@@ -30,6 +30,10 @@ media
 *.iws /out/
 
 
+# settings
+ResHub/settings.py
+
+
 # C extensions
 *.so
 
