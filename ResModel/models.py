@@ -95,7 +95,7 @@ class Review(models.Model):
 class Relationship(models.Model):
     ResearchId1 = models.ForeignKey('Researcher',related_name='first',to_field='id',on_delete=models.CASCADE)
     ResearchId2 = models.ForeignKey('Researcher',related_name='second',to_field='id',on_delete=models.CASCADE)
-    LiteratureNum = models.IntegerField(null=False);
+    LiteratureNum = models.IntegerField(null=False)
 
 
 
