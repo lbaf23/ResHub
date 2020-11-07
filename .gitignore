@@ -6,9 +6,9 @@ __pycache__/
  
 # Backup files #
 *.bak
- 
+
 # PyCharm #
-.idea
+.idea\*
 
 
 # settings
