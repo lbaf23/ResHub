@@ -8,10 +8,10 @@ __pycache__/
 *.bak
 
 # PyCharm #
-.idea\*
+.idea/*
 
 # migrations #
-ResModel\migrations\*
+ResModel/migrations/*
 
 # settings
 ResHub/settings.py
