@@ -56,13 +56,21 @@ class Mail(models.Model):
     MailContent = models.CharField(max_length=2000,null=False)
     SendTime = models.DateTimeField(auto_now_add=True)
     IsRead = models.BooleanField(null=False)
+    withDraw = models.BooleanField(default=False)
 
 class Message(models.Model):
     ReceiveEmail = models.ForeignKey('HubUser',to_field='UserEmail',on_delete=models.CASCADE)
     MessageContent = models.CharField(max_length=2000,null=False)
     MessageType = models.SmallIntegerField(null=False)
     SendTime = models.DateTimeField(auto_now_add=True)
-    IsRead = models.BooleanField(null=False)
+    IsRead = models.BooleanField(default=True)
+
+class ChatFriends(models.Model):
+    myId = models.ForeignKey(HubUser,related_name='myId',on_delete=models.CASCADE)
+    friendId = models.ForeignKey(HubUser,related_name='friendId',on_delete=models.CASCADE)
+    meetDate = models.DateField(default=None)
+    lastMail = models.ForeignKey(Mail,related_name='lastMail',on_delete=models.CASCADE,default=None)
+    unread = models.IntegerField(default=0)
 
 class Administrators(models.Model):
     AdmEmail = models.CharField(max_length=50,null=False)
