@@ -50,10 +50,10 @@ class Paper(Literature):
     PaperStart = models.CharField(max_length=20,null=True)
     PaperEnd = models.CharField(max_length=20,null=True)
     PaperLang = models.CharField(max_length=20,null=True)#语言
-    PaperVolume = models.CharField(max_length=50) #册
-    PaperIssue = models.CharField(max_length=50)
-    PaperPublisher = models.CharField(max_length=50)
-    PaperType = models.CharField(max_length=50)
+    PaperVolume = models.CharField(max_length=50,null=True) #册
+    PaperIssue = models.CharField(max_length=50,null=True)
+    PaperPublisher = models.CharField(max_length=50,null=True)
+    PaperType = models.CharField(max_length=50,null=True)
 
 class Concern(models.Model):
     UserEmail = models.ForeignKey('HubUser',to_field='UserEmail',on_delete=models.CASCADE)
