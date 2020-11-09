@@ -39,7 +39,9 @@ class Literature(models.Model):
     LitLink = models.CharField(max_length=200,null=True)
     CollectionNum = models.IntegerField(null=False)
     IsUserUpload = models.BooleanField(null=False)
+
 class Paper(Literature):
+    PaperId = models.CharField(max_length=50, primary_key=True)
     PaperTitle = models.CharField(max_length=200,null=False)
     PaperAuthor = models.CharField(max_length=200,null=False)
     PaperVenue =  models.CharField(max_length=200,null=False)
