@@ -28,17 +28,30 @@ class Researcher(models.Model):
     ConcernNum = models.IntegerField(null=False)
 
 class Literature(models.Model):
-    LitName = models.CharField(max_length=200,null=False)
     '''
+    LitName = models.CharField(max_length=200,null=False)
     LitDate = models.DateField(auto_now_add=False)
     LitType = models.SmallIntegerField(null=False)
     LitAuthor = models.CharField(max_length=200,null=False)
+    LitQuote = models.CharField(max_length=200,null=True)
+    '''
     LitRead = models.IntegerField(null=False)
     LitLink = models.CharField(max_length=200,null=True)
-    LitQuote = models.CharField(max_length=200,null=True)
     CollectionNum = models.IntegerField(null=False)
     IsUserUpload = models.BooleanField(null=False)
-    '''
+class Paper(Literature):
+    PaperTitle = models.CharField(max_length=200,null=False)
+    PaperAuthor = models.CharField(max_length=200,null=False)
+    PaperVenue =  models.CharField(max_length=200,null=False)
+    PaperTime = models.DateField(auto_now_add=False,null=True)
+    PaperCitation = models.IntegerField(null=False)
+    PaperStart = models.CharField(max_length=20,null=True)
+    PaperEnd = models.CharField(max_length=20,null=True)
+    PaperLang = models.CharField(max_length=20,null=True)#语言
+    PaperVolume = models.CharField(max_length=50) #册
+    PaperIssue = models.CharField(max_length=50)
+    PaperPublisher = models.CharField(max_length=50)
+    PaperType = models.CharField(max_length=50)
 
 class Concern(models.Model):
     UserEmail = models.ForeignKey('HubUser',to_field='UserEmail',on_delete=models.CASCADE)

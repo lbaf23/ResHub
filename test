@@ -1,0 +1,7 @@
+import  json
+f = open('D:\迅雷下载\\mag_papers_0.txt','r')
+
+for i in range(0, 10):
+    print(json.loads(f.readline()))
+
+f.close()
