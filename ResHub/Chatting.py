@@ -4,6 +4,14 @@ from django.core import serializers
 import json
 from channels.db import database_sync_to_async
 
+from dwebsocket.decorators import accept_websocket
+
+@accept_websocket
+def chatting_websocket(request):
+    if request.is_websocket():
+        print('receive')
+
+
 @database_sync_to_async
 def submit_message(info): # 发送一条消息
 
