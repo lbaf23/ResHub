@@ -81,8 +81,8 @@ class Message(models.Model):
     IsRead = models.BooleanField(default=True)
 
 class ChatFriends(models.Model):
-    myId = models.ForeignKey(HubUser,related_name='myId',on_delete=models.CASCADE)
-    friendId = models.ForeignKey(HubUser,related_name='friendId',on_delete=models.CASCADE)
+    myId = models.ForeignKey(HubUser,related_name='myId',to_field='UserEmail',on_delete=models.CASCADE)
+    friendId = models.ForeignKey(HubUser,related_name='friendId',to_field='UserEmail',on_delete=models.CASCADE)
     meetDate = models.DateField(default=None)
     lastMail = models.ForeignKey(Mail,related_name='lastMail',on_delete=models.CASCADE,default=None)
     unread = models.IntegerField(default=0)
