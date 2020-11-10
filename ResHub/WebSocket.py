@@ -1,7 +1,7 @@
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 
-import json
-from . import Chatting
+from ResHub.controller import Chatting
+
 
 # 自定义websocket处理类
 class web_socket_connect(AsyncJsonWebsocketConsumer):
