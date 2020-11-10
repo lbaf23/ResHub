@@ -20,12 +20,12 @@ def CatchPortal(request):
                 "message": "验证码错误",
             })
         if id is not None:
-            Protal = Researcher.objects.filter(id=id).first()
-            if Protal.IsClaim ==0:
-                Protal.IsClaim=1
-                Protal.ResEmail=ResEmail
-                Protal.UserEmail=HubUser.objects.filter(UserEmail=UserEmail).first()
-                Protal.save()
+            Portal = Researcher.objects.filter(id=id).first()
+            if Portal.IsClaim ==0:
+                Portal.IsClaim=1
+                Portal.ResEmail=ResEmail
+                Portal.UserEmail=HubUser.objects.filter(UserEmail=UserEmail).first()
+                Portal.save()
                 return JsonResponse({
                     "status": 1,
                     "message": "门户认领成功",
