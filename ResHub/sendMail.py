@@ -1,7 +1,12 @@
 import smtplib
 from email.mime.text import MIMEText
 import random
-from . import settings
+from ResHub import settings
+from django.core.cache import cache
+import redis
+
+from ResHub.redispool import r
+
 
 def send_email(receive):
     msg_from = settings.FROM_EMAIL
@@ -21,6 +26,7 @@ def send_email(receive):
         s.login(msg_from, pwd)
         s.sendmail(msg_from, msg_to, message.as_string())
         s.quit()
+        r.set(msg_to, code, 3600)
         return True, code
     except Exception:
         s.quit()
