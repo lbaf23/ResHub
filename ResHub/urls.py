@@ -17,13 +17,16 @@ from django.contrib import admin
 from django.urls import path
 
 from ResHub.controller import Chatting
-from ResHub.controller import Login,Browse,Portal
+from ResHub.controller import Login, Browse, Portal
+from ResHub.personal_portal import getPersonalPortal
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('identityCheck', Login.identity_check),
     path('BrowseHistory', Browse.BrowseHistory),
-    path('CatchPortal', Portal.CatchPortal)
+    path('CatchPortal', Portal.CatchPortal),
 
+    # Matrix.L
+    path('getPersonalPortal', getPersonalPortal.getPersonalPortal)
 ]
