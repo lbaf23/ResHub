@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 class HubUser(models.Model):
-    UserEmail = models.CharField(max_length=50, primary_key=False,unique=True)
+    UserEmail = models.CharField(max_length=50, primary_key=True)
     UserName = models.CharField(max_length=50, null=True)
     UserPassword = models.CharField(max_length=20,null=False)
     UserImage = models.CharField(max_length=50,null=False)
