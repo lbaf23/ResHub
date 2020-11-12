@@ -6,7 +6,7 @@ def getPersonalPortal(request):
     try:
         res = {}
         if request.method == "GET":
-            userId = request.POST.get('userId')
+            userId = request.GET.get('userId')
             if userId is not None:
                 # temp1记录从HubUser得到的结果
                 temp1 = HubUser.objects.filter(UserEmail=userId).first()
