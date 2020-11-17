@@ -19,6 +19,7 @@ from django.urls import path
 from ResHub.controller import Chatting
 from ResHub.controller import Login, Browse, Portal
 from ResHub.personal_portal import getPersonalPortal
+from ResHub.controller import Collection
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,5 +29,9 @@ urlpatterns = [
     path('CatchPortal', Portal.CatchPortal),
 
     # Matrix.L
-    path('getPersonalPortal', getPersonalPortal.getPersonalPortal)
+    path('getPersonalPortal', getPersonalPortal.getPersonalPortal),
+
+    #LYC
+    path('addCollection',Collection.add_collection),
+    path('cancelCollection',Collection.del_collection),
 ]
