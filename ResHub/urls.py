@@ -25,6 +25,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('identityCheck', Login.identity_check),
+    path('recentUsers', Chatting.get_recent_friends),
+
     path('BrowseHistory', Browse.BrowseHistory),
     path('CatchPortal', Portal.CatchPortal),
 

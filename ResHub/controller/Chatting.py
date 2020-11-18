@@ -7,13 +7,38 @@ from channels.db import database_sync_to_async
 from dwebsocket.decorators import accept_websocket
 
 
+def get_recent_friends(request):
+    mid = request.GET.get('userId')
+    f = ChatFriends.objects.filter(myId=mid).order_by('lastMail__SendTime')
+    res = list()
+
+    for i in range(0,f.__len__()):
+        j = {
+            'chatId': f[i].id,
+            'friendId': f[i].friendId_id,
+            'friendName': f[i].friendId.UserName,
+            'newMessage': f[i].unread,
+            'friendHead': f[i].friendId.UserImage
+        }
+        res.append(j)
+    return JsonResponse({'list' : res})
+
+
 @database_sync_to_async
 def submit_message(info): # 发送一条消息
-
-    # mes = Message(sendId=ChatUser.objects.get(userId=sid),receiveId=ChatUser.objects.get(userId=rid),messageContent=content)
-    # mes.save()
-    # 保存消息
-    return info
+    content = info.get('content')
+    mid = info.get('myId')
+    fid = info.get('friendId')
+    mes = Mail(SendEmail=HubUser.objects.get(UserEmail=mid),ReceiveEmail=HubUser.objects.get(UserEmail=fid),MailContent=content)
+    mes.save()
+    message = {}
+    message['id']=mes.id
+    message['messageContent']=content
+    message['myId']=mid
+    message['sendDate']=str(mes.SendTime)
+    message['friendId']=fid
+    message['withDraw']=mes.withDraw
+    return message
 
 # 撤回一条消息
 @database_sync_to_async
