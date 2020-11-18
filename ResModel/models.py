@@ -15,7 +15,7 @@ class Institution(models.Model):
     InsIntroduction = models.CharField(max_length=50)
 
 class Researcher(models.Model):
-    ResId = models.CharField(max_length=50)
+    ResId = models.CharField(max_length=50,primary_key=True)
     IsClaim = models.BooleanField()
     UserEmail = models.OneToOneField('HubUser',to_field='UserEmail',on_delete=models.CASCADE,null=True)
     ResName = models.CharField(max_length=50)
@@ -33,11 +33,11 @@ class Researcher(models.Model):
 class Literature(models.Model):
     LitId = models.CharField(max_length=50,primary_key=True)
     LitTitle = models.CharField(max_length=200)
+    LitAuthor = models.ManyToManyField(to="Researcher",null=True)
     ReadNum = models.IntegerField(default=0)
-    LinkNum = models.CharField(max_length=200,default=0)
+    LitUrl = models.CharField(max_length=200,default=0)
     CollectionNum = models.IntegerField(default=0)
     IsUserUpload = models.BooleanField(default=False)
-    PaperAuthor = models.ManyToManyField(to="Researcher",null=True)
     class Meta:
         abstract = True
 
