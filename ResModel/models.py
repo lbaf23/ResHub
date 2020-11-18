@@ -103,7 +103,7 @@ class ChatFriends(models.Model):
     myId = models.ForeignKey(HubUser,related_name='myId',to_field='UserEmail',on_delete=models.CASCADE)
     friendId = models.ForeignKey(HubUser,related_name='friendId',to_field='UserEmail',on_delete=models.CASCADE)
     meetDate = models.DateField(default=None)
-    lastMail = models.ForeignKey(Mail,related_name='lastMail',on_delete=models.CASCADE,default=None)
+    lastMail = models.ForeignKey(Mail,related_name='lastMail',on_delete=models.CASCADE,null=True)
     unread = models.IntegerField(default=0)
 
 class Administrators(models.Model):
