@@ -89,7 +89,7 @@ class Mail(models.Model):
     ReceiveEmail = models.ForeignKey('HubUser',related_name='receive',to_field='UserEmail',on_delete=models.CASCADE)
     MailContent = models.CharField(max_length=2000,null=False)
     SendTime = models.DateTimeField(auto_now_add=True)
-    IsRead = models.BooleanField(null=False)
+    IsRead = models.BooleanField(default=False)
     withDraw = models.BooleanField(default=False)
 
 class Message(models.Model):
