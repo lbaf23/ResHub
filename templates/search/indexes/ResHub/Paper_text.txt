@@ -1,0 +1,8 @@
+{{ object.PaperVenue }}
+{{ object.PaperTime }}
+{{ object.PaperCitation }}
+{{ object.PaperLang }}
+{{ object.PaperIssue }}
+{{ object.PaperPublisher }}
+{{ object.PaperType }}
+{{ object.LitType }}
