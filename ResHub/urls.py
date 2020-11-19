@@ -26,6 +26,7 @@ urlpatterns = [
 
     path('identityCheck', Login.identity_check),
     path('recentUsers', Chatting.get_recent_friends),
+    path('getChats', Chatting.get_chats),
 
     path('BrowseHistory', Browse.BrowseHistory),
     path('CatchPortal', Portal.CatchPortal),

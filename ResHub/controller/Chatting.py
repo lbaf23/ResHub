@@ -9,7 +9,7 @@ from dwebsocket.decorators import accept_websocket
 
 def get_recent_friends(request):
     mid = request.GET.get('userId')
-    f = ChatFriends.objects.filter(myId=mid).order_by('lastMail__SendTime')
+    f = ChatFriends.objects.filter(MyId=mid).order_by('lastMail__SendTime')
     res = list()
 
     for i in range(0,f.__len__()):
@@ -22,6 +22,29 @@ def get_recent_friends(request):
         }
         res.append(j)
     return JsonResponse({'list' : res})
+
+def get_chats(request):
+    mid = request.GET.get('myId')
+    fid = request.GET.get('friendId')
+    print(mid,fid)
+
+    c = Mail.objects.filter(SendEmail=HubUser.objects.get(UserEmail=mid)).\
+        filter(ReceiveEmail=HubUser.objects.get(UserEmail=fid))
+    d = Mail.objects.filter(ReceiveEmail=HubUser.objects.get(UserEmail=mid)).\
+        filter(SendEmail=HubUser.objects.get(UserEmail=fid))
+
+    l = (c | d).order_by('SendTime')
+    res = list()
+    for i in l:
+        j = {
+            'id': i.id,
+            'sendId': i.SendEmail_id,
+            'msg': i.MailContent,
+            'sendTime': i.SendTime,
+        }
+        res.append(j)
+    return JsonResponse({'list': res})
+
 
 
 @database_sync_to_async
@@ -37,7 +60,7 @@ def submit_message(info): # 发送一条消息
     message['myId']=mid
     message['sendDate']=str(mes.SendTime)
     message['friendId']=fid
-    message['withDraw']=mes.withDraw
+    message['withDraw']=mes.WithDraw
     return message
 
 # 撤回一条消息
