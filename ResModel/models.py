@@ -29,10 +29,10 @@ class Researcher(models.Model):
     VisitNum = models.IntegerField(default=0)
     ConcernNum = models.IntegerField(default=0)
     ResHIndex = models.IntegerField(null=True)
-    ResPubs = models.CharField(max_length=200,null=True)
+    ResPubs = models.CharField(max_length=2000,null=True)
 
 class Literature(models.Model):
-    LitId = models.CharField(max_length=50,primary_key=True)
+    LitId = models.CharField(max_length=50,unique=True)
     LitTitle = models.CharField(max_length=200)
     LitAuthor = models.ManyToManyField(to="Researcher",null=True)
     ReadNum = models.IntegerField(default=0)
@@ -83,6 +83,7 @@ class Collection(models.Model):
     PatentId = models.ForeignKey('Patent',to_field='LitId',on_delete=models.CASCADE,null=True)
     ProjectId = models.ForeignKey('Project',to_field='LitId',on_delete=models.CASCADE,null=True)
     CollectionTime = models.DateTimeField(auto_now_add=True)
+    CollectionType = models.IntegerField()
 
 class Mail(models.Model):
     SendEmail = models.ForeignKey('HubUser',related_name='send',to_field='UserEmail',on_delete=models.CASCADE)
@@ -116,7 +117,7 @@ class Browse(models.Model):
     PatentId = models.ForeignKey('Patent',to_field='LitId',on_delete=models.CASCADE,null=True)
     ProjectId = models.ForeignKey('Project',to_field='LitId',on_delete=models.CASCADE,null=True)
     ResearchId = models.ForeignKey('Researcher',to_field='ResId',on_delete=models.CASCADE,null=True)
-    BrowseType = models.SmallIntegerField()
+    BrowseType = models.IntegerField()
     BrowseTime = models.DateTimeField(auto_now_add=True)
 
 class Search(models.Model):
@@ -131,6 +132,7 @@ class Appeal(models.Model):
     AppealTime = models.DateTimeField(auto_now_add=True)
 
 class Review(models.Model):
+    ReviewContent = models.CharField(max_length=2000)
     UserEmail = models.ForeignKey('HubUser',to_field='UserEmail',on_delete=models.CASCADE)
     UploadTime = models.DateTimeField(auto_now_add=True)
     ReviewState = models.BooleanField()
