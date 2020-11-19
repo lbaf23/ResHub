@@ -72,17 +72,16 @@ class web_socket_connect(AsyncJsonWebsocketConsumer):
 
 
     async def chat_message(self, event):
-
-        print("收到event")
         # 发送给自己
         if event['state']=='sendMessage':
+            print("发送消息")
             await self.send_json({
                 "state": 'sendMessage',
                 "id": event["id"],
-                "messageContent": event["messageContent"],
+                "msg" : event["messageContent"],
                 "sendId": event["myId"],
                 "receiveId": event["friendId"],
-                "sendDate": event['sendDate'],
+                "sendTime": event['sendDate'],
             })
         elif event['state']=='withdraw':
             await self.send_json({
