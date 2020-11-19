@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from ResModel.models import HubUser, Researcher
+from ResModel.models import HubUser, Researcher, Institution
 
 
 def getPersonalPortal(request):
@@ -14,11 +14,12 @@ def getPersonalPortal(request):
                 temp2 = Researcher.objects.filter(UserEmail=userId).first()
                 # temp3记录从
                 res['userName'] = temp1.UserName
-                res['realName'] = ""
                 if(temp2 is not None):
                     res['realName'] = temp2.ResName
+                    res['instituteId'] = temp2.ResCompany
+                    res['researchInstitute'] = (
+                        Institution.objects.filter(id=temp2.temp2.ResCompany).first).InsName
                 res['perosonCommunication'] = temp1.UserEmail
-                res['instituteId'] = temp2.ResCompany
             else:
                 return JsonResponse({
                     "status": 2,
