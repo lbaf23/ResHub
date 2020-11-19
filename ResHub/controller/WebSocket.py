@@ -12,6 +12,7 @@ class web_socket_connect(AsyncJsonWebsocketConsumer):
         print('连接：',mid,self.channel_name)
         await self.accept()
         # 将新的连接加入到群组
+
         await self.channel_layer.group_add(mid, self.channel_name)
 
     async def receive_json(self, message):
@@ -49,18 +50,6 @@ class web_socket_connect(AsyncJsonWebsocketConsumer):
                 },
             )
 
-        elif message['state']=='withdraw': # 撤回消息
-            await Chatting.with_draw_message(message['id'])
-            await self.channel_layer.group_send(
-                message.get('receiveId'),
-                {
-                    "type": 'chat.message',
-                    "state": message['state'],
-                    "id": message['id'],
-                    "sendId": message['sendId'],
-                    "receiveId": message['receiveId']
-                },
-            )
 
     async def disconnect(self, close_code):
         # 连接关闭时调用
@@ -82,11 +71,4 @@ class web_socket_connect(AsyncJsonWebsocketConsumer):
                 "sendId": event["myId"],
                 "receiveId": event["friendId"],
                 "sendTime": event['sendDate'],
-            })
-        elif event['state']=='withdraw':
-            await self.send_json({
-                "state": 'withdraw',
-                "id": event["id"],
-                "sendId": event['sendId'],
-                "receiveId": event['receiveId']
             })

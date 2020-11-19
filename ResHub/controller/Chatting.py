@@ -9,16 +9,16 @@ from dwebsocket.decorators import accept_websocket
 
 def get_recent_friends(request):
     mid = request.GET.get('userId')
-    f = ChatFriends.objects.filter(MyId=mid).order_by('lastMail__SendTime')
+    f = ChatFriends.objects.filter(MyId=mid).order_by('LastMail__SendTime')
     res = list()
 
     for i in range(0,f.__len__()):
         j = {
             'chatId': f[i].id,
-            'friendId': f[i].friendId_id,
-            'friendName': f[i].friendId.UserName,
-            'newMessage': f[i].unread,
-            'friendHead': f[i].friendId.UserImage
+            'friendId': f[i].FriendId_id,
+            'friendName': f[i].FriendId.UserName,
+            'newMessage': f[i].Unread,
+            'friendHead': f[i].FriendId.UserImage
         }
         res.append(j)
     return JsonResponse({'list' : res})
