@@ -1,4 +1,6 @@
-{{ object.PaperVenue }}
+{{ object.LitId }}
+{{ object.LitTitle }}
+{{ object.LitAuthor }}
 {{ object.PaperTime }}
 {{ object.PaperCitation }}
 {{ object.PaperLang }}
