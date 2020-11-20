@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from rest_framework import routers
+from ResHub.elsearch.search_paper import search_keywords
+
 from ResHub.controller import Chatting
 from ResHub.controller import Login, Browse, Portal
 from ResHub.personal_portal import getPersonalPortal
@@ -38,3 +41,7 @@ urlpatterns = [
     path('addCollection',Collection.add_collection),
     path('cancelCollection',Collection.del_collection),
 ]
+
+router = routers.DefaultRouter()
+router.register('paper/search',search_keywords, basename='paper_search')
+urlpatterns += router.urls

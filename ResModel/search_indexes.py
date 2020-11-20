@@ -1,13 +1,12 @@
 from haystack import indexes
+from .models import Paper
 
-from ResModel.models import Paper
-class ELLiterature(indexes.SearchIndex, indexes.Indexable):
+class PaperIndex(indexes.SearchIndex, indexes.Indexable):
     # 必须写的字段
     text = indexes.CharField(document=True, use_template=True)
 
     LitId = indexes.CharField(model_attr='LitId')
     LitTitle = indexes.CharField(model_attr='LitTitle')
-    LitAuthor = indexes.CharField(model_attr='LitAuthor')
     PaperTime = indexes.DateField(model_attr='PaperTime')
     PaperCitation = indexes.IntegerField(model_attr='PaperCitation')
     PaperLang = indexes.CharField(model_attr='PaperLang')#语言
