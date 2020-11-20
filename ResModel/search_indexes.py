@@ -10,7 +10,7 @@ class PaperIndex(indexes.SearchIndex, indexes.Indexable):
         return Paper
 
     def index_queryset(self, using=None):
-        return self.get_model().objects.all()
+        return self.get_model().objects.filter()
 
 
 '''
