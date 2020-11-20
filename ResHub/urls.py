@@ -44,6 +44,6 @@ urlpatterns = [
 
 ]
 
-router = routers.SimpleRouter()
+router = routers.DefaultRouter()
 router.register('paper/search', PaperSearchViewSet, basename='paper_search')
 urlpatterns += router.urls

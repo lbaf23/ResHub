@@ -32,7 +32,7 @@ class Researcher(models.Model):
     ResPubs = models.CharField(max_length=2000,null=True)#作者发表的文章
 
 class Paper(models.Model):
-    LitId = models.CharField(max_length=50,unique=True)
+    LitId = models.CharField(max_length=50,primary_key=True)
     LitTitle = models.CharField(max_length=200)
     LitAuthor = models.ManyToManyField(to="Researcher",null=True)
     ReadNum = models.IntegerField(default=0)
