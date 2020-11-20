@@ -26,7 +26,8 @@ class PaperSerializer(serializers.ModelSerializer):
             'PaperPublisher',
             'PaperType',
             'PaperFos',
-            'PaperDoi'
+            'PaperDoi',
+            'PaperVenue'
         )
 
 class PaperIndexSerializer(HaystackSerializer):
@@ -40,5 +41,6 @@ class PaperIndexSerializer(HaystackSerializer):
             'text',
             'object',
             'PaperAbstract',
-            'PaperFos'
+            'PaperFos',
+            'PaperKeywords'
         )

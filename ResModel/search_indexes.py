@@ -7,6 +7,7 @@ class PaperIndex(indexes.SearchIndex, indexes.Indexable):
 
     PaperAbstract = indexes.CharField(model_attr='PaperAbstract', null=True)
     PaperFos = indexes.CharField(model_attr='PaperFos', null=True)
+    PaperKeywords = indexes.CharField(model_attr='PaperKeywords', null=True)
 
     def get_model(self):
         # 返回建立索引的模型 数据库表
