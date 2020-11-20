@@ -40,7 +40,7 @@ class Paper(models.Model):
     IsUserUpload = models.BooleanField(default=False)
     PaperTime = models.IntegerField(null=True)#发表时间
     PaperAbstract = models.TextField(max_length=8000,null=True)#摘要
-    PaperKeywords = models.CharField(max_length=3000,null=True)#关键字
+    PaperKeywords = models.TextField(max_length=8000,null=True)#关键字
     PaperCitation = models.IntegerField(null=True)#引用数量
     PaperStart = models.IntegerField(null=True)#论文开始页
     PaperEnd = models.IntegerField(null=True)#论文结束页
