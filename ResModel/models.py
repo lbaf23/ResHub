@@ -33,31 +33,33 @@ class Researcher(models.Model):
 
 class Paper(models.Model):
     PaperId = models.CharField(max_length=50,primary_key=True)
-    PaperTitle = models.CharField(max_length=200)
+    PaperTitle = models.CharField(max_length=1000)
     ReadNum = models.IntegerField(default=0)
-    PaperUrl = models.CharField(max_length=2000,default=0)
+    PaperUrl = models.TextField(max_length=8000,null=True)
     CollectionNum = models.IntegerField(default=0)
     IsUserUpload = models.BooleanField(default=False)
     PaperTime = models.IntegerField(null=True)#发表时间
-    PaperAbstract = models.CharField(max_length=5000,null=True)#摘要
-    PaperKeywords = models.CharField(max_length=2000,null=True)#关键字
+    PaperAbstract = models.TextField(max_length=8000,null=True)#摘要
+    PaperKeywords = models.CharField(max_length=3000,null=True)#关键字
     PaperCitation = models.IntegerField(null=True)#引用数量
     PaperStart = models.IntegerField(null=True)#论文开始页
     PaperEnd = models.IntegerField(null=True)#论文结束页
     PaperLang = models.CharField(max_length=20,null=True)#语言
-    PaperVolume = models.CharField(max_length=50,null=True) #册
+    PaperVolume = models.IntegerField(null=True) #册
     PaperIssue = models.CharField(max_length=50,null=True)#期号
-    PaperPublisher = models.CharField(max_length=50,null=True)#出版商
+    PaperPublisher = models.CharField(max_length=1000,null=True)#出版商
     PaperType = models.CharField(max_length=50,null=True)#论文类型
-    PaperField = models.CharField(max_length=2000,null=True)#领域
+    PaperFos = models.CharField(max_length=2000,null=True)#学科
+    PaperDoi = models.CharField(max_length=100,null=True)
+    PaperVenue = models.CharField(max_length=500,null=True) # 会议
 
 class PaperAuthor(models.Model):
     PaperId = models.ForeignKey('Paper',to_field='PaperId',on_delete=models.CASCADE)
     ResearcherId = models.ForeignKey('Researcher',to_field='ResId',on_delete=models.CASCADE)
 
 class PaperReference(models.Model):
-    PaperId = models.ForeignKey('Paper',to_field='PaperId',on_delete=models.CASCADE)
-    RePaperId = models.ForeignKey('Paper',to_field='PaperId',on_delete=models.CASCADE)
+    PaperId = models.ForeignKey('Paper',to_field='PaperId',related_name='TPaperId',on_delete=models.CASCADE)
+    RePaperId = models.ForeignKey('Paper',to_field='PaperId',related_name='RePaperId',on_delete=models.CASCADE)
 
 class Patent(models.Model):
     PatentId = models.CharField(max_length=50,unique=True)
