@@ -49,10 +49,15 @@ class Paper(models.Model):
     PaperIssue = models.CharField(max_length=50,null=True)#期号
     PaperPublisher = models.CharField(max_length=50,null=True)#出版商
     PaperType = models.CharField(max_length=50,null=True)#论文类型
+    PaperField = models.CharField(max_length=2000,null=True)#领域
 
-class Paper_Author(models.Model):
+class PaperAuthor(models.Model):
     PaperId = models.ForeignKey('Paper',to_field='PaperId',on_delete=models.CASCADE)
     ResearcherId = models.ForeignKey('Researcher',to_field='ResId',on_delete=models.CASCADE)
+
+class PaperReference(models.Model):
+    PaperId = models.ForeignKey('Paper',to_field='PaperId',on_delete=models.CASCADE)
+    RePaperId = models.ForeignKey('Paper',to_field='PaperId',on_delete=models.CASCADE)
 
 class Patent(models.Model):
     PatentId = models.CharField(max_length=50,unique=True)
@@ -63,7 +68,7 @@ class Patent(models.Model):
     IsUserUpload = models.BooleanField(default=False)
     PatentAbstract = models.CharField(max_length=2000,null=True)#摘要
 
-class Patent_Author(models.Model):
+class PatentAuthor(models.Model):
     PatentId = models.ForeignKey('Patent',to_field='PatentId',on_delete=models.CASCADE)
     ResearcherId = models.ForeignKey('Researcher',to_field='ResId',on_delete=models.CASCADE)
 
@@ -85,7 +90,7 @@ class Project(models.Model):
     SubjectHeadingCN = models.CharField(max_length=100,null=True)#项目中文题目
     SubjectHeadingEN = models.CharField(max_length=200,null=True)#项目英文题目
 
-class Project_Author(models.Model):
+class ProjectAuthor(models.Model):
     ProjectId = models.ForeignKey('Project',to_field='ProjectId',on_delete=models.CASCADE)
     ResearcherId = models.ForeignKey('Researcher',to_field='ResId',on_delete=models.CASCADE)
 
