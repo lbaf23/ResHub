@@ -32,10 +32,10 @@ class Researcher(models.Model):
     ResPubs = models.CharField(max_length=2000,null=True)#作者发表的文章
 
 class Paper(models.Model):
-    LitId = models.CharField(max_length=50,primary_key=True)
-    LitTitle = models.CharField(max_length=200)
+    PaperId = models.CharField(max_length=50,primary_key=True)
+    PaperTitle = models.CharField(max_length=200)
     ReadNum = models.IntegerField(default=0)
-    LitUrl = models.CharField(max_length=200,default=0)
+    PaperUrl = models.CharField(max_length=200,default=0)
     CollectionNum = models.IntegerField(default=0)
     IsUserUpload = models.BooleanField(default=False)
     PaperTime = models.DateField(auto_now_add=False,null=True)#发表时间
@@ -44,35 +44,34 @@ class Paper(models.Model):
     PaperCitation = models.IntegerField(null=True)#引用数量
     PaperStart = models.CharField(max_length=20,null=True)#论文开始页
     PaperEnd = models.CharField(max_length=20,null=True)#论文结束页
+    PaperLang = models.CharField(max_length=20,null=True)#语言
     PaperVolume = models.CharField(max_length=50,null=True) #册
     PaperIssue = models.CharField(max_length=50,null=True)#期号
     PaperPublisher = models.CharField(max_length=50,null=True)#出版商
     PaperType = models.CharField(max_length=50,null=True)#论文类型
-    LitType = models.IntegerField(default=1)#学术成果种类，默认为1，表示论文
 
 class Paper_Author(models.Model):
-    PaperId = models.ForeignKey('Paper',to_field='LitId',on_delete=models.CASCADE)
+    PaperId = models.ForeignKey('Paper',to_field='PaperId',on_delete=models.CASCADE)
     ResearcherId = models.ForeignKey('Researcher',to_field='ResId',on_delete=models.CASCADE)
 
 class Patent(models.Model):
-    LitId = models.CharField(max_length=50,unique=True)
-    LitTitle = models.CharField(max_length=200)
+    PatentId = models.CharField(max_length=50,unique=True)
+    PatentTitle = models.CharField(max_length=200)
     ReadNum = models.IntegerField(default=0)
-    LitUrl = models.CharField(max_length=200,default=0)
+    PatentUrl = models.CharField(max_length=200,default=0)
     CollectionNum = models.IntegerField(default=0)
     IsUserUpload = models.BooleanField(default=False)
     PatentAbstract = models.CharField(max_length=2000,null=True)#摘要
-    LitType = models.IntegerField(default=2)#学术成果种类，默认为2，表示专利
 
 class Patent_Author(models.Model):
-    PatentId = models.ForeignKey('Patent',to_field='LitId',on_delete=models.CASCADE)
+    PatentId = models.ForeignKey('Patent',to_field='PatentId',on_delete=models.CASCADE)
     ResearcherId = models.ForeignKey('Researcher',to_field='ResId',on_delete=models.CASCADE)
 
 class Project(models.Model):
-    LitId = models.CharField(max_length=50,unique=True)
-    LitTitle = models.CharField(max_length=200)
+    ProjectId = models.CharField(max_length=50,unique=True)
+    ProjectTitle = models.CharField(max_length=200)
     ReadNum = models.IntegerField(default=0)
-    LitUrl = models.CharField(max_length=200,default=0)
+    ProjectUrl = models.CharField(max_length=200,default=0)
     CollectionNum = models.IntegerField(default=0)
     IsUserUpload = models.BooleanField(default=False)
     GrantYear = models.DateField(auto_now_add=False,null=True)#发表年份
@@ -85,10 +84,9 @@ class Project(models.Model):
     StudyPeriod = models.CharField(max_length=100,null=True)#研究期
     SubjectHeadingCN = models.CharField(max_length=100,null=True)#项目中文题目
     SubjectHeadingEN = models.CharField(max_length=200,null=True)#项目英文题目
-    LitType = models.IntegerField(default=3)#学术成果种类，默认为3，表示项目
 
 class Project_Author(models.Model):
-    ProjectId = models.ForeignKey('Project',to_field='LitId',on_delete=models.CASCADE)
+    ProjectId = models.ForeignKey('Project',to_field='ProjectId',on_delete=models.CASCADE)
     ResearcherId = models.ForeignKey('Researcher',to_field='ResId',on_delete=models.CASCADE)
 
 class Concern(models.Model):
@@ -98,9 +96,9 @@ class Concern(models.Model):
 
 class Collection(models.Model):
     UserEmail = models.ForeignKey('HubUser',to_field='UserEmail',on_delete=models.CASCADE)
-    PaperId = models.ForeignKey('Paper',to_field='LitId',on_delete=models.CASCADE,null=True)
-    PatentId = models.ForeignKey('Patent',to_field='LitId',on_delete=models.CASCADE,null=True)
-    ProjectId = models.ForeignKey('Project',to_field='LitId',on_delete=models.CASCADE,null=True)
+    PaperId = models.ForeignKey('Paper',to_field='PaperId',on_delete=models.CASCADE,null=True)
+    PatentId = models.ForeignKey('Patent',to_field='PatentId',on_delete=models.CASCADE,null=True)
+    ProjectId = models.ForeignKey('Project',to_field='ProjectId',on_delete=models.CASCADE,null=True)
     CollectionTime = models.DateTimeField(auto_now_add=True)
     CollectionType = models.IntegerField()
 
@@ -132,9 +130,9 @@ class Administrators(models.Model):
 
 class Browse(models.Model):
     UserEmail = models.ForeignKey('HubUser',to_field='UserEmail',on_delete=models.CASCADE)
-    PaperId = models.ForeignKey('Paper',to_field='LitId',on_delete=models.CASCADE,null=True)
-    PatentId = models.ForeignKey('Patent',to_field='LitId',on_delete=models.CASCADE,null=True)
-    ProjectId = models.ForeignKey('Project',to_field='LitId',on_delete=models.CASCADE,null=True)
+    PaperId = models.ForeignKey('Paper',to_field='PaperId',on_delete=models.CASCADE,null=True)
+    PatentId = models.ForeignKey('Patent',to_field='PatentId',on_delete=models.CASCADE,null=True)
+    ProjectId = models.ForeignKey('Project',to_field='ProjectId',on_delete=models.CASCADE,null=True)
     ResearchId = models.ForeignKey('Researcher',to_field='ResId',on_delete=models.CASCADE,null=True)
     BrowseType = models.IntegerField()
     BrowseTime = models.DateTimeField(auto_now_add=True)
