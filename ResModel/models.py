@@ -34,7 +34,6 @@ class Researcher(models.Model):
 class Paper(models.Model):
     LitId = models.CharField(max_length=50,primary_key=True)
     LitTitle = models.CharField(max_length=200)
-    LitAuthor = models.ManyToManyField(to="Researcher",null=True)
     ReadNum = models.IntegerField(default=0)
     LitUrl = models.CharField(max_length=200,default=0)
     CollectionNum = models.IntegerField(default=0)
@@ -51,10 +50,13 @@ class Paper(models.Model):
     PaperType = models.CharField(max_length=50,null=True)#论文类型
     LitType = models.IntegerField(default=1)#学术成果种类，默认为1，表示论文
 
+class Paper_Author(models.Model):
+    PaperId = models.ForeignKey('Paper',to_field='LitId',on_delete=models.CASCADE)
+    ResearcherId = models.ForeignKey('Researcher',to_field='ResId',on_delete=models.CASCADE)
+
 class Patent(models.Model):
     LitId = models.CharField(max_length=50,unique=True)
     LitTitle = models.CharField(max_length=200)
-    LitAuthor = models.ManyToManyField(to="Researcher",null=True)
     ReadNum = models.IntegerField(default=0)
     LitUrl = models.CharField(max_length=200,default=0)
     CollectionNum = models.IntegerField(default=0)
@@ -62,10 +64,13 @@ class Patent(models.Model):
     PatentAbstract = models.CharField(max_length=2000,null=True)#摘要
     LitType = models.IntegerField(default=2)#学术成果种类，默认为2，表示专利
 
+class Patent_Author(models.Model):
+    PatentId = models.ForeignKey('Patent',to_field='LitId',on_delete=models.CASCADE)
+    ResearcherId = models.ForeignKey('Researcher',to_field='ResId',on_delete=models.CASCADE)
+
 class Project(models.Model):
     LitId = models.CharField(max_length=50,unique=True)
     LitTitle = models.CharField(max_length=200)
-    LitAuthor = models.ManyToManyField(to="Researcher",null=True)
     ReadNum = models.IntegerField(default=0)
     LitUrl = models.CharField(max_length=200,default=0)
     CollectionNum = models.IntegerField(default=0)
@@ -81,6 +86,10 @@ class Project(models.Model):
     SubjectHeadingCN = models.CharField(max_length=100,null=True)#项目中文题目
     SubjectHeadingEN = models.CharField(max_length=200,null=True)#项目英文题目
     LitType = models.IntegerField(default=3)#学术成果种类，默认为3，表示项目
+
+class Project_Author(models.Model):
+    ProjectId = models.ForeignKey('Project',to_field='LitId',on_delete=models.CASCADE)
+    ResearcherId = models.ForeignKey('Researcher',to_field='ResId',on_delete=models.CASCADE)
 
 class Concern(models.Model):
     UserEmail = models.ForeignKey('HubUser',to_field='UserEmail',on_delete=models.CASCADE)
@@ -118,7 +127,7 @@ class ChatFriends(models.Model):
     Unread = models.IntegerField(default=0)
 
 class Administrators(models.Model):
-    AdmEmail = models.CharField(max_length=50)
+    AdmEmail = models.CharField(max_length=50,primary_key=True)
     AdmPassword = models.CharField(max_length=20)
 
 class Browse(models.Model):
@@ -142,7 +151,7 @@ class Appeal(models.Model):
     AppealTime = models.DateTimeField(auto_now_add=True)
 
 class Review(models.Model):
-    ReviewContent = models.CharField(max_length=2000)
+    ReviewPath = models.CharField(max_length=100)
     UserEmail = models.ForeignKey('HubUser',to_field='UserEmail',on_delete=models.CASCADE)
     UploadTime = models.DateTimeField(auto_now_add=True)
     ReviewState = models.BooleanField()
