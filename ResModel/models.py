@@ -35,15 +35,15 @@ class Paper(models.Model):
     PaperId = models.CharField(max_length=50,primary_key=True)
     PaperTitle = models.CharField(max_length=200)
     ReadNum = models.IntegerField(default=0)
-    PaperUrl = models.CharField(max_length=200,default=0)
+    PaperUrl = models.CharField(max_length=2000,default=0)
     CollectionNum = models.IntegerField(default=0)
     IsUserUpload = models.BooleanField(default=False)
-    PaperTime = models.DateField(auto_now_add=False,null=True)#发表时间
-    PaperAbstract = models.CharField(max_length=2000,null=True)#摘要
-    PaperKeywords = models.CharField(max_length=200,null=True)#关键字
+    PaperTime = models.IntegerField(null=True)#发表时间
+    PaperAbstract = models.CharField(max_length=5000,null=True)#摘要
+    PaperKeywords = models.CharField(max_length=2000,null=True)#关键字
     PaperCitation = models.IntegerField(null=True)#引用数量
-    PaperStart = models.CharField(max_length=20,null=True)#论文开始页
-    PaperEnd = models.CharField(max_length=20,null=True)#论文结束页
+    PaperStart = models.IntegerField(null=True)#论文开始页
+    PaperEnd = models.IntegerField(null=True)#论文结束页
     PaperLang = models.CharField(max_length=20,null=True)#语言
     PaperVolume = models.CharField(max_length=50,null=True) #册
     PaperIssue = models.CharField(max_length=50,null=True)#期号
