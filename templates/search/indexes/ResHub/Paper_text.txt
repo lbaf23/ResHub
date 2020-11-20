@@ -1,0 +1,9 @@
+{{ object.LitId }}
+{{ object.LitTitle }}
+{{ object.PaperTime }}
+{{ object.PaperCitation }}
+{{ object.PaperLang }}
+{{ object.PaperIssue }}
+{{ object.PaperPublisher }}
+{{ object.PaperType }}
+{{ object.LitType }}
