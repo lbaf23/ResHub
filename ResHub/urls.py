@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 
 from rest_framework import routers
-from ResHub.elsearch.search_paper import search_keywords
+from ResModel.views import PaperSearchViewSet
 
 from ResHub.controller import Chatting
 from ResHub.controller import Login, Browse, Portal
@@ -40,8 +40,10 @@ urlpatterns = [
     #LYC
     path('addCollection',Collection.add_collection),
     path('cancelCollection',Collection.del_collection),
+
+
 ]
 
-router = routers.DefaultRouter()
-router.register('paper/search',search_keywords, basename='paper_search')
+router = routers.SimpleRouter()
+router.register('paper/search', PaperSearchViewSet, basename='paper_search')
 urlpatterns += router.urls

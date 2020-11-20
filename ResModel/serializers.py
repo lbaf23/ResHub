@@ -9,7 +9,6 @@ class PaperSerializer(serializers.ModelSerializer):
         model = Paper
         fields = { 'LitId', 'LitTitle', 'PaperTime', 'PaperCitation', 'PaperLang',
                    'PaperIssue', 'PaperPublisher', 'PaperType', 'LitType' }
-
 class PaperIndexSerializer(HaystackSerializer):
     # 索引结果数据序列化器
     object = PaperSerializer(read_only=True)
