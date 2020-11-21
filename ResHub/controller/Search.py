@@ -27,6 +27,59 @@ def decode_search_words(s1):
         })
     return li
 
+def search_el_indexes(key):
+    res = SearchQuerySet()
+    for w in key:
+        if w['method'] == 'and':
+            if w['word'] == 'PaperKeywords':
+                res = res.filter_and(PaperKeywords=w['value'])
+            elif w['word'] == 'PaperTitle':
+                res = res.filter_and(PaperKeywords=w['value'])
+            elif w['word'] == 'PaperAbstract':
+                res = res.filter_and(PaperAbstract=w['value'])
+            elif w['word'] == 'PaperAuthors':
+                res = res.filter_and(PaperAuthors=w['value'])
+            elif w['word'] == 'PaperOrg':
+                res = res.filter_or(PaperOrg=w['value'])
+
+        elif w['method'] == 'or':
+            if w['word'] == 'PaperKeywords':
+                res = res.filter_or(PaperKeywords=w['value'])
+            elif w['word'] == 'PaperTitle':
+                res = res.filter_or(PaperKeywords=w['value'])
+            elif w['word'] == 'PaperAbstract':
+                res = res.filter_or(PaperAbstract=w['value'])
+            elif w['word'] == 'PaperAuthors':
+                res = res.filter_or(PaperAuthors=w['value'])
+            elif w['word'] == 'PaperOrg':
+                res = res.filter_or(PaperOrg=w['value'])
+
+        elif w['method'] == 'not':
+            if w['word'] == 'PaperKeywords':
+                res = res.filter_not(PaperKeywords=w['value'])
+            elif w['word'] == 'PaperTitle':
+                res = res.filter_not(PaperKeywords=w['value'])
+            elif w['word'] == 'PaperAbstract':
+                res = res.filter_not(PaperAbstract=w['value'])
+            elif w['word'] == 'PaperAuthors':
+                res = res.filter_or(PaperAuthors=w['value'])
+            elif w['word'] == 'PaperOrg':
+                res = res.filter_or(PaperOrg=w['value'])
+
+        else:
+            if w['word'] == 'PaperKeywords':
+                res = res.filter(PaperKeywords=w['value'])
+            elif w['word'] == 'PaperTitle':
+                res = res.filter(PaperKeywords=w['value'])
+            elif w['word'] == 'PaperAbstract':
+                res = res.filter(PaperAbstract=w['value'])
+            elif w['word'] == 'PaperAuthors':
+                res = res.filter_or(PaperAuthors=w['value'])
+            elif w['word'] == 'PaperOrg':
+                res = res.filter_or(PaperOrg=w['value'])
+
+    return res
+
 def search_words(request):
     words = request.GET.get('words')
     page = request.GET.get('page') # 页数
@@ -37,42 +90,11 @@ def search_words(request):
 
     print(str(key))
 
-    # 缓存没有，搜索
-    res = SearchQuerySet()
-    for w in key:
-        if w['method'] == 'and':
-            if w['word'] == 'PaperKeywords':
-                res = res.filter_and(PaperKeywords=w['value'])
-            elif w['word'] == 'PaperTitle':
-                res = res.filter_and(PaperKeywords=w['value'])
-            elif w['word'] == 'PaperAbstract':
-                res = res.filter_and(PaperAbstract=w['value'])
+    # search from redis
+    # ...
 
-        elif w['method'] == 'or':
-            if w['word'] == 'PaperKeywords':
-                res = res.filter_or(PaperKeywords=w['value'])
-            elif w['word'] == 'PaperTitle':
-                res = res.filter_or(PaperKeywords=w['value'])
-            elif w['word'] == 'PaperAbstract':
-                res = res.filter_or(PaperAbstract=w['value'])
-
-        elif w['method'] == 'not':
-            if w['word'] == 'PaperKeywords':
-                res = res.filter_not(PaperKeywords=w['value'])
-            elif w['word'] == 'PaperTitle':
-                res = res.filter_not(PaperKeywords=w['value'])
-            elif w['word'] == 'PaperAbstract':
-                res = res.filter_not(PaperAbstract=w['value'])
-
-        else:
-            if w['word'] == 'PaperKeywords':
-                res = res.filter(PaperKeywords=w['value'])
-            elif w['word'] == 'PaperTitle':
-                res = res.filter(PaperKeywords=w['value'])
-            elif w['word'] == 'PaperAbstract':
-                res = res.filter(PaperAbstract=w['value'])
-
-
+    # search by elasticsearch index
+    res = search_el_indexes(key)
     # order_by
 
     num = res.count()
@@ -88,3 +110,4 @@ def search_words(request):
         l.append(j)
 
     return JsonResponse({'num':num, 'result': l })
+
