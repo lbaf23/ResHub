@@ -23,6 +23,7 @@ from ResHub.controller import Chatting
 from ResHub.controller import Login, Browse, Portal
 from ResHub.personal_portal import getPersonalPortal
 from ResHub.controller import Collection
+from ResHub.controller import Search
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -41,6 +42,7 @@ urlpatterns = [
     path('addCollection',Collection.add_collection),
     path('cancelCollection',Collection.del_collection),
 
+    path('searchKeywords', Search.search_keywords),
 
 ]
 
