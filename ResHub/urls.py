@@ -42,7 +42,7 @@ urlpatterns = [
     path('addCollection',Collection.add_collection),
     path('cancelCollection',Collection.del_collection),
 
-    path('searchKeywords', Search.search_keywords),
+    path('searchWords', Search.search_words),
 
 ]
 
