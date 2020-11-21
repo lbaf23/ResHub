@@ -23,12 +23,11 @@ class Researcher(models.Model):
     ResEmail = models.CharField(max_length=50,null=True,unique=True)
     ResField = models.CharField(max_length=50,null=True)
     ResCompany = models.ForeignKey('Institution',to_field='id',on_delete=models.CASCADE,null=True)
-    ResIntroduction = models.CharField(max_length=50,null=True)
+    ResIntroduction = models.CharField(max_length=2000,null=True)
     LiteratureNum = models.IntegerField(default=0)#发表文章数量
     CitedNum = models.IntegerField(null=True)#文章被引用次数
     VisitNum = models.IntegerField(default=0)#浏览次数
     ConcernNum = models.IntegerField(default=0)#关注人数
-    ResHIndex = models.IntegerField(null=True)
     ResPubs = models.CharField(max_length=2000,null=True)#作者发表的文章
 
 class Paper(models.Model):
@@ -64,25 +63,26 @@ class PaperReference(models.Model):
 
 class Patent(models.Model):
     PatentId = models.CharField(max_length=50,unique=True)
-    PatentTitle = models.CharField(max_length=200)
+    PatentTitle = models.CharField(max_length=1000)
     ReadNum = models.IntegerField(default=0)
-    PatentUrl = models.CharField(max_length=200,default=0)
+    PatentUrl = models.CharField(max_length=8000,default=0)
     CollectionNum = models.IntegerField(default=0)
     IsUserUpload = models.BooleanField(default=False)
-    PatentAbstract = models.CharField(max_length=2000,null=True)#摘要
+    PatentAbstract = models.CharField(max_length=8000,null=True)#摘要
 
 class PatentAuthor(models.Model):
     PatentId = models.ForeignKey('Patent',to_field='PatentId',on_delete=models.CASCADE)
     ResearcherId = models.ForeignKey('Researcher',to_field='ResId',on_delete=models.CASCADE)
+    ResearcherRank = models.IntegerField(null=True)
 
 class Project(models.Model):
     ProjectId = models.CharField(max_length=50,unique=True)
-    ProjectTitle = models.CharField(max_length=200)
+    ProjectTitle = models.CharField(max_length=1000)
     ReadNum = models.IntegerField(default=0)
-    ProjectUrl = models.CharField(max_length=200,default=0)
+    ProjectUrl = models.CharField(max_length=8000,default=0)
     CollectionNum = models.IntegerField(default=0)
     IsUserUpload = models.BooleanField(default=False)
-    GrantYear = models.DateField(auto_now_add=False,null=True)#发表年份
+    GrantYear =models.IntegerField(null=True)#发表年份
     Subject = models.CharField(max_length=100,null=True)#主题
     ProjectLeader = models.CharField(max_length=50,null=True)#项目组长
     ProjectLeaderTitle = models.CharField(max_length=50,null=True)#项目组长头衔
@@ -90,12 +90,13 @@ class Project(models.Model):
     Funding = models.CharField(max_length=20,null=True)#项目基金
     ProjectCategory = models.CharField(max_length=50,null=True)#项目类别
     StudyPeriod = models.CharField(max_length=100,null=True)#研究期
-    SubjectHeadingCN = models.CharField(max_length=100,null=True)#项目中文题目
-    SubjectHeadingEN = models.CharField(max_length=200,null=True)#项目英文题目
+    SubjectHeadingCN = models.CharField(max_length=1000,null=True)#项目中文题目
+    SubjectHeadingEN = models.CharField(max_length=1000,null=True)#项目英文题目
 
 class ProjectAuthor(models.Model):
     ProjectId = models.ForeignKey('Project',to_field='ProjectId',on_delete=models.CASCADE)
     ResearcherId = models.ForeignKey('Researcher',to_field='ResId',on_delete=models.CASCADE)
+    ResearcherRank = models.IntegerField(null=True)
 
 class Concern(models.Model):
     UserEmail = models.ForeignKey('HubUser',to_field='UserEmail',on_delete=models.CASCADE)
