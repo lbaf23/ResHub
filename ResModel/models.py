@@ -33,9 +33,9 @@ class Researcher(models.Model):
 class Paper(models.Model):
     PaperId = models.CharField(max_length=50,primary_key=True)
     PaperTitle = models.CharField(max_length=1000)
-    ReadNum = models.IntegerField(default=0)
+    ReadNum = models.IntegerField(default=0) #阅读次数
     PaperUrl = models.TextField(max_length=8000,null=True)
-    CollectionNum = models.IntegerField(default=0)
+    CollectionNum = models.IntegerField(default=0) #收藏次数
     IsUserUpload = models.BooleanField(default=False)
     PaperTime = models.IntegerField(null=True)#发表时间
     PaperAbstract = models.TextField(max_length=8000,null=True)#摘要

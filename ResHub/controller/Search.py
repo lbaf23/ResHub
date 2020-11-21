@@ -31,6 +31,7 @@ def search_words(request):
     words = request.GET.get('words')
     page = request.GET.get('page') # 页数
     per_page = request.GET.get('PerPage') #每页的数量
+    order_by = request.GET.get('orderBy')
 
     key = decode_search_words(words)
 
@@ -44,30 +45,38 @@ def search_words(request):
                 res = res.filter_and(PaperKeywords=w['value'])
             elif w['word'] == 'PaperTitle':
                 res = res.filter_and(PaperKeywords=w['value'])
+            elif w['word'] == 'PaperAbstract':
+                res = res.filter_and(PaperAbstract=w['value'])
 
         elif w['method'] == 'or':
             if w['word'] == 'PaperKeywords':
                 res = res.filter_or(PaperKeywords=w['value'])
             elif w['word'] == 'PaperTitle':
                 res = res.filter_or(PaperKeywords=w['value'])
+            elif w['word'] == 'PaperAbstract':
+                res = res.filter_or(PaperAbstract=w['value'])
 
         elif w['method'] == 'not':
             if w['word'] == 'PaperKeywords':
                 res = res.filter_not(PaperKeywords=w['value'])
             elif w['word'] == 'PaperTitle':
                 res = res.filter_not(PaperKeywords=w['value'])
+            elif w['word'] == 'PaperAbstract':
+                res = res.filter_not(PaperAbstract=w['value'])
 
         else:
             if w['word'] == 'PaperKeywords':
                 res = res.filter(PaperKeywords=w['value'])
             elif w['word'] == 'PaperTitle':
                 res = res.filter(PaperKeywords=w['value'])
+            elif w['word'] == 'PaperAbstract':
+                res = res.filter(PaperAbstract=w['value'])
 
 
+    # order_by
 
-
-    res = res.values('object')
     num = res.count()
+    res = res.values('object')[(int(page)-1)*int(per_page) : int(page)*int(per_page)]
 
     l = []
 
