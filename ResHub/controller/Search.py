@@ -9,22 +9,28 @@ import re
 # 检索式解码
 def decode_search_words(s1):
     s1 = re.sub(r"\s+", "", s1)
-    s = s1.split(';')
+    s = s1.split(',')
     s.sort()
     li = []
     for w in s:
-        m1 = w.index(':')
-        m2 = w.find('-')
-        word = w[:m1]
-        if m2 != -1:
-            value = w[m1+1:m2]
-            method = w[m2+1:]
-        else:
-            value = w[m1+1:]
-            method = ''
-        li.append({
-            'word': word, 'value': value, 'method': method
-        })
+        try:
+            m1 = w.index(':')
+            m2 = w.find('-')
+            word = w[:m1]
+            if m2 != -1:
+                value = w[m1+1:m2]
+                method = w[m2+1:]
+            else:
+                value = w[m1+1:]
+                method = ''
+            if method == '':
+                li.insert(0, {'word': word, 'value': value, 'method': method})
+            else:
+                li.append({
+                    'word': word, 'value': value, 'method': method
+                })
+        except Exception:
+            pass
     return li
 
 def search_el_indexes(key):
@@ -34,19 +40,19 @@ def search_el_indexes(key):
             if w['word'] == 'PaperKeywords':
                 res = res.filter_and(PaperKeywords=w['value'])
             elif w['word'] == 'PaperTitle':
-                res = res.filter_and(PaperKeywords=w['value'])
+                res = res.filter_and(PaperTitle=w['value'])
             elif w['word'] == 'PaperAbstract':
                 res = res.filter_and(PaperAbstract=w['value'])
             elif w['word'] == 'PaperAuthors':
                 res = res.filter_and(PaperAuthors=w['value'])
             elif w['word'] == 'PaperOrg':
-                res = res.filter_or(PaperOrg=w['value'])
+                res = res.filter_and(PaperOrg=w['value'])
 
         elif w['method'] == 'or':
             if w['word'] == 'PaperKeywords':
                 res = res.filter_or(PaperKeywords=w['value'])
             elif w['word'] == 'PaperTitle':
-                res = res.filter_or(PaperKeywords=w['value'])
+                res = res.filter_or(PaperTitle=w['value'])
             elif w['word'] == 'PaperAbstract':
                 res = res.filter_or(PaperAbstract=w['value'])
             elif w['word'] == 'PaperAuthors':
@@ -58,25 +64,25 @@ def search_el_indexes(key):
             if w['word'] == 'PaperKeywords':
                 res = res.filter_not(PaperKeywords=w['value'])
             elif w['word'] == 'PaperTitle':
-                res = res.filter_not(PaperKeywords=w['value'])
+                res = res.filter_not(PaperTitle=w['value'])
             elif w['word'] == 'PaperAbstract':
                 res = res.filter_not(PaperAbstract=w['value'])
             elif w['word'] == 'PaperAuthors':
-                res = res.filter_or(PaperAuthors=w['value'])
+                res = res.filter_not(PaperAuthors=w['value'])
             elif w['word'] == 'PaperOrg':
-                res = res.filter_or(PaperOrg=w['value'])
+                res = res.filter_not(PaperOrg=w['value'])
 
         else:
             if w['word'] == 'PaperKeywords':
                 res = res.filter(PaperKeywords=w['value'])
             elif w['word'] == 'PaperTitle':
-                res = res.filter(PaperKeywords=w['value'])
+                res = res.filter(PaperTitle=w['value'])
             elif w['word'] == 'PaperAbstract':
                 res = res.filter(PaperAbstract=w['value'])
             elif w['word'] == 'PaperAuthors':
-                res = res.filter_or(PaperAuthors=w['value'])
+                res = res.filter(PaperAuthors=w['value'])
             elif w['word'] == 'PaperOrg':
-                res = res.filter_or(PaperOrg=w['value'])
+                res = res.filter(PaperOrg=w['value'])
 
     return res
 
