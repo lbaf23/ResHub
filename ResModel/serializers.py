@@ -10,6 +10,8 @@ class PaperSerializer(serializers.ModelSerializer):
         fields = (
             'PaperId',
             'PaperTitle',
+            'PaperAuthors',
+            'PaperOrg',
             'ReadNum',
             'PaperUrl',
             'CollectionNum',
@@ -41,6 +43,8 @@ class PaperIndexSerializer(HaystackSerializer):
             'text',
             'object',
             'PaperAbstract',
-            'PaperFos',
-            'PaperKeywords'
+            'PaperKeywords',
+            'PaperAuthors',
+            'PaperTitle',
+            'PaperOrg'
         )

@@ -6,8 +6,10 @@ class PaperIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
 
     PaperAbstract = indexes.CharField(model_attr='PaperAbstract', null=True)
-    PaperFos = indexes.CharField(model_attr='PaperFos', null=True)
     PaperKeywords = indexes.CharField(model_attr='PaperKeywords', null=True)
+    PaperAuthors = indexes.CharField(model_attr='PaperAuthors', null=True)
+    PaperTitle = indexes.CharField(model_attr='PaperTitle', null=True)
+    PaperOrg = indexes.CharField(model_attr='PaperOrg', null=True)
 
     def get_model(self):
         # 返回建立索引的模型 数据库表
