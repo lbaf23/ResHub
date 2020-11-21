@@ -56,6 +56,7 @@ class Paper(models.Model):
 class PaperAuthor(models.Model):
     PaperId = models.ForeignKey('Paper',to_field='PaperId',on_delete=models.CASCADE)
     ResearcherId = models.ForeignKey('Researcher',to_field='ResId',on_delete=models.CASCADE)
+    ResearcherRank = models.IntegerField(null=True)
 
 class PaperReference(models.Model):
     PaperId = models.ForeignKey('Paper',to_field='PaperId',related_name='TPaperId',on_delete=models.CASCADE)
