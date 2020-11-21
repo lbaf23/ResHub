@@ -33,6 +33,8 @@ class Researcher(models.Model):
 class Paper(models.Model):
     PaperId = models.CharField(max_length=50,primary_key=True)
     PaperTitle = models.CharField(max_length=1000)
+    PaperAuthors = models.CharField(max_length=500, null=True)
+    PaperOrg = models.CharField(max_length=1000, null=True)
     ReadNum = models.IntegerField(default=0) #阅读次数
     PaperUrl = models.TextField(max_length=8000,null=True)
     CollectionNum = models.IntegerField(default=0) #收藏次数
