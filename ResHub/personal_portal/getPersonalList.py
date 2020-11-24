@@ -30,7 +30,22 @@ def getPersonalList(request):
                     ResearcherId=researcher_id)
                 papers = []
                 for i in paper_author:
-                    paper_author
+                    paperid = i.PaperId
+                    paper = Paper.objects.filter(PaperId=paperid)
+                    list = {}
+                    list["type"] = 2
+                    list["id"] = paper.PaperId
+                    list["from"] = paper.PaperUrl
+                    list["PaperTitle"] = paper.PaperTitle
+                    list["paperDate"] = paper.PaperTime
+                    list["paperQuote"] = paper.PaperCitation
+                    paper.append(list)
+                res["patents"] = patents
+                res["papers"] = papers
+                return JsonResponse({
+                    "status": 1,
+                    "message": res
+                })
             else:
                 return JsonResponse({
                     "status": 3,
