@@ -1,0 +1,2 @@
+{{ object.PaperTitle }}
+{{ object.PaperKeywords }}
