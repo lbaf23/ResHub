@@ -67,10 +67,11 @@ class Patent(models.Model):
     PatentId = models.CharField(max_length=50,unique=True)
     PatentTitle = models.CharField(max_length=1000)
     ReadNum = models.IntegerField(default=0)
-    PatentUrl = models.CharField(max_length=8000,default=0)
+    PatentUrl = models.TextField(max_length=8000,default=0)
     CollectionNum = models.IntegerField(default=0)
     IsUserUpload = models.BooleanField(default=False)
-    PatentAbstract = models.CharField(max_length=8000,null=True)#摘要
+    PatentAbstract = models.TextField(max_length=8000,null=True)#摘要
+    PatentDate = models.DateField(null=True)
 
 class PatentAuthor(models.Model):
     PatentId = models.ForeignKey('Patent',to_field='PatentId',on_delete=models.CASCADE)
@@ -81,7 +82,7 @@ class Project(models.Model):
     ProjectId = models.CharField(max_length=50,unique=True)
     ProjectTitle = models.CharField(max_length=1000)
     ReadNum = models.IntegerField(default=0)
-    ProjectUrl = models.CharField(max_length=8000,default=0)
+    ProjectUrl = models.TextField(max_length=8000,default=0)
     CollectionNum = models.IntegerField(default=0)
     IsUserUpload = models.BooleanField(default=False)
     GrantYear =models.IntegerField(null=True)#发表年份
