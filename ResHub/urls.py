@@ -38,6 +38,9 @@ urlpatterns = [
     path('CatchPortal', Portal.catch_portal),
     path('getMyConcern', Concern.get_my_concern),
     path('cancelConcern', Concern.cancel_concern),
+    path('newPortal',Portal.new_portal),
+    path('appealPortal',Portal.appeal_portal),
+
 
     # Matrix.L
     path('temp', temp.temp),
