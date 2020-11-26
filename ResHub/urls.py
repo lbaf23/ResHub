@@ -21,7 +21,8 @@ from ResModel.views import PaperSearchViewSet
 
 from ResHub.controller import Chatting
 from ResHub.controller import Login, Browse, Portal
-from ResHub.personal_portal import getPersonalPortal, getPersonalList
+from ResHub.personal_portal import getPersonalPortal, getPersonalList, temp
+from ResHub.institutions import getResearchInstitute, getDaGongRen
 from ResHub.controller import Collection
 from ResHub.controller import Search
 
@@ -36,8 +37,11 @@ urlpatterns = [
     path('CatchPortal', Portal.CatchPortal),
 
     # Matrix.L
+    path('temp', temp.temp),
     path('getPersonalPortal', getPersonalPortal.getPersonalPortal),
     path('getPersonalList', getPersonalList.getPersonalList),
+    path('getResearchInstitute', getResearchInstitute.getResearchInstitute),
+    path('getDaGongRen', getDaGongRen.getDaGongRen),
 
     # LYC
     path('addCollection', Collection.add_collection),
