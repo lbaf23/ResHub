@@ -8,8 +8,10 @@ def temp(request):
     res['1'] = list1
     res['2'] = list2
     list = {}
-    node = {}
+    node = []
     node.append(list1)
     node.append(list2)
-    res.append(node)
-    return JsonResponse(res)
+    res["list"] = node
+    ans = {}
+    ans["ans"] = res
+    return JsonResponse(ans)
