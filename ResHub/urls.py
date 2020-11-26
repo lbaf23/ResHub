@@ -20,7 +20,7 @@ from rest_framework import routers
 from ResModel.views import PaperSearchViewSet
 
 from ResHub.controller import Chatting
-from ResHub.controller import Login, Browse, Portal
+from ResHub.controller import Login, Browse, Portal, Concern
 from ResHub.personal_portal import getPersonalPortal, getPersonalList
 from ResHub.controller import Collection
 from ResHub.controller import Search
@@ -32,8 +32,11 @@ urlpatterns = [
     path('recentUsers', Chatting.get_recent_friends),
     path('getChats', Chatting.get_chats),
 
-    path('BrowseHistory', Browse.BrowseHistory),
-    path('CatchPortal', Portal.CatchPortal),
+    # WXJ
+    path('BrowseHistory', Browse.browse_history),
+    path('CatchPortal', Portal.catch_portal),
+    path('getMyConcern', Concern.get_my_concern),
+    path('cancelConcern', Concern.cancel_concern),
 
     # Matrix.L
     path('getPersonalPortal', getPersonalPortal.getPersonalPortal),

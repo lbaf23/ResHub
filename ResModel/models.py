@@ -18,17 +18,17 @@ class Researcher(models.Model):
     ResId = models.CharField(max_length=50,primary_key=True)
     IsClaim = models.BooleanField()
     UserEmail = models.OneToOneField('HubUser',to_field='UserEmail',on_delete=models.CASCADE,null=True)
-    ResName = models.CharField(max_length=50)
-    NormalizedName = models.CharField(max_length=50,null=True)
-    ResEmail = models.CharField(max_length=50,null=True,unique=True)
-    ResField = models.CharField(max_length=50,null=True)
-    ResCompany = models.ForeignKey('Institution',to_field='id',on_delete=models.CASCADE,null=True)
-    ResIntroduction = models.CharField(max_length=2000,null=True)
-    LiteratureNum = models.IntegerField(default=0)#发表文章数量
-    CitedNum = models.IntegerField(null=True)#文章被引用次数
-    VisitNum = models.IntegerField(default=0)#浏览次数
-    ConcernNum = models.IntegerField(default=0)#关注人数
-    ResPubs = models.CharField(max_length=2000,null=True)#作者发表的文章
+    # ResName = models.CharField(max_length=50)
+    # NormalizedName = models.CharField(max_length=50,null=True)
+    # ResEmail = models.CharField(max_length=50,null=True,unique=True)
+    # ResField = models.CharField(max_length=50,null=True)
+    # ResCompany = models.ForeignKey('Institution',to_field='id',on_delete=models.CASCADE,null=True)
+    # ResIntroduction = models.CharField(max_length=2000,null=True)
+    # LiteratureNum = models.IntegerField(default=0)#发表文章数量
+    # CitedNum = models.IntegerField(null=True)#文章被引用次数
+    # VisitNum = models.IntegerField(default=0)#浏览次数
+    # ConcernNum = models.IntegerField(default=0)#关注人数
+    # ResPubs = models.CharField(max_length=2000,null=True)#作者发表的文章
 
 class Paper(models.Model):
     PaperId = models.CharField(max_length=50,primary_key=True)
