@@ -40,10 +40,11 @@ def catch_portal(request):
                 "status": 3,
                 "message": "该门户不存在"
             })
-    return JsonResponse({
-        "status": 4,
-        "message": "请求方法错误"
-    })
+    else:
+        return JsonResponse({
+            "status": 4,
+            "message": "请求方法错误"
+        })
 
 
 def new_portal(request):
