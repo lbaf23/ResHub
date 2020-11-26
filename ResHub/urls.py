@@ -42,6 +42,7 @@ urlpatterns = [
     # LYC
     path('addCollection', Collection.add_collection),
     path('cancelCollection', Collection.del_collection),
+    path('getMyCollection',Collection.get_collection),
 
     path('searchWords', Search.search_words),
 

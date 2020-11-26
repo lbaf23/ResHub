@@ -72,6 +72,7 @@ class Patent(models.Model):
     IsUserUpload = models.BooleanField(default=False)
     PatentAbstract = models.TextField(max_length=8000,null=True)#摘要
     PatentDate = models.DateField(null=True)
+    PatentAuthor = models.CharField(max_length=500, null=True)
 
 class PatentAuthor(models.Model):
     PatentId = models.ForeignKey('Patent',to_field='PatentId',on_delete=models.CASCADE)
@@ -95,6 +96,8 @@ class Project(models.Model):
     StudyPeriod = models.CharField(max_length=100,null=True)#研究期
     SubjectHeadingCN = models.CharField(max_length=1000,null=True)#项目中文题目
     SubjectHeadingEN = models.CharField(max_length=1000,null=True)#项目英文题目
+    ProjectAbstract = models.TextField(max_length=8000,null=True)#摘要
+    ProjectAuthor = models.CharField(max_length=500, null=True)
 
 class ProjectAuthor(models.Model):
     ProjectId = models.ForeignKey('Project',to_field='ProjectId',on_delete=models.CASCADE)
