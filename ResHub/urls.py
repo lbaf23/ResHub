@@ -23,6 +23,7 @@ from ResHub.controller import Chatting
 from ResHub.controller import Login, Browse, Portal, Concern
 from ResHub.personal_portal import getPersonalPortal, getPersonalList, temp
 from ResHub.institutions import getResearchInstitute, getDaGongRen
+from ResHub.history import getSearchRecord
 from ResHub.controller import Collection
 from ResHub.controller import Search
 
@@ -33,13 +34,13 @@ urlpatterns = [
     path('recentUsers', Chatting.get_recent_friends),
     path('getChats', Chatting.get_chats),
 
-    #WXJ
+    # WXJ
     path('BrowseHistory', Browse.browse_history),
     path('CatchPortal', Portal.catch_portal),
     path('getMyConcern', Concern.get_my_concern),
     path('cancelConcern', Concern.cancel_concern),
-    path('newPortal',Portal.new_portal),
-    path('appealPortal',Portal.appeal_portal),
+    path('newPortal', Portal.new_portal),
+    path('appealPortal', Portal.appeal_portal),
 
 
     # Matrix.L
@@ -48,13 +49,14 @@ urlpatterns = [
     path('getPersonalList', getPersonalList.getPersonalList),
     path('getResearchInstitute', getResearchInstitute.getResearchInstitute),
     path('getDaGongRen', getDaGongRen.getDaGongRen),
+    path('getSearchRecord', getSearchRecord.getSearchRecord),
 
     # LYC
     path('addCollection', Collection.add_collection),
     path('cancelCollection', Collection.del_collection),
-    path('getMyCollection',Collection.get_collection),
-    path('addBrowseHistory',Browse.add_browse_history),
-    path('addViewSum',Browse.add_view_num),
+    path('getMyCollection', Collection.get_collection),
+    path('addBrowseHistory', Browse.add_browse_history),
+    path('addViewSum', Browse.add_view_num),
 
     path('searchWords', Search.search_words),
 
