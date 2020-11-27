@@ -38,5 +38,3 @@ def send_email(receive):
 def get_code():
     return random.randint(111111, 999999)
 
-
-send_email("985812032@qq.com")
