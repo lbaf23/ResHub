@@ -58,7 +58,6 @@ def add_collection(request):
     user_id = request.GET.get('userId')
     col_id = request.GET.get('paperId')
     col_type = int(request.GET.get('type'))
-    print(user_id,col_id,col_type)
     succeed = True
     user = HubUser.objects.get(UserEmail=user_id)
     if col_type == 1:

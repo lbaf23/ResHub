@@ -53,6 +53,8 @@ urlpatterns = [
     path('addCollection', Collection.add_collection),
     path('cancelCollection', Collection.del_collection),
     path('getMyCollection',Collection.get_collection),
+    path('addBrowseHistory',Browse.add_browse_history),
+    path('addViewSum',Browse.add_view_num),
 
     path('searchWords', Search.search_words),
 
