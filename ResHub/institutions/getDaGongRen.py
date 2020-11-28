@@ -7,19 +7,30 @@ def getDaGongRen(request):
         if request.method == "GET":
             instituteId = request.GET.get('instituteId')
             if instituteId is not None:
-                institute = Institution.objects.filter(id=instituteId)
+                institute = Institution.objects.filter(id=instituteId).first()
+                if(institute is None):
+                    return JsonResponse({
+                        "status": 0,
+                        "message": "Nothing"
+                    })
                 instituteid = institute.id
-                researchers = Researcher.objects.filter(ResCompany=instituteid)
+                researchers = Researcher.objects.filter(
+                    ResCompany=instituteid)
+                if(researchers.__len__() == 0):
+                    return JsonResponse({
+                        "status": 0,
+                        "message": "Nothing"
+                    })
                 list = []
                 for i in researchers:
                     temp = {}
                     temp["realName"] = i.ResName
-                    temp["personCommunication"] = i.UserEmail
+                    temp["personCommunication"] = i.UserEmail.UserEmail
                     temp["personQuote"] = i.CitedNum
                     list.append(temp)
 
                 res = {}
-                res["sum"] = researchers.len()
+                res["len"] = researchers.__len__()
                 res["list"] = list
 
                 return JsonResponse({

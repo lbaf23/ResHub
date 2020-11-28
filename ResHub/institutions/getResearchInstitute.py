@@ -7,14 +7,19 @@ def getResearchInstitute(request):
         if request.method == "GET":
             instituteId = request.GET.get('instituteId')
             if instituteId is not None:
-                institute = Institution.objects.filter(id=instituteId)
+                institute = Institution.objects.filter(id=instituteId).first()
+                if(institute is None):
+                    return JsonResponse({
+                        "status": 0,
+                        "message": "Nothing"
+                    })
                 instituteid = institute.id
                 researchers = Researcher.objects.filter(ResCompany=instituteid)
                 res = {}
                 res["instituteName"] = institute.InsName
                 res["InsField"] = institute.InsField
                 res["InsIntroduction"] = institute.InsIntroduction
-                res["hold"] = researchers.len()
+                res["hold"] = researchers.__len__()
                 return JsonResponse({
                     "status": 1,
                     "message": res

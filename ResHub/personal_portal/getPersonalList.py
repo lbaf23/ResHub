@@ -13,12 +13,12 @@ def getPersonalList(request):
                 len = 0
                 res = {}
                 # 专利
-                patent_author = PaperAuthor.objects.filter(
+                patent_author = PatentAuthor.objects.filter(
                     ResearcherId=researcher_id)
                 patents = []
                 for i in patent_author:
-                    patentid = i.PatentId
-                    patent = Patent.objects.filter(PatentId=patentid)
+                    patentid = i.PatentId.PatentId
+                    patent = Patent.objects.filter(PatentId=patentid).first()
                     list = {}
                     list["type"] = 1
                     list["id"] = patent.PatentId
@@ -30,8 +30,8 @@ def getPersonalList(request):
                     ResearcherId=researcher_id)
                 papers = []
                 for i in paper_author:
-                    paperid = i.PaperId
-                    paper = Paper.objects.filter(PaperId=paperid)
+                    paperid = i.PaperId.PaperId
+                    paper = Paper.objects.filter(PaperId=paperid).first()
                     list = {}
                     list["type"] = 2
                     list["id"] = paper.PaperId
@@ -39,9 +39,11 @@ def getPersonalList(request):
                     list["PaperTitle"] = paper.PaperTitle
                     list["paperDate"] = paper.PaperTime
                     list["paperQuote"] = paper.PaperCitation
-                    paper.append(list)
+                    papers.append(list)
 
+                res["patents_len"] = patents.__len__()
                 res["patents"] = patents
+                res["papers_len"] = papers.__len__()
                 res["papers"] = papers
                 return JsonResponse({
                     "status": 1,

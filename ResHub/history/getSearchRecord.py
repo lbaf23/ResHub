@@ -9,13 +9,19 @@ def getSearchRecord(request):
             if userId is not None:
                 res = {}
                 list = []
-                Search = Search.objects.filter(UserEmail=userId)
-                for i in Search:
+                search = Search.objects.filter(UserEmail=userId)
+                len = search.__len__()
+                if(len == 0):
+                    return JsonResponse({
+                        "status": 0,
+                        "message": "Nothing"
+                    })
+                for i in search:
                     temp = {}
-                    temp.append(i.SearchContent)
-                    temp.append(i.SearchTime)
+                    temp['SearchContent'] = i.SearchContent
+                    temp['SearchTime'] = str(i.SearchTime)
                     list.append(temp)
-                res['len'] = Search.len()
+                res['len'] = search.__len__()
                 res['list'] = list
                 return JsonResponse({
                     "status": 1,
