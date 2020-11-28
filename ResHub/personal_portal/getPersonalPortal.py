@@ -8,29 +8,26 @@ def getPersonalPortal(request):
         if request.method == "GET":
             userId = request.GET.get('userId')
             resId = request.GET.get('resId')
-            if userId is not None:
+            if ((userId is not None) and (resId is not None)):
                 # temp2记录从Researcher得到的结果
                 temp2 = Researcher.objects.filter(ResEmail=resId).first()
 
                 if(temp2 is not None):
                     res['realName'] = temp2.ResName
                     res['ResField'] = temp2.ResField
-                    res['InsName'] = (
-                        Institution.objects.filter(id=temp2.temp2.ResCompany).first).InsName
-                    res['ResCompany'] = temp2.ResCompany
+                    res['InsName'] = temp2.ResCompany.InsName
+                    res['ResCompany'] = temp2.ResCompany.id
                     res['ResEmail'] = temp2.ResEmail
-                    res['instituteId'] = temp2.ResCompany
                     res['CitedNum'] = temp2.CitedNum
-                    res['literatureNum'] = temp2.literatureNum
-                    res['visitnum'] = temp2.visitnum
+                    res['literatureNum'] = temp2.LiteratureNum
+                    res['visitnum'] = temp2.VisitNum
                     coopList = []
-                    temp = temp2.id
+                    temp = temp2.ResId
                     temp3 = Relationship.objects.filter(ResearchId1=temp).all()
                     temp4 = Relationship.objects.filter(ResearchId2=temp).all()
                     len = 0
                     for i in temp3:
-                        temp5 = Researcher.objects.filter(
-                            id=i.ResearchId2).first()
+                        temp5 = i.ResearchId2
                         coopList.append(temp5.ResName)
                         len = len+1
                         if(len == 5):
@@ -38,17 +35,17 @@ def getPersonalPortal(request):
                     for i in temp4:
                         if(len == 5):
                             break
-                        temp5 = Researcher.objects.filter(
-                            id=i.ResearchId1).first()
+                        temp5 = i.ResearchId1
                         coopList.append(temp5.ResName)
                         len = len+1
                     res['coopList'] = coopList
-                    if(temp2.IsClaim == 0):
+
+                    if(temp2.IsClaim == False):
                         res['IsClaim'] = False
                     else:
                         res['IsClaim'] = True
                     temp6 = Concern.objects.filter(
-                        UserEmail=userId, ResearchId=temp2.id).first()
+                        UserEmail=userId, ResearchId=temp2.ResId).first()
                     if(temp6 is not None):
                         res['isFollowing'] = True
                     else:
@@ -57,9 +54,9 @@ def getPersonalPortal(request):
                         res['myPortal'] = True
                     else:
                         res['myPortal'] = False
-                    res['visitNum'] = temp2.visitNum
-                    res['followNum'] = temp6 = Concern.objects.filter(
-                        ResearchId=temp2.id).all().length()
+                    res['visitNum'] = temp2.VisitNum
+                    res['followNum'] = Concern.objects.filter(
+                        ResearchId=temp2.ResId).all().__len__()
                     return JsonResponse({
                         "status": 1,
                         "message": res
