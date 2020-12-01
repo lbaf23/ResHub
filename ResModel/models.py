@@ -73,6 +73,7 @@ class Patent(models.Model):
     PatentAbstract = models.TextField(max_length=8000,null=True)#摘要
     PatentDate = models.DateField(null=True)
     PatentAuthor = models.CharField(max_length=500, null=True)
+    PatentCompany = models.CharField(max_length=100,null=True)
 
 class PatentAuthor(models.Model):
     PatentId = models.ForeignKey('Patent',to_field='PatentId',on_delete=models.CASCADE)
