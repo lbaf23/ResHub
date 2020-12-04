@@ -60,8 +60,8 @@ class PaperAuthor(models.Model):
     ResearcherRank = models.IntegerField(null=True)
 
 class PaperReference(models.Model):
-    PaperId = models.ForeignKey('Paper',to_field='PaperId',related_name='TPaperId',on_delete=models.CASCADE, null=True)
-    RePaperId = models.ForeignKey('Paper',to_field='PaperId',related_name='RePaperId',on_delete=models.CASCADE, null=True)
+    PaperId = models.ForeignKey('Paper',to_field='PaperId',related_name='TPaperId',on_delete=models.CASCADE)
+    RePaperId = models.CharField(max_length=50)
 
 class Patent(models.Model):
     PatentId = models.CharField(max_length=50,unique=True)
