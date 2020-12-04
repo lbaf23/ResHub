@@ -61,7 +61,7 @@ class PaperAuthor(models.Model):
 
 class PaperReference(models.Model):
     PaperId = models.ForeignKey('Paper',to_field='PaperId',related_name='TPaperId',on_delete=models.CASCADE)
-    RePaperId = models.CharField(max_length=50)
+    RePaperId = models.ForeignKey('Paper',to_field='PaperId',related_name='RePaperId',on_delete=models.CASCADE)
 
 class Patent(models.Model):
     PatentId = models.CharField(max_length=50,unique=True)
@@ -87,7 +87,7 @@ class Project(models.Model):
     ProjectUrl = models.TextField(max_length=8000,default=0)
     CollectionNum = models.IntegerField(default=0)
     IsUserUpload = models.BooleanField(default=False)
-    GrantYear =models.IntegerField(null=True)#发表年份
+    GrantYear = models.IntegerField(null=True)#发表年份
     Subject = models.CharField(max_length=100,null=True)#主题
     ProjectLeader = models.CharField(max_length=50,null=True)#项目组长
     ProjectLeaderTitle = models.CharField(max_length=50,null=True)#项目组长头衔
