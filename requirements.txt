@@ -1,0 +1,7 @@
+redis==3.5.3
+drf_haystack==1.8.9
+Django==3.0.3
+channels==2.2.0
+PyMySQL==0.10.0
+django_haystack==3.0
+djangorestframework==3.12.2

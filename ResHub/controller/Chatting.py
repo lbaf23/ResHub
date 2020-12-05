@@ -1,10 +1,7 @@
-from django.http import HttpResponse, JsonResponse
-from ResModel.models import HubUser,Mail,ChatFriends
-from django.core import serializers
-import json
 from channels.db import database_sync_to_async
+from django.http import JsonResponse
 
-from dwebsocket.decorators import accept_websocket
+from ResModel.models import HubUser, Mail, ChatFriends
 
 
 def get_recent_friends(request):

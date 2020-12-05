@@ -1,11 +1,10 @@
 import json
+
 from django.http import JsonResponse
-from pandas.core.dtypes.inference import is_number
 
 from ResHub.createResId import tid_maker
 from ResHub.redispool import r
 from ResModel.models import Researcher, HubUser, Appeal
-from django_redis import get_redis_connection
 
 
 def catch_portal(request):

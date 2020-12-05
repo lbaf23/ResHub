@@ -31,6 +31,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('identityCheck', Login.identity_check),
+    path('bandWidthTest', Login.bandwidth_test),
     path('recentUsers', Chatting.get_recent_friends),
     path('getChats', Chatting.get_chats),
 
