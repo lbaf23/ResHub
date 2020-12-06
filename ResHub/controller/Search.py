@@ -81,7 +81,6 @@ def search_words(request):
     order_by = request.GET.get('orderBy')
 
     sk = json.loads(search_key)
-    print(sk)
 
     print(exists_in_redis(sk))
     if exists_in_redis(sk):
@@ -96,7 +95,7 @@ def search_words(request):
     # order_by
 
     num = res.count()
-    res = res.values('object')[(int(page)-1)*int(per_page) : int(page)*int(per_page)]
+    res = res.values('object')[(int(page)-1)*int(per_page): int(page)*int(per_page)]
 
     l = []
 
