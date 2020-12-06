@@ -56,17 +56,17 @@ def search_el_indexes(res, key):
 
             elif w['boolType'] == '3':
                 if w['type'] == '4':
-                    res = res.filter_not(PaperKeywords=w['words'])
+                    res = res.exclude(PaperKeywords=w['words'])
                 elif w['type'] == '1':
-                    res = res.filter_not(text=w['words'])
+                    res = res.exclude(text=w['words'])
                 elif w['type'] == '2':
-                    res = res.filter_not(PaperTitle=w['words'])
+                    res = res.exclude(PaperTitle=w['words'])
                 elif w['type'] == '5':
-                    res = res.filter_not(PaperAbstract=w['words'])
+                    res = res.exclude(PaperAbstract=w['words'])
                 elif w['type'] == '3':
-                    res = res.filter_not(PaperAuthors=w['words'])
+                    res = res.exclude(PaperAuthors=w['words'])
                 elif w['type'] == 'PaperOrg':
-                    res = res.filter_not(PaperOrg=w['words'])
+                    res = res.exclude(PaperOrg=w['words'])
 
             else:
                 pass
