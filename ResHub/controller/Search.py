@@ -82,7 +82,6 @@ def search_words(request):
 
     sk = json.loads(search_key)
 
-    print(exists_in_redis(sk))
     if exists_in_redis(sk):
         pass
         # search from redis
