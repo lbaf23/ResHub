@@ -1,6 +1,6 @@
 from haystack.query import SearchQuerySet
 from django.http import JsonResponse
-
+import json
 
 # 检索式解码
 def exists_in_redis(s1):
@@ -80,15 +80,18 @@ def search_words(request):
     per_page = request.GET.get('PerPage') #每页的数量
     order_by = request.GET.get('orderBy')
 
-    print(exists_in_redis(search_key))
-    if exists_in_redis(search_key):
+    sk = json.loads(search_key)
+    print(sk)
+
+    print(exists_in_redis(sk))
+    if exists_in_redis(sk):
         pass
         # search from redis
         # ...
 
     # search by elasticsearch index
     qs = SearchQuerySet()
-    res = search_el_indexes(qs, search_key)
+    res = search_el_indexes(qs, sk)
     # 过滤年份等数据并排序
     # order_by
 
