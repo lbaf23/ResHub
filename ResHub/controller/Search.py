@@ -1,106 +1,95 @@
 from haystack.query import SearchQuerySet
 from django.http import JsonResponse
-from ResModel.models import Paper
-import json
-from django.core import serializers
-import time
-import re
+
 
 # 检索式解码
-def decode_search_words(s1):
-    s1 = re.sub(r"\s+", "", s1)
-    s = s1.split(',')
-    s.sort()
-    li = []
-    for w in s:
-        try:
-            m1 = w.index(':')
-            m2 = w.find('-')
-            word = w[:m1]
-            if m2 != -1:
-                value = w[m1+1:m2]
-                method = w[m2+1:]
-            else:
-                value = w[m1+1:]
-                method = ''
-            if method == '':
-                li.insert(0, {'word': word, 'value': value, 'method': method})
-            else:
-                li.append({
-                    'word': word, 'value': value, 'method': method
-                })
-        except Exception:
-            pass
-    return li
+def exists_in_redis(s1):
+    s1.sort()
+    return s1
 
-def search_el_indexes(key):
-    res = SearchQuerySet()
-    for w in key:
-        if w['method'] == 'and':
-            if w['word'] == 'PaperKeywords':
-                res = res.filter_and(PaperKeywords=w['value'])
-            elif w['word'] == 'PaperTitle':
-                res = res.filter_and(PaperTitle=w['value'])
-            elif w['word'] == 'PaperAbstract':
-                res = res.filter_and(PaperAbstract=w['value'])
-            elif w['word'] == 'PaperAuthors':
-                res = res.filter_and(PaperAuthors=w['value'])
-            elif w['word'] == 'PaperOrg':
-                res = res.filter_and(PaperOrg=w['value'])
 
-        elif w['method'] == 'or':
-            if w['word'] == 'PaperKeywords':
-                res = res.filter_or(PaperKeywords=w['value'])
-            elif w['word'] == 'PaperTitle':
-                res = res.filter_or(PaperTitle=w['value'])
-            elif w['word'] == 'PaperAbstract':
-                res = res.filter_or(PaperAbstract=w['value'])
-            elif w['word'] == 'PaperAuthors':
-                res = res.filter_or(PaperAuthors=w['value'])
-            elif w['word'] == 'PaperOrg':
-                res = res.filter_or(PaperOrg=w['value'])
-
-        elif w['method'] == 'not':
-            if w['word'] == 'PaperKeywords':
-                res = res.filter_not(PaperKeywords=w['value'])
-            elif w['word'] == 'PaperTitle':
-                res = res.filter_not(PaperTitle=w['value'])
-            elif w['word'] == 'PaperAbstract':
-                res = res.filter_not(PaperAbstract=w['value'])
-            elif w['word'] == 'PaperAuthors':
-                res = res.filter_not(PaperAuthors=w['value'])
-            elif w['word'] == 'PaperOrg':
-                res = res.filter_not(PaperOrg=w['value'])
-
+# boolType {1:AND ; 2:OR ; 3:NOT}
+# type {1：主题；2：标题；3：作者；4：关键词；5：摘要; }
+def search_el_indexes(res, key):
+    for w in list(key):
+        if not w.__contains__('boolType'):
+            if w['type'] == '4':
+                res = res.filter(PaperKeywords=w['words'])
+            elif w['type'] == '1':
+                res = res.filter(text=w['words'])
+            elif w['type'] == '2':
+                res = res.filter(PaperTitle=w['words'])
+            elif w['type'] == '5':
+                res = res.filter(PaperAbstract=w['words'])
+            elif w['type'] == '3':
+                res = res.filter(PaperAuthors=w['words'])
+            elif w['type'] == 'PaperOrg':
+                res = res.filter(PaperOrg=w['words'])
         else:
-            if w['word'] == 'PaperKeywords':
-                res = res.filter(PaperKeywords=w['value'])
-            elif w['word'] == 'PaperTitle':
-                res = res.filter(PaperTitle=w['value'])
-            elif w['word'] == 'PaperAbstract':
-                res = res.filter(PaperAbstract=w['value'])
-            elif w['word'] == 'PaperAuthors':
-                res = res.filter(PaperAuthors=w['value'])
-            elif w['word'] == 'PaperOrg':
-                res = res.filter(PaperOrg=w['value'])
+            if w['boolType'] == '1':
+                if w['type'] == '4':
+                    res = res.filter_and(PaperKeywords=w['words'])
+                elif w['type'] == '1':
+                    res = res.filter_and(text=w['words'])
+                elif w['type'] == '2':
+                    res = res.filter_and(PaperTitle=w['words'])
+                elif w['type'] == '5':
+                    res = res.filter_and(PaperAbstract=w['words'])
+                elif w['type'] == '3':
+                    res = res.filter_and(PaperAuthors=w['words'])
+                elif w['type'] == 'PaperOrg':
+                    res = res.filter_and(PaperOrg=w['words'])
+
+            elif w['boolType'] == '2':
+                if w['type'] == '4':
+                    res = res.filter_or(PaperKeywords=w['words'])
+                elif w['type'] == '1':
+                    res = res.filter_or(text=w['words'])
+                elif w['type'] == '2':
+                    res = res.filter_or(PaperTitle=w['words'])
+                elif w['type'] == '5':
+                    res = res.filter_or(PaperAbstract=w['words'])
+                elif w['type'] == '3':
+                    res = res.filter_or(PaperAuthors=w['words'])
+                elif w['type'] == 'PaperOrg':
+                    res = res.filter_or(PaperOrg=w['words'])
+
+            elif w['boolType'] == '3':
+                if w['type'] == '4':
+                    res = res.filter_not(PaperKeywords=w['words'])
+                elif w['type'] == '1':
+                    res = res.filter_not(text=w['words'])
+                elif w['type'] == '2':
+                    res = res.filter_not(PaperTitle=w['words'])
+                elif w['type'] == '5':
+                    res = res.filter_not(PaperAbstract=w['words'])
+                elif w['type'] == '3':
+                    res = res.filter_not(PaperAuthors=w['words'])
+                elif w['type'] == 'PaperOrg':
+                    res = res.filter_not(PaperOrg=w['words'])
+
+            else:
+                pass
 
     return res
 
+
 def search_words(request):
-    words = request.GET.get('words')
+    search_key = request.GET.get('searchKey')
     page = request.GET.get('page') # 页数
     per_page = request.GET.get('PerPage') #每页的数量
     order_by = request.GET.get('orderBy')
 
-    key = decode_search_words(words)
-
-    print(str(key))
-
-    # search from redis
-    # ...
+    print(exists_in_redis(search_key))
+    if exists_in_redis(search_key):
+        pass
+        # search from redis
+        # ...
 
     # search by elasticsearch index
-    res = search_el_indexes(key)
+    qs = SearchQuerySet()
+    res = search_el_indexes(qs, search_key)
+    # 过滤年份等数据并排序
     # order_by
 
     num = res.count()
@@ -111,9 +100,9 @@ def search_words(request):
     for r in res:
         p = r['object']
         j = {
-                   'PaperTitle': p.PaperTitle
+            'PaperTitle': p.PaperTitle
         }
         l.append(j)
 
-    return JsonResponse({'num':num, 'result': l })
+    return JsonResponse({'num': num, 'result': l})
 
