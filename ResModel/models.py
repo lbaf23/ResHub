@@ -94,7 +94,7 @@ class Project(models.Model):
     ProjectId = models.CharField(max_length=50, primary_key=True)  # grant no
     ProjectTitle = models.CharField(max_length=1000)
     ReadNum = models.IntegerField(default=0)  # 阅读次数
-    ProjectUrl = models.CharField(max_length=100, db_index=True, unique=True)
+    ProjectUrl = models.CharField(max_length=200, db_index=True, unique=True)
     CollectionNum = models.IntegerField(default=0)  # 收藏次数
     GrantYear = models.IntegerField(null=True)  # 发表年份
     Subject = models.CharField(max_length=100, null=True)  # 主题
