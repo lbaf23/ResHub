@@ -58,6 +58,8 @@ urlpatterns = [
     path('getMyCollection', Collection.get_collection),
     path('addBrowseHistory', Browse.add_browse_history),
     path('addViewSum', Browse.add_view_num),
+    path('registerInformation',Login.register),
+    path('verificationCode',Login.verification),
 
     path('searchWords', Search.search_words),
 
