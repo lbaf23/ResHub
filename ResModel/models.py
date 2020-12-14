@@ -181,7 +181,7 @@ class Search(models.Model):
 class Appeal(models.Model):
     ResearchId = models.ForeignKey('Researcher', to_field='ResId', on_delete=models.CASCADE)
     UserEmail = models.ForeignKey('HubUser', to_field='UserEmail', on_delete=models.CASCADE)
-    AppealState = models.BooleanField()
+    AppealState = models.IntegerField()#0 未审核 1拒绝 2通过
     AppealTime = models.DateTimeField(auto_now_add=True)
 
 
@@ -189,7 +189,7 @@ class Review(models.Model):
     ReviewPath = models.CharField(max_length=100)
     UserEmail = models.ForeignKey('HubUser', to_field='UserEmail', on_delete=models.CASCADE)
     UploadTime = models.DateTimeField(auto_now_add=True)
-    ReviewState = models.BooleanField()
+    ReviewState = models.IntegerField()#0 未审核 1拒绝 2通过
     ReviewTime = models.DateTimeField(auto_now_add=False)
 
 
