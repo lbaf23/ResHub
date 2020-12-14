@@ -182,7 +182,7 @@ class Appeal(models.Model):
     ResearchId = models.ForeignKey('Researcher', to_field='ResId', on_delete=models.CASCADE)
     UserEmail = models.ForeignKey('HubUser', to_field='UserEmail', on_delete=models.CASCADE)
     AppealState = models.IntegerField()#0 未审核 1拒绝 2通过
-    AppealTime = models.DateTimeField(auto_now_add=True)
+    AppealTime = models.DateTimeField(auto_now_add=True,null=True)
 
 
 class Review(models.Model):
@@ -190,7 +190,7 @@ class Review(models.Model):
     UserEmail = models.ForeignKey('HubUser', to_field='UserEmail', on_delete=models.CASCADE)
     UploadTime = models.DateTimeField(auto_now_add=True)
     ReviewState = models.IntegerField()#0 未审核 1拒绝 2通过
-    ReviewTime = models.DateTimeField(auto_now_add=False)
+    ReviewTime = models.DateTimeField(auto_now_add=False,null=True)
 
 
 class Relationship(models.Model):

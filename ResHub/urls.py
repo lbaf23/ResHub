@@ -26,7 +26,7 @@ from ResHub.institutions import getResearchInstitute, getDaGongRen
 from ResHub.history import getSearchRecord
 from ResHub.controller import Collection
 from ResHub.controller import Search
-
+from ResHub.controller import Administrator
 urlpatterns = [
     path('admin/', admin.site.urls),
 
@@ -60,6 +60,10 @@ urlpatterns = [
     path('addViewSum', Browse.add_view_num),
     path('registerInformation',Login.register),
     path('verificationCode',Login.verification),
+    path('pass1',Administrator.pass_review),
+    path('reject1',Administrator.reject_review),
+    path('pass2',Administrator.pass_appeal),
+    path('reject2',Administrator.reject_appeal),
 
     path('searchWords', Search.search_words),
 
