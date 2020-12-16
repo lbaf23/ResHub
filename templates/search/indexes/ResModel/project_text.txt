@@ -1,2 +1,7 @@
-{{ object.PaperTitle }}
-{{ object.PaperKeywords }}
+{{ object.ProjectTitle }}
+{{ object.Subject }}
+{{ object.SubjectHeadingCN }}
+{{ object.SubjectHeadingEN }}
+{{ object.ZhAbstract }}
+{{ object.EnAbstract }}
+{{ object.FinalAbstract }}

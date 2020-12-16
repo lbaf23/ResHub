@@ -1,0 +1,3 @@
+{{ object.PatentTitle }}
+{{ object.PatentAbstract }}
+{{ object.PatentCompany }}

@@ -2,6 +2,7 @@ from haystack.query import SearchQuerySet, SQ
 from django.http import JsonResponse
 import json
 
+
 # 检索式解码
 def exists_in_redis(s1):
     s1.sort()
@@ -109,3 +110,11 @@ def search_words(request):
 
     return JsonResponse({'num': num, 'result': l})
 
+
+def search_authors(request):
+    search_key = request.GET.get('searchKey')
+    page = request.GET.get('page') # 页数
+    per_page = request.GET.get('PerPage') #每页的数量
+    order_by = request.GET.get('orderBy')
+
+    pass

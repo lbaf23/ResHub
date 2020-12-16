@@ -66,7 +66,7 @@ urlpatterns = [
     path('reject2',Administrator.reject_appeal),
 
     path('searchWords', Search.search_words),
-
+    path('searchAuthors', Search.search_authors),
 ]
 
 router = routers.DefaultRouter()

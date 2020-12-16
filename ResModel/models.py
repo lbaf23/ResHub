@@ -20,12 +20,12 @@ class Institution(models.Model):
 
 class Researcher(models.Model):
     ResId = models.CharField(max_length=50, primary_key=True)
-    IsClaim = models.BooleanField()
+    IsClaim = models.BooleanField()  # 是否认领
     UserEmail = models.OneToOneField('HubUser', to_field='UserEmail', on_delete=models.CASCADE, null=True)
-    ResName = models.CharField(max_length=50)
-    NormalizedName = models.CharField(max_length=50, null=True)
+    ResName = models.CharField(max_length=50)  # 姓名
+    NormalizedName = models.CharField(max_length=50, null=True)  # 规范化的姓名
     ResEmail = models.CharField(max_length=50, null=True, unique=True)
-    ResField = models.CharField(max_length=50, null=True)
+    ResField = models.CharField(max_length=50, null=True)  # 作者领域
     ResCompany = models.ForeignKey('Institution', to_field='id', on_delete=models.CASCADE, null=True)
     ResIntroduction = models.CharField(max_length=2000, null=True)
     LiteratureNum = models.IntegerField(default=0)  # 发表文章数量

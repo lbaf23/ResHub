@@ -1,0 +1,2 @@
+{{ object.ResName }}
+{{ object.NormalizedName }}

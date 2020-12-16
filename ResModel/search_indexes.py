@@ -1,5 +1,5 @@
 from haystack import indexes
-from .models import Paper,Project
+from .models import Paper, Project, Patent, Researcher
 
 
 class PaperIndex(indexes.SearchIndex, indexes.Indexable):
@@ -33,10 +33,39 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     EnAbstract = indexes.CharField(model_attr='EnAbstract', null=True)
     FinalAbstract = indexes.CharField(model_attr='FinalAbstract', null=True)
 
-
     def get_model(self):
         # 返回建立索引的模型 数据库表
         return Project
+
+    def index_queryset(self, using=None):
+        return self.get_model().objects.filter()
+
+
+class PatentIndex(indexes.SearchIndex, indexes.Indexable):
+    # 必须写的字段
+    text = indexes.CharField(document=True, use_template=True)
+
+    PatentTitle = indexes.CharField(model_attr='PatentTitle', null=True)
+    PatentAbstract = indexes.CharField(model_attr='PatentAbstract', null=True)
+    PatentAuthor = indexes.CharField(model_attr='PatentAuthor', null=True)
+    PatentCompany = indexes.CharField(model_attr='PatentCompany', null=True)
+
+    def get_model(self):
+        # 返回建立索引的模型 数据库表
+        return Patent
+
+    def index_queryset(self, using=None):
+        return self.get_model().objects.filter()
+
+
+class AuthorIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, use_template=True)
+
+    ResCompany = indexes.CharField(model_attr='ResCompany', null=True)
+
+    def get_model(self):
+        # 返回建立索引的模型 数据库表
+        return Researcher
 
     def index_queryset(self, using=None):
         return self.get_model().objects.filter()
