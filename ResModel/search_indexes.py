@@ -34,7 +34,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     FinalAbstract = indexes.CharField(model_attr='FinalAbstract', null=True)
 
 
-def get_model(self):
+    def get_model(self):
         # 返回建立索引的模型 数据库表
         return Project
 
