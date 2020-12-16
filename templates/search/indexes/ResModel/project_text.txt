@@ -1,3 +1,2 @@
 {{ object.PaperTitle }}
 {{ object.PaperKeywords }}
-{{ object.PaperAbstract }}

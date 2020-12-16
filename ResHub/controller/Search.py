@@ -1,4 +1,4 @@
-from haystack.query import SearchQuerySet
+from haystack.query import SearchQuerySet, SQ
 from django.http import JsonResponse
 import json
 
@@ -90,6 +90,8 @@ def search_words(request):
     # search by elasticsearch index
     qs = SearchQuerySet()
     res = search_el_indexes(qs, sk)
+
+
     # 过滤年份等数据并排序
     # order_by
 

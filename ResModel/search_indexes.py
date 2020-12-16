@@ -1,5 +1,5 @@
 from haystack import indexes
-from .models import Paper
+from .models import Paper,Project
 
 
 class PaperIndex(indexes.SearchIndex, indexes.Indexable):
@@ -15,6 +15,28 @@ class PaperIndex(indexes.SearchIndex, indexes.Indexable):
     def get_model(self):
         # 返回建立索引的模型 数据库表
         return Paper
+
+    def index_queryset(self, using=None):
+        return self.get_model().objects.filter()
+
+
+class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
+    # 必须写的字段
+    text = indexes.CharField(document=True, use_template=True)
+
+    ProjectTitle = indexes.CharField(model_attr='ProjectTitle', null=True)
+    Subject = indexes.CharField(model_attr='Subject', null=True)
+    ProjectLeader = indexes.CharField(model_attr='ProjectLeader', null=True)
+    SubjectHeadingCN = indexes.CharField(model_attr='SubjectHeadingCN', null=True)
+    SubjectHeadingEN = indexes.CharField(model_attr='SubjectHeadingEN', null=True)
+    ZhAbstract = indexes.CharField(model_attr='ZhAbstract', null=True)
+    EnAbstract = indexes.CharField(model_attr='EnAbstract', null=True)
+    FinalAbstract = indexes.CharField(model_attr='FinalAbstract', null=True)
+
+
+def get_model(self):
+        # 返回建立索引的模型 数据库表
+        return Project
 
     def index_queryset(self, using=None):
         return self.get_model().objects.filter()
