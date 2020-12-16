@@ -12,6 +12,11 @@ class HubUser(models.Model):
     UserIntroduction = models.CharField(max_length=2000, null=True)
 
 
+class ResInstitution(models.Model):
+    ResId = models.ForeignKey('Researcher', to_field='ResId', on_delete=models.CASCADE)
+    InstitutionId = models.ForeignKey('Institution', to_field='id', on_delete=models.CASCADE)
+
+
 class Institution(models.Model):
     InsName = models.CharField(max_length=50)
     InsField = models.CharField(max_length=50, null=True)
@@ -26,7 +31,6 @@ class Researcher(models.Model):
     NormalizedName = models.CharField(max_length=50, null=True)  # 规范化的姓名
     ResEmail = models.CharField(max_length=50, null=True, unique=True)
     ResField = models.CharField(max_length=50, null=True)  # 作者领域
-    ResCompany = models.ForeignKey('Institution', to_field='id', on_delete=models.CASCADE, null=True)
     ResIntroduction = models.CharField(max_length=2000, null=True)
     LiteratureNum = models.IntegerField(default=0)  # 发表文章数量
     CitedNum = models.IntegerField(null=True)  # 文章被引用次数
