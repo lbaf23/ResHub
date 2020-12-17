@@ -23,7 +23,7 @@ from ResHub.controller import Chatting
 from ResHub.controller import Login, Browse, Portal, Concern
 from ResHub.personal_portal import getPersonalPortal, getPersonalList, temp
 from ResHub.institutions import getResearchInstitute, getDaGongRen
-from ResHub.history import getSearchRecord
+from ResHub.history import getSearchRecord, deleteSearchRecord
 from ResHub.controller import Collection
 from ResHub.controller import Search
 from ResHub.controller import Administrator
@@ -44,13 +44,14 @@ urlpatterns = [
     path('appealPortal', Portal.appeal_portal),
 
 
-    # Matrix.L
+    # LKY
     path('temp', temp.temp),
     path('getPersonalPortal', getPersonalPortal.getPersonalPortal),
     path('getPersonalList', getPersonalList.getPersonalList),
     path('getResearchInstitute', getResearchInstitute.getResearchInstitute),
     path('getDaGongRen', getDaGongRen.getDaGongRen),
     path('getSearchRecord', getSearchRecord.getSearchRecord),
+    path('deleteSearchRecord', deleteSearchRecord.deleteSearchRecord),
 
     # LYC
     path('addCollection', Collection.add_collection),
@@ -58,12 +59,12 @@ urlpatterns = [
     path('getMyCollection', Collection.get_collection),
     path('addBrowseHistory', Browse.add_browse_history),
     path('addViewSum', Browse.add_view_num),
-    path('registerInformation',Login.register),
-    path('verificationCode',Login.verification),
-    path('pass1',Administrator.pass_review),
-    path('reject1',Administrator.reject_review),
-    path('pass2',Administrator.pass_appeal),
-    path('reject2',Administrator.reject_appeal),
+    path('registerInformation', Login.register),
+    path('verificationCode', Login.verification),
+    path('pass1', Administrator.pass_review),
+    path('reject1', Administrator.reject_review),
+    path('pass2', Administrator.pass_appeal),
+    path('reject2', Administrator.reject_appeal),
 
     path('searchWords', Search.search_words),
     path('searchAuthors', Search.search_authors),
