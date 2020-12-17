@@ -81,7 +81,7 @@ def search_words(request):
     page = request.GET.get('page') # 页数
     per_page = request.GET.get('PerPage') #每页的数量
 
-    begin_year = int(request.GET.get('dateBegin'))
+    start_year = int(request.GET.get('dateStart'))
     end_year = int(request.GET.get('dateEnd'))
 
     radio = request.GET.get('Redio') # 中英扩展 false true
