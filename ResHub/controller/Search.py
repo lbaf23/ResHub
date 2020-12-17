@@ -56,41 +56,41 @@ def search_el_indexes(res, key, redio):
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.filter_and(PaperKeywords=ow)
+                        res = res.filter_or(PaperKeywords=ow)
             elif w['type'] == '1':
                 res = res.filter(text=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.filter_and(text=ow)
+                        res = res.filter_or(text=ow)
 
             elif w['type'] == '2':
                 res = res.filter(PaperTitle=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.filter_and(PaperTitle=ow)
+                        res = res.filter_or(PaperTitle=ow)
 
             elif w['type'] == '5':
                 res = res.filter(PaperAbstract=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.filter_and(PaperAbstract=ow)
+                        res = res.filter_or(PaperAbstract=ow)
 
             elif w['type'] == '3':
                 res = res.filter(PaperAuthors=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.filter_and(PaperAuthors=ow)
+                        res = res.filter_or(PaperAuthors=ow)
 
             elif w['type'] == 'PaperOrg':
                 res = res.filter(PaperOrg=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.filter_and(PaperOrg=ow)
+                        res = res.filter_or(PaperOrg=ow)
 
         else:
             if w['boolType'] == '1':
@@ -99,42 +99,42 @@ def search_el_indexes(res, key, redio):
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.filter_and(PaperKeywords=ow)
+                            res = res.filter_or(PaperKeywords=ow)
 
                 elif w['type'] == '1':
                     res = res.filter_and(text=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.filter_and(text=ow)
+                            res = res.filter_or(text=ow)
 
                 elif w['type'] == '2':
                     res = res.filter_and(PaperTitle=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.filter_and(PaperTitle=ow)
+                            res = res.filter_or(PaperTitle=ow)
 
                 elif w['type'] == '5':
                     res = res.filter_and(PaperAbstract=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.filter_and(PaperAbstract=ow)
+                            res = res.filter_or(PaperAbstract=ow)
 
                 elif w['type'] == '3':
                     res = res.filter_and(PaperAuthors=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.filter_and(PaperAuthors=ow)
+                            res = res.filter_or(PaperAuthors=ow)
 
                 elif w['type'] == 'PaperOrg':
                     res = res.filter_and(PaperOrg=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.filter_and(PaperOrg=ow)
+                            res = res.filter_or(PaperOrg=ow)
 
             elif w['boolType'] == '2':
                 if w['type'] == '4':
