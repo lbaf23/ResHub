@@ -46,7 +46,7 @@ urlpatterns = [
 
 
     # LKY
-    path('temp', temp.temp),
+    #path('temp', temp.temp),
     path('getPersonalPortal', getPersonalPortal.getPersonalPortal),
     path('getPersonalList', getPersonalList.getPersonalList),
     path('getResearchInstitute', getResearchInstitute.getResearchInstitute),
