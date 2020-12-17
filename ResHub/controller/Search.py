@@ -228,10 +228,6 @@ def search_el_indexes(res, key, redio):
     return res
 
 
-def filter_paper_keywords(k):
-    re.sub()
-
-
 def search_words(request):
     search_key = request.GET.get('keyWords')
     try:
