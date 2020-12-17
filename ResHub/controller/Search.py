@@ -272,7 +272,7 @@ def search_words(request):
         kw = re.sub(r'[\[|\'|\]|,]','' , str(p.PaperKeywords))
         kw = re.sub(r' ', ',', kw)
         j = {
-            'link': re.sub(r'[\[|\]|\']','',("['123', '144']")).split(',')[0],
+            'link': re.sub(r'[\[|\]|\']','',p.PaperUrl).split(',')[0],
             'paperId': p.PaperId,
             'title': p.PaperTitle,
             'msg': p.PaperAbstract,
