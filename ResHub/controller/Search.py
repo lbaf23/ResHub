@@ -230,9 +230,13 @@ def search_el_indexes(res, key, redio):
 
 def search_words(request):
     search_key = request.GET.get('keyWords')
-    page = request.GET.get('page') # 页数
     try:
-        per_page = request.GET.get('PerPage') #每页的数量
+        page = int(request.GET.get('page')) # 页数
+    except Exception:
+        page = 1
+
+    try:
+        per_page = int(request.GET.get('PerPage')) #每页的数量
     except Exception:
         per_page = 10
 
@@ -255,7 +259,7 @@ def search_words(request):
     res = search_el_indexes(qs, sk, radio)
 
     num = res.count()
-    res = res.values('object')[(int(page)-1)*int(per_page): int(page)*int(per_page)]
+    res = res.values('object')[(page-1)*per_page: page*per_page]
 
     l = []
 
