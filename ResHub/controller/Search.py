@@ -271,12 +271,12 @@ def search_words(request):
         p = r['object']
 
         j = {
-            'link': list(p.PaperUrl)[0],
+            'link': p.PaperUrl,
             'paperId': p.PaperId,
             'title': p.PaperTitle,
             'msg': p.PaperAbstract,
             'author': p.PaperAuthors,
-            'keywords': re.sub(r'[\[|\']','' , str(p.PaperKeywords))
+            'keywords': str(p.PaperKeywords)
         }
         l.append(j)
 
