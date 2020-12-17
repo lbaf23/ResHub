@@ -231,10 +231,15 @@ def search_el_indexes(res, key, redio):
 def search_words(request):
     search_key = request.GET.get('keyWords')
     page = request.GET.get('page') # 页数
-    per_page = request.GET.get('PerPage') #每页的数量
+    try:
+        per_page = request.GET.get('PerPage') #每页的数量
+    except Exception:
+        per_page = 10
 
     start_year = int(request.GET.get('dateStart'))
     end_year = int(request.GET.get('dateEnd'))
+
+    type = request.GET.get('type')
 
     radio = request.GET.get('Redio') # 中英扩展 false true
 
