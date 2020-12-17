@@ -77,7 +77,7 @@ def search_el_indexes(res, key):
 
 
 def search_words(request):
-    search_key = request.GET.get('searchKey')
+    search_key = request.GET.get('keyWords')
     page = request.GET.get('page') # 页数
     per_page = request.GET.get('PerPage') #每页的数量
 
