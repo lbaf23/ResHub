@@ -1,7 +1,8 @@
 from haystack.query import SearchQuerySet, SQ
 from django.http import JsonResponse
 import json
-
+from ResModel.models import PaperAuthor, Project, Paper
+import re
 
 # 检索式解码
 def exists_in_redis(s1):
@@ -76,10 +77,14 @@ def search_el_indexes(res, key):
 
 
 def search_words(request):
-    search_key = request.GET.get('searchKey')
+    search_key = request.GET.get('keyWords')
     page = request.GET.get('page') # 页数
     per_page = request.GET.get('PerPage') #每页的数量
-    order_by = request.GET.get('orderBy')
+
+    start_year = int(request.GET.get('dateStart'))
+    end_year = int(request.GET.get('dateEnd'))
+
+    radio = request.GET.get('Redio') # 中英扩展 false true
 
     sk = json.loads(search_key)
 
@@ -103,12 +108,41 @@ def search_words(request):
 
     for r in res:
         p = r['object']
+
         j = {
-            'PaperTitle': p.PaperTitle
+            'paperId': p.PaperId,
+            'title': p.PaperTitle,
+            'msg': p.PaperAbstract,
+            'author': p.PaperAuthors,
+
         }
         l.append(j)
 
     return JsonResponse({'num': num, 'result': l})
+
+
+def show_paper_info(request):
+    pid = request.GET.get('paperId')
+    pl = Paper.objects.filter(PaperId=pid)
+    if len(pl) > 0:
+        p = pl[0]
+        alist = p.PaperAuthors.split(str="",)
+        authorId = ['null']*len(alist)
+        aulist = PaperAuthor.objects.filter(PaperId=p.PaperId)
+        for a in aulist:
+            authorId[int(a.ResearcherRank)] = a.ResearcherId
+
+        return JsonResponse({
+            'paperId': p.PaperId,
+            'title': p.PaperTitle,
+            'msg': p.PaperAbstract,
+            'author': p.PaperAuthors,
+            'authorId': authorId,
+
+            'keyword': re.sub(r'[\[|\']','' , str(p.PaperKeywords)),
+        })
+
+
 
 
 def search_authors(request):
@@ -117,4 +151,8 @@ def search_authors(request):
     per_page = request.GET.get('PerPage') #每页的数量
     order_by = request.GET.get('orderBy')
 
+    pass
+
+
+def filter_search_words(request):
     pass
