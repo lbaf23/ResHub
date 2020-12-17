@@ -272,7 +272,7 @@ def search_words(request):
         kw = re.sub(r'[\[|\'|\]|,]','' , str(p.PaperKeywords))
         kw = re.sub(r' ', ',', kw)
         j = {
-            'link': list(p.PaperUrl)[1],
+            'link': list(p.PaperUrl)[0],
             'paperId': p.PaperId,
             'title': p.PaperTitle,
             'msg': p.PaperAbstract,
