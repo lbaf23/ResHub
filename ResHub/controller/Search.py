@@ -228,6 +228,10 @@ def search_el_indexes(res, key, redio):
     return res
 
 
+def filter_paper_keywords(k):
+    re.sub()
+
+
 def search_words(request):
     search_key = request.GET.get('keyWords')
     try:
@@ -267,11 +271,12 @@ def search_words(request):
         p = r['object']
 
         j = {
+            'link': list(p.PaperUrl)[0],
             'paperId': p.PaperId,
             'title': p.PaperTitle,
             'msg': p.PaperAbstract,
             'author': p.PaperAuthors,
-
+            'keywords': re.sub(r'[\[|\']','' , str(p.PaperKeywords))
         }
         l.append(j)
 
@@ -295,8 +300,7 @@ def show_paper_info(request):
             'msg': p.PaperAbstract,
             'author': p.PaperAuthors,
             'authorId': authorId,
-
-            'keyword': re.sub(r'[\[|\']','' , str(p.PaperKeywords)),
+            'keywords': re.sub(r'[\[|\']','' , str(p.PaperKeywords)),
         })
 
 
