@@ -43,6 +43,7 @@ urlpatterns = [
     path('cancelConcern', Concern.cancel_concern),
     path('newPortal', Portal.new_portal),
     path('appealPortal', Portal.appeal_portal),
+    path('passwordLost', Login.passwordLost),
 
 
     # LKY
@@ -69,6 +70,7 @@ urlpatterns = [
     path('reject2', Administrator.reject_appeal),
 
     path('searchWords', Search.search_words),
+    path('openPaper', Search.show_paper_info),
     path('searchAuthors', Search.search_authors),
 ]
 
