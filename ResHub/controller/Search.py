@@ -289,10 +289,16 @@ def show_paper_info(request):
         if len(pl) > 0:
             p = pl[0]
             alist = p.PaperAuthors
+            olist = p.PaperOrg
             if alist != None:
-                alist = alist.split(str=",",)
+                alist = alist[:-1].split(",")
             else:
                 alist = []
+
+            if olist != None:
+                olist = olist[:-1].split(",")
+            else:
+                olist = []
 
             authorId = ['null']*len(alist)
             aulist = PaperAuthor.objects.filter(PaperId=p.PaperId)
@@ -305,6 +311,7 @@ def show_paper_info(request):
                 'abstract': p.PaperAbstract,
                 'author': alist,
                 'authorId': authorId,
+                'authorOrg': olist,
                 'doi': p.PaperDoi,
                 'url': p.PaperUrl,
                 'CollectionNum': p.CollectionNum,
