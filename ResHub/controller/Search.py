@@ -290,7 +290,7 @@ def show_paper_info(request):
             p = pl[0]
             alist = p.PaperAuthors
             if alist != None:
-                alist = alist.split(str="",)
+                alist = alist.split(str=",",)
             else:
                 alist = []
 
