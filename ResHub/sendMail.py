@@ -37,4 +37,3 @@ def send_email(receive):
 
 def get_code():
     return random.randint(111111, 999999)
-

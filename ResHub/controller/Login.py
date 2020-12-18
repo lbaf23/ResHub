@@ -1,6 +1,9 @@
+import json
+
 from ResModel.models import HubUser
 from django.http import HttpResponse, JsonResponse
 from ResHub.redispool import r
+from ResHub.sendMail import send_email
 def identity_check(request):
     uid = request.POST.get('userId')
     pwd = request.POST.get('password')
@@ -38,3 +41,25 @@ def verification(request):
     else:
         result=False
         return JsonResponse({'result':result})
+
+
+def passwordLost(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        UserEmail = data.get("UserEmail")
+        if UserEmail is not None:
+            send_email(UserEmail)
+            return JsonResponse({
+                "status": 1,
+                "message": "发送验证码成功",
+            }, safe=False)
+        else:
+            return JsonResponse({
+                "status": 2,
+                "message": "请求参数错误"
+            })
+    else:
+        return JsonResponse({
+          "status": 3,
+          "message": "请求方法错误"
+        })
