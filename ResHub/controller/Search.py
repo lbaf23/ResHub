@@ -281,24 +281,47 @@ def search_words(request):
 
 
 def show_paper_info(request):
-    pid = request.GET.get('paperId')
-    pl = Paper.objects.filter(PaperId=pid)
-    if len(pl) > 0:
-        p = pl[0]
-        alist = p.PaperAuthors.split(str="",)
-        authorId = ['null']*len(alist)
-        aulist = PaperAuthor.objects.filter(PaperId=p.PaperId)
-        for a in aulist:
-            authorId[int(a.ResearcherRank)] = a.ResearcherId
+    pid = request.POST.get('id')
+    type = request.POST.get('type')
 
-        return JsonResponse({
-            'paperId': p.PaperId,
-            'title': p.PaperTitle,
-            'msg': p.PaperAbstract,
-            'author': p.PaperAuthors,
-            'authorId': authorId,
-            'keywords': re.sub(r'[\[|\']','' , str(p.PaperKeywords)),
-        })
+    if type == 'paper':
+        pl = Paper.objects.filter(PaperId=pid)
+        if len(pl) > 0:
+            p = pl[0]
+            alist = p.PaperAuthors
+            if alist != None:
+                alist = alist.split(str="",)
+            else:
+                alist = []
+
+            authorId = ['null']*len(alist)
+            aulist = PaperAuthor.objects.filter(PaperId=p.PaperId)
+            for a in aulist:
+                authorId[int(a.ResearcherRank)] = a.ResearcherId
+
+            return JsonResponse({
+                'paperId': p.PaperId,
+                'title': p.PaperTitle,
+                'abstract': p.PaperAbstract,
+                'author': alist,
+                'authorId': authorId,
+                'doi': p.PaperDoi,
+                'url': p.PaperUrl,
+                'CollectionNum': p.CollectionNum,
+                'PaperTime': p.PaperTime,
+                'PaperCitation': p.PaperCitation,
+                'PaperStart': p.PaperStart,
+                'PaperEnd': p.PaperEnd,
+                'PaperLang': p.PaperLang,
+                'PaperVolume': p.PaperVolume,
+                'PaperIssue': p.PaperIssue,
+                'PaperPublisher': p.PaperPublisher,
+                'PaperFos': p.PaperFos,
+                'PaperVenue': p.PaperVenue,
+                'keywords': re.sub(r'[\[|\']', '', str(p.PaperKeywords)),
+            })
+    elif type == 'project':
+        pass
 
 
 
