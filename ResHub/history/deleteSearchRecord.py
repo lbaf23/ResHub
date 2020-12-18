@@ -22,10 +22,7 @@ def deleteSearchRecord(request):
                     list.append(temp)
                 res['len'] = browse.__len__()
                 res['list'] = list
-                return JsonResponse({
-                    "status": 1,
-                    "message": res
-                })
+                return JsonResponse(res)
             else:
                 return JsonResponse({
                     "status": 2,
