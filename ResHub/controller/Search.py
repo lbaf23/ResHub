@@ -1,7 +1,7 @@
 from haystack.query import SearchQuerySet, SQ
 from django.http import JsonResponse
 import json
-from ResModel.models import PaperAuthor, Project, Paper
+from ResModel.models import PaperAuthor, Project, Paper, PaperReference
 import re
 import requests
 
@@ -305,6 +305,13 @@ def show_paper_info(request):
             for a in aulist:
                 authorId[int(a.ResearcherRank)] = a.ResearcherId
 
+            refs = PaperReference.objects.filter(PaperId=pid)
+            reft = []
+            refi = []
+            for r in refs:
+                reft.append(r.RePaperId_PaperTitle)
+                refi.append(r.RePaperId_id)
+
             return JsonResponse({
                 'paperId': p.PaperId,
                 'title': p.PaperTitle,
@@ -315,6 +322,7 @@ def show_paper_info(request):
                 'doi': p.PaperDoi,
                 'url': p.PaperUrl,
                 'CollectionNum': p.CollectionNum,
+                'ReadNum': p.ReadNum,
                 'PaperTime': p.PaperTime,
                 'PaperCitation': p.PaperCitation,
                 'PaperStart': p.PaperStart,
@@ -326,6 +334,8 @@ def show_paper_info(request):
                 'PaperFos': p.PaperFos,
                 'PaperVenue': p.PaperVenue,
                 'keywords': re.sub(r'[\[|\']', '', str(p.PaperKeywords)),
+                'referenceTitle': reft,
+                'referenceLink': refi
             })
     elif type == 'project':
         pass
