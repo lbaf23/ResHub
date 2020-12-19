@@ -6,6 +6,7 @@ class PaperIndex(indexes.SearchIndex, indexes.Indexable):
     # 必须写的字段
     text = indexes.CharField(document=True, use_template=True)
 
+    PaperTime = indexes.IntegerField(model_attr='PaperTime', null=True)
     PaperAbstract = indexes.CharField(model_attr='PaperAbstract', null=True)
     PaperKeywords = indexes.CharField(model_attr='PaperKeywords', null=True)
     PaperAuthors = indexes.CharField(model_attr='PaperAuthors', null=True)
@@ -24,6 +25,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     # 必须写的字段
     text = indexes.CharField(document=True, use_template=True)
 
+    GrantYear = indexes.IntegerField(model_attr='GrantYear', null=True)
     ProjectTitle = indexes.CharField(model_attr='ProjectTitle', null=True)
     Subject = indexes.CharField(model_attr='Subject', null=True)
     ProjectLeader = indexes.CharField(model_attr='ProjectLeader', null=True)
@@ -32,6 +34,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     ZhAbstract = indexes.CharField(model_attr='ZhAbstract', null=True)
     EnAbstract = indexes.CharField(model_attr='EnAbstract', null=True)
     FinalAbstract = indexes.CharField(model_attr='FinalAbstract', null=True)
+    SupportUnits = indexes.CharField(model_attr='SupportUnits', null=True)
 
     def get_model(self):
         # 返回建立索引的模型 数据库表
@@ -45,6 +48,7 @@ class PatentIndex(indexes.SearchIndex, indexes.Indexable):
     # 必须写的字段
     text = indexes.CharField(document=True, use_template=True)
 
+    PatentDate = indexes.DateField(model_attr='PatentDate', null=True)
     PatentTitle = indexes.CharField(model_attr='PatentTitle', null=True)
     PatentAbstract = indexes.CharField(model_attr='PatentAbstract', null=True)
     PatentAuthor = indexes.CharField(model_attr='PatentAuthor', null=True)
