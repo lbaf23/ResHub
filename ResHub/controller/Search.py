@@ -674,7 +674,7 @@ def show_paper_info(request):
             return JsonResponse({
                 'paperId': p.PaperId,
                 'title': p.PaperTitle,
-                'abstract': p.PaperAbstract,
+                'abstract': '' if p.PaperAbstract is None else p.PaperAbstract,
                 'author': alist,
                 'authorId': authorId,
                 'authorOrg': olist,
