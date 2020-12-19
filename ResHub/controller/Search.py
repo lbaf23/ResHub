@@ -626,7 +626,7 @@ def search_words(request):
         kw = re.sub(r'[\[|\'|\]|,]','' , str(p.PaperKeywords))
         kw = re.sub(r' ', ',', kw)
         j = {
-            'link': re.sub(r'[\[|\]|\']','',p.PaperUrl).split(','),
+            'link': re.sub(r'[\[|\]|\'| ]','',p.PaperUrl).split(','),
             'paperId': p.PaperId,
             'title': p.PaperTitle,
             'msg': '' if p.PaperAbstract is None else p.PaperAbstract,
@@ -679,7 +679,7 @@ def show_paper_info(request):
                 'authorId': authorId,
                 'authorOrg': olist,
                 'doi': p.PaperDoi,
-                'link': re.sub(r'[\[|\]|\']','',p.PaperUrl).split(','),
+                'link': re.sub(r'[\[|\]|\'| ]','',p.PaperUrl).split(','),
                 'CollectionNum': p.CollectionNum,
                 'ReadNum': p.ReadNum,
                 'PaperTime': p.PaperTime,
