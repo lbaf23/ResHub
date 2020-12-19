@@ -16,7 +16,7 @@ def bandwidth_test(request):
     return JsonResponse({'result': '1111' * 1024*16})
 
 def register(request):
-    name = request.POST.get('userId')
+    name = request.POST.get('userName')
     pwd = request.POST.get('password')
     address = request.POST.get('mailAddress')
     description = request.POST.get('userDescription')
@@ -30,7 +30,7 @@ def register(request):
     return JsonResponse({'result':result})
 
 def verification(request):
-    email = request.GET.get('userId')
+    email = request.GET.get('mailAddress')
     code = request.GET.get('verificationCode')
     result = True
     correct = r.get(email)
@@ -44,9 +44,8 @@ def verification(request):
 
 
 def passwordLost(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        UserEmail = data.get("UserEmail")
+    if request.method == "GET":
+        UserEmail = request.GET.get('mailAddress')
         if UserEmail is not None:
             send_email(UserEmail)
             return JsonResponse({
