@@ -25,10 +25,11 @@ def get_my_concern(request):
                 j['headImage'] = user.UserImage
                 j['id'] = user.UserEmail
                 retconcernList.append(j)
+
             return JsonResponse({
                 "status": 1,
                 "ConcernList": retconcernList,
-                "message": "已经返回关注者列表",
+                "message": "已经返回关注列表",
             }, safe=False)
         else:
             return JsonResponse({
