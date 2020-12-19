@@ -48,7 +48,379 @@ def translate_by_api(str):
 
 # boolType {1:AND ; 2:OR ; 3:NOT}
 # type {1：主题；2：标题；3：作者；4：关键词；5：摘要; }
-def search_el_indexes(res, key, redio):
+def search_el_indexes(res, key, redio, type):
+    if type == 'paper':
+        return search_paper_index(res, key, redio)
+    elif type == 'project':
+        return search_project_index(res, key, redio)
+    elif type == 'patent':
+        return search_patent_index(res, key, redio)
+    else:
+        return SearchQuerySet()
+
+
+def search_patent_index(res, key, redio):
+    for w in list(key):
+        if not w.__contains__('boolType'):
+            if w['type'] == '4':
+                res = res.using('patent_index').filter(PaperKeywords=w['words'])
+                if redio:
+                    ow = translate_by_api(w['words'])
+                    if ow != '':
+                        res = res.using('patent_index').filter_or(PaperKeywords=ow)
+            elif w['type'] == '1':
+                res = res.using('patent_index').filter(text=w['words'])
+                if redio:
+                    ow = translate_by_api(w['words'])
+                    if ow != '':
+                        res = res.using('patent_index').filter_or(text=ow)
+
+            elif w['type'] == '2':
+                res = res.using('patent_index').filter(PaperTitle=w['words'])
+                if redio:
+                    ow = translate_by_api(w['words'])
+                    if ow != '':
+                        res = res.using('patent_index').filter_or(PaperTitle=ow)
+
+            elif w['type'] == '5':
+                res = res.using('patent_index').filter(PaperAbstract=w['words'])
+                if redio:
+                    ow = translate_by_api(w['words'])
+                    if ow != '':
+                        res = res.using('patent_index').filter_or(PaperAbstract=ow)
+
+            elif w['type'] == '3':
+                res = res.using('patent_index').filter(PaperAuthors=w['words'])
+                if redio:
+                    ow = translate_by_api(w['words'])
+                    if ow != '':
+                        res = res.using('patent_index').filter_or(PaperAuthors=ow)
+
+            elif w['type'] == 'PaperOrg':
+                res = res.using('patent_index').filter(PaperOrg=w['words'])
+                if redio:
+                    ow = translate_by_api(w['words'])
+                    if ow != '':
+                        res = res.using('patent_index').filter_or(PaperOrg=ow)
+
+        else:
+            if w['boolType'] == '1':
+                if w['type'] == '4':
+                    res = res.using('patent_index').filter_and(PaperKeywords=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('patent_index').filter_or(PaperKeywords=ow)
+
+                elif w['type'] == '1':
+                    res = res.using('patent_index').filter_and(text=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('patent_index').filter_or(text=ow)
+
+                elif w['type'] == '2':
+                    res = res.using('patent_index').filter_and(PaperTitle=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('patent_index').filter_or(PaperTitle=ow)
+
+                elif w['type'] == '5':
+                    res = res.using('patent_index').filter_and(PaperAbstract=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('patent_index').filter_or(PaperAbstract=ow)
+
+                elif w['type'] == '3':
+                    res = res.using('patent_index').filter_and(PaperAuthors=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('patent_index').filter_or(PaperAuthors=ow)
+
+                elif w['type'] == 'PaperOrg':
+                    res = res.using('patent_index').filter_and(PaperOrg=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('patent_index').filter_or(PaperOrg=ow)
+
+            elif w['boolType'] == '2':
+                if w['type'] == '4':
+                    res = res.using('patent_index').filter_or(PaperKeywords=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('patent_index').filter_or(PaperKeywords=ow)
+
+                elif w['type'] == '1':
+                    res = res.using('patent_index').filter_or(text=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('patent_index').filter_or(text=ow)
+
+                elif w['type'] == '2':
+                    res = res.using('patent_index').filter_or(PaperTitle=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('patent_index').filter_or(PaperTitle=ow)
+
+                elif w['type'] == '5':
+                    res = res.using('patent_index').filter_or(PaperAbstract=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('patent_index').filter_or(PaperAbstract=ow)
+
+                elif w['type'] == '3':
+                    res = res.using('patent_index').filter_or(PaperAuthors=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('patent_index').filter_or(PaperAuthors=ow)
+
+                elif w['type'] == 'PaperOrg':
+                    res = res.using('patent_index').filter_or(PaperOrg=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('patent_index').filter_or(PaperOrg=ow)
+
+            elif w['boolType'] == '3':
+                if w['type'] == '4':
+                    res = res.using('patent_index').exclude(PaperKeywords=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('patent_index').exclude(PaperKeywords=ow)
+
+                elif w['type'] == '1':
+                    res = res.using('patent_index').exclude(text=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('patent_index').exclude(text=ow)
+
+                elif w['type'] == '2':
+                    res = res.using('patent_index').exclude(PaperTitle=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('patent_index').exclude(PaperTitle=ow)
+
+                elif w['type'] == '5':
+                    res = res.using('patent_index').exclude(PaperAbstract=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('patent_index').exclude(PaperAbstract=ow)
+
+                elif w['type'] == '3':
+                    res = res.using('patent_index').exclude(PaperAuthors=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('patent_index').exclude(PaperAuthors=ow)
+
+                elif w['type'] == 'PaperOrg':
+                    res = res.using('patent_index').exclude(PaperOrg=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('patent_index').exclude(PaperOrg=ow)
+
+            else:
+                pass
+
+    return res
+
+
+
+def search_project_index(res, key, redio):
+    for w in list(key):
+        if not w.__contains__('boolType'):
+            if w['type'] == '4':
+                res = res.using('project_index').filter(PaperKeywords=w['words'])
+                if redio:
+                    ow = translate_by_api(w['words'])
+                    if ow != '':
+                        res = res.using('project_index').filter_or(PaperKeywords=ow)
+            elif w['type'] == '1':
+                res = res.using('project_index').filter(text=w['words'])
+                if redio:
+                    ow = translate_by_api(w['words'])
+                    if ow != '':
+                        res = res.using('project_index').filter_or(text=ow)
+
+            elif w['type'] == '2':
+                res = res.using('project_index').filter(PaperTitle=w['words'])
+                if redio:
+                    ow = translate_by_api(w['words'])
+                    if ow != '':
+                        res = res.using('project_index').filter_or(PaperTitle=ow)
+
+            elif w['type'] == '5':
+                res = res.using('project_index').filter(PaperAbstract=w['words'])
+                if redio:
+                    ow = translate_by_api(w['words'])
+                    if ow != '':
+                        res = res.using('project_index').filter_or(PaperAbstract=ow)
+
+            elif w['type'] == '3':
+                res = res.using('project_index').filter(PaperAuthors=w['words'])
+                if redio:
+                    ow = translate_by_api(w['words'])
+                    if ow != '':
+                        res = res.using('project_index').filter_or(PaperAuthors=ow)
+
+            elif w['type'] == 'PaperOrg':
+                res = res.using('project_index').filter(PaperOrg=w['words'])
+                if redio:
+                    ow = translate_by_api(w['words'])
+                    if ow != '':
+                        res = res.using('project_index').filter_or(PaperOrg=ow)
+
+        else:
+            if w['boolType'] == '1':
+                if w['type'] == '4':
+                    res = res.using('project_index').filter_and(PaperKeywords=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('project_index').filter_or(PaperKeywords=ow)
+
+                elif w['type'] == '1':
+                    res = res.using('project_index').filter_and(text=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('project_index').filter_or(text=ow)
+
+                elif w['type'] == '2':
+                    res = res.using('project_index').filter_and(PaperTitle=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('project_index').filter_or(PaperTitle=ow)
+
+                elif w['type'] == '5':
+                    res = res.using('project_index').filter_and(PaperAbstract=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('project_index').filter_or(PaperAbstract=ow)
+
+                elif w['type'] == '3':
+                    res = res.using('project_index').filter_and(PaperAuthors=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('project_index').filter_or(PaperAuthors=ow)
+
+                elif w['type'] == 'PaperOrg':
+                    res = res.using('project_index').filter_and(PaperOrg=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('project_index').filter_or(PaperOrg=ow)
+
+            elif w['boolType'] == '2':
+                if w['type'] == '4':
+                    res = res.using('project_index').filter_or(PaperKeywords=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('project_index').filter_or(PaperKeywords=ow)
+
+                elif w['type'] == '1':
+                    res = res.using('project_index').filter_or(text=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('project_index').filter_or(text=ow)
+
+                elif w['type'] == '2':
+                    res = res.using('project_index').filter_or(PaperTitle=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('project_index').filter_or(PaperTitle=ow)
+
+                elif w['type'] == '5':
+                    res = res.using('project_index').filter_or(PaperAbstract=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('project_index').filter_or(PaperAbstract=ow)
+
+                elif w['type'] == '3':
+                    res = res.using('project_index').filter_or(PaperAuthors=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('project_index').filter_or(PaperAuthors=ow)
+
+                elif w['type'] == 'PaperOrg':
+                    res = res.using('project_index').filter_or(PaperOrg=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('project_index').filter_or(PaperOrg=ow)
+
+            elif w['boolType'] == '3':
+                if w['type'] == '4':
+                    res = res.using('project_index').exclude(PaperKeywords=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('project_index').exclude(PaperKeywords=ow)
+
+                elif w['type'] == '1':
+                    res = res.using('project_index').exclude(text=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('project_index').exclude(text=ow)
+
+                elif w['type'] == '2':
+                    res = res.using('project_index').exclude(PaperTitle=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('project_index').exclude(PaperTitle=ow)
+
+                elif w['type'] == '5':
+                    res = res.using('project_index').exclude(PaperAbstract=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('project_index').exclude(PaperAbstract=ow)
+
+                elif w['type'] == '3':
+                    res = res.using('project_index').exclude(PaperAuthors=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('project_index').exclude(PaperAuthors=ow)
+
+                elif w['type'] == 'PaperOrg':
+                    res = res.using('project_index').exclude(PaperOrg=w['words'])
+                    if redio:
+                        ow = translate_by_api(w['words'])
+                        if ow != '':
+                            res = res.using('project_index').exclude(PaperOrg=ow)
+
+            else:
+                pass
+
+    return res
+
+
+def search_paper_index(res, key, redio):
     for w in list(key):
         if not w.__contains__('boolType'):
             if w['type'] == '4':
@@ -256,7 +628,7 @@ def search_words(request):
 
     # search by elasticsearch index
     qs = SearchQuerySet()
-    res = search_el_indexes(qs, sk, radio)
+    res = search_el_indexes(qs, sk, radio, type)
 
     num = res.count()
     res = res.values('object')[(page-1)*per_page: page*per_page]
@@ -333,14 +705,12 @@ def show_paper_info(request):
                 'PaperPublisher': p.PaperPublisher,
                 'PaperFos': p.PaperFos,
                 'PaperVenue': p.PaperVenue,
-                'keywords': re.sub(r'[\[|\']', '', str(p.PaperKeywords)),
+                'keywords': re.sub(r'[\[|\'|\]]', '', str(p.PaperKeywords)),
                 'referenceTitle': reft,
                 'referenceLink': refi
             })
     elif type == 'project':
         pass
-
-
 
 
 def search_authors(request):
