@@ -44,9 +44,8 @@ def verification(request):
 
 
 def passwordLost(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        UserEmail = data.get("UserEmail")
+    if request.method == "GET":
+        UserEmail = request.GET.get('mailAddress')
         if UserEmail is not None:
             send_email(UserEmail)
             return JsonResponse({
