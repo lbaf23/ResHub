@@ -24,6 +24,7 @@ def get_my_concern(request):
                 j['name'] = user.UserName
                 j['headImage'] = user.UserImage
                 j['id'] = user.UserEmail
+                j['label'] = user.UserIntroduction
                 retconcernList.append(j)
 
             return JsonResponse({
