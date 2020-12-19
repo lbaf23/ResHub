@@ -629,7 +629,7 @@ def search_words(request):
             'link': re.sub(r'[\[|\]|\']','',p.PaperUrl).split(',')[0],
             'paperId': p.PaperId,
             'title': p.PaperTitle,
-            'msg': p.PaperAbstract,
+            'msg': '' if p.PaperAbstract is None else p.PaperAbstract,
             'author': format_list(p.PaperAuthors),
             'authorOrg': format_list(p.PaperOrg),
             'keywords': kw
