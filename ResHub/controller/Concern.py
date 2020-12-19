@@ -16,22 +16,18 @@ def get_my_concern(request):
                     "status": 4,
                     "message": "列表为空"
                 })
-            retconcernNameList = []
-            retconcernEmailList = []
-            retconcernHeadList = []
-            cnt = 0
+            retconcernList = []
             for i in concernlist:
+                j = {}
                 researcher = Researcher.objects.filter(ResId=i.ResearchId_id).first()
                 user = HubUser.objects.filter(UserEmail=researcher.UserEmail_id).first()
-                retconcernNameList.append(user.UserName)
-                retconcernEmailList.append(user.UserEmail)
-                retconcernHeadList.append(user.UserImage)
-                cnt += 1
+                j['name'] = user.UserName
+                j['headImage'] = user.UserImage
+                j['id'] = user.UserEmail
+                retconcernList.append(j)
             return JsonResponse({
                 "status": 1,
-                "NameList": retconcernNameList,
-                "EmailList": retconcernEmailList,
-                "HeadList": retconcernHeadList,
+                "ConcernList": retconcernList,
                 "message": "已经返回关注者列表",
             }, safe=False)
         else:
