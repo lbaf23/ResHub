@@ -30,7 +30,7 @@ def register(request):
     return JsonResponse({'result':result})
 
 def verification(request):
-    email = request.GET.get('userId')
+    email = request.GET.get('mailAddress')
     code = request.GET.get('verificationCode')
     result = True
     correct = r.get(email)
