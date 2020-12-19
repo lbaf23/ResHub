@@ -644,7 +644,8 @@ def search_words(request):
             'paperId': p.PaperId,
             'title': p.PaperTitle,
             'msg': p.PaperAbstract,
-            'author': p.PaperAuthors,
+            'author': p.PaperAuthors.split(',')[:-1],
+            'authorOrg': p.PaperOrg.split(',')[:-1],
             'keywords': kw
         }
         l.append(j)
