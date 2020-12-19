@@ -16,7 +16,7 @@ def bandwidth_test(request):
     return JsonResponse({'result': '1111' * 1024*16})
 
 def register(request):
-    name = request.POST.get('userId')
+    name = request.POST.get('userName')
     pwd = request.POST.get('password')
     address = request.POST.get('mailAddress')
     description = request.POST.get('userDescription')
@@ -30,7 +30,7 @@ def register(request):
     return JsonResponse({'result':result})
 
 def verification(request):
-    email = request.GET.get('userId')
+    email = request.GET.get('mailAddress')
     code = request.GET.get('verificationCode')
     result = True
     correct = r.get(email)
