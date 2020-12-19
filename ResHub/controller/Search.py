@@ -12,6 +12,12 @@ def exists_in_redis(s1):
     return s1
 
 
+def format_list(s):
+    if s is None:
+        return []
+    return s.split(',')[:-1]
+
+
 def translate_by_api(str):
     """
    input : str 需要翻译的字符串
@@ -644,8 +650,8 @@ def search_words(request):
             'paperId': p.PaperId,
             'title': p.PaperTitle,
             'msg': p.PaperAbstract,
-            'author': p.PaperAuthors.split(',')[:-1],
-            'authorOrg': p.PaperOrg.split(',')[:-1],
+            'author': format_list(p.PaperAuthors),
+            'authorOrg': format_list(p.PaperOrg),
             'keywords': kw
         }
         l.append(j)
