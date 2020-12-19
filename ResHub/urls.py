@@ -24,7 +24,7 @@ from ResHub.controller import Login, Browse, Portal, Concern
 from ResHub.personal_portal import getPersonalPortal, getPersonalList, temp
 from ResHub.institutions import getResearchInstitute, getDaGongRen
 from ResHub.history import getSearchRecord, deleteSearchRecord
-from ResHub.user import newPassword
+from ResHub.user import newPassword, changeHead
 from ResHub.controller import Collection
 from ResHub.controller import Search
 from ResHub.controller import Administrator
@@ -44,7 +44,8 @@ urlpatterns = [
     path('newPortal', Portal.new_portal),
     path('appealPortal', Portal.appeal_portal),
     path('passwordLost', Login.passwordLost),
-
+    path('getList', Administrator.getList),
+    path('changeHead', changeHead.changeHead),
 
     # LKY
     #path('temp', temp.temp),
@@ -55,6 +56,7 @@ urlpatterns = [
     path('getSearchRecord', getSearchRecord.getSearchRecord),
     path('deleteSearchRecord', deleteSearchRecord.deleteSearchRecord),
     path('newPassword', newPassword.newPassword),
+
 
     # LYC
     path('addCollection', Collection.add_collection),
