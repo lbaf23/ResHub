@@ -68,13 +68,7 @@ def search_el_indexes(res, key, redio, type):
 def search_patent_index(res, key, redio):
     for w in list(key):
         if not w.__contains__('boolType'):
-            if w['type'] == '4':
-                res = res.using('patent').filter(PaperKeywords=w['words'])
-                if redio:
-                    ow = translate_by_api(w['words'])
-                    if ow != '':
-                        res = res.using('patent').filter_or(PaperKeywords=ow)
-            elif w['type'] == '1':
+            if w['type'] == '1' or w['type'] == '4':
                 res = res.using('patent').filter(text=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
@@ -82,43 +76,36 @@ def search_patent_index(res, key, redio):
                         res = res.using('patent').filter_or(text=ow)
 
             elif w['type'] == '2':
-                res = res.using('patent').filter(PaperTitle=w['words'])
+                res = res.using('patent').filter(PatentTitle=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.using('patent').filter_or(PaperTitle=ow)
+                        res = res.using('patent').filter_or(PatentTitle=ow)
 
             elif w['type'] == '5':
-                res = res.using('patent').filter(PaperAbstract=w['words'])
+                res = res.using('patent').filter(PatentAbstract=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.using('patent').filter_or(PaperAbstract=ow)
+                        res = res.using('patent').filter_or(PatentAbstract=ow)
 
             elif w['type'] == '3':
-                res = res.using('patent').filter(PaperAuthors=w['words'])
+                res = res.using('patent').filter(PatentAuthor=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.using('patent').filter_or(PaperAuthors=ow)
+                        res = res.using('patent').filter_or(PatentAuthor=ow)
 
             elif w['type'] == 'PaperOrg':
-                res = res.using('patent').filter(PaperOrg=w['words'])
+                res = res.using('patent').filter(PatentCompany=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.using('patent').filter_or(PaperOrg=ow)
+                        res = res.using('patent').filter_or(PatentCompany=ow)
 
         else:
             if w['boolType'] == '1':
-                if w['type'] == '4':
-                    res = res.using('patent').filter_and(PaperKeywords=w['words'])
-                    if redio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('patent').filter_or(PaperKeywords=ow)
-
-                elif w['type'] == '1':
+                if w['type'] == '1' or w['type'] == '4':
                     res = res.using('patent').filter_and(text=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
@@ -126,42 +113,35 @@ def search_patent_index(res, key, redio):
                             res = res.using('patent').filter_or(text=ow)
 
                 elif w['type'] == '2':
-                    res = res.using('patent').filter_and(PaperTitle=w['words'])
+                    res = res.using('patent').filter_and(PatentTitle=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent').filter_or(PaperTitle=ow)
+                            res = res.using('patent').filter_or(PatentTitle=ow)
 
                 elif w['type'] == '5':
-                    res = res.using('patent').filter_and(PaperAbstract=w['words'])
+                    res = res.using('patent').filter_and(PatentAbstract=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent').filter_or(PaperAbstract=ow)
+                            res = res.using('patent').filter_or(PatentAbstract=ow)
 
                 elif w['type'] == '3':
-                    res = res.using('patent').filter_and(PaperAuthors=w['words'])
+                    res = res.using('patent').filter_and(PatentAuthor=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent').filter_or(PaperAuthors=ow)
+                            res = res.using('patent').filter_or(PatentAuthor=ow)
 
                 elif w['type'] == 'PaperOrg':
-                    res = res.using('patent').filter_and(PaperOrg=w['words'])
+                    res = res.using('patent').filter_and(PatentCompany=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent').filter_or(PaperOrg=ow)
+                            res = res.using('patent').filter_or(PatentCompany=ow)
 
             elif w['boolType'] == '2':
-                if w['type'] == '4':
-                    res = res.using('patent').filter_or(PaperKeywords=w['words'])
-                    if redio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('patent').filter_or(PaperKeywords=ow)
-
-                elif w['type'] == '1':
+                if w['type'] == '1' or w['type'] == '4':
                     res = res.using('patent').filter_or(text=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
@@ -169,42 +149,35 @@ def search_patent_index(res, key, redio):
                             res = res.using('patent').filter_or(text=ow)
 
                 elif w['type'] == '2':
-                    res = res.using('patent').filter_or(PaperTitle=w['words'])
+                    res = res.using('patent').filter_or(PatentTitle=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent').filter_or(PaperTitle=ow)
+                            res = res.using('patent').filter_or(PatentTitle=ow)
 
                 elif w['type'] == '5':
-                    res = res.using('patent').filter_or(PaperAbstract=w['words'])
+                    res = res.using('patent').filter_or(PatentAbstract=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent').filter_or(PaperAbstract=ow)
+                            res = res.using('patent').filter_or(PatentAbstract=ow)
 
                 elif w['type'] == '3':
-                    res = res.using('patent').filter_or(PaperAuthors=w['words'])
+                    res = res.using('patent').filter_or(PatentAuthor=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent').filter_or(PaperAuthors=ow)
+                            res = res.using('patent').filter_or(PatentAuthor=ow)
 
                 elif w['type'] == 'PaperOrg':
-                    res = res.using('patent').filter_or(PaperOrg=w['words'])
+                    res = res.using('patent').filter_or(PatentCompany=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent').filter_or(PaperOrg=ow)
+                            res = res.using('patent').filter_or(PatentCompany=ow)
 
             elif w['boolType'] == '3':
-                if w['type'] == '4':
-                    res = res.using('patent').exclude(PaperKeywords=w['words'])
-                    if redio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('patent').exclude(PaperKeywords=ow)
-
-                elif w['type'] == '1':
+                if w['type'] == '1' or w['type'] == '4':
                     res = res.using('patent').exclude(text=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
@@ -212,32 +185,32 @@ def search_patent_index(res, key, redio):
                             res = res.using('patent').exclude(text=ow)
 
                 elif w['type'] == '2':
-                    res = res.using('patent').exclude(PaperTitle=w['words'])
+                    res = res.using('patent').exclude(PatentTitle=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent').exclude(PaperTitle=ow)
+                            res = res.using('patent').exclude(PatentTitle=ow)
 
                 elif w['type'] == '5':
-                    res = res.using('patent').exclude(PaperAbstract=w['words'])
+                    res = res.using('patent').exclude(PatentAbstract=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent').exclude(PaperAbstract=ow)
+                            res = res.using('patent').exclude(PatentAbstract=ow)
 
                 elif w['type'] == '3':
-                    res = res.using('patent').exclude(PaperAuthors=w['words'])
+                    res = res.using('patent').exclude(PatentAuthor=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent').exclude(PaperAuthors=ow)
+                            res = res.using('patent').exclude(PatentAuthor=ow)
 
                 elif w['type'] == 'PaperOrg':
-                    res = res.using('patent').exclude(PaperOrg=w['words'])
+                    res = res.using('patent').exclude(PatentCompany=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent').exclude(PaperOrg=ow)
+                            res = res.using('patent').exclude(PatentCompany=ow)
 
             else:
                 pass
@@ -738,3 +711,4 @@ def search_authors(request):
 
 def filter_search_words(request):
     pass
+
