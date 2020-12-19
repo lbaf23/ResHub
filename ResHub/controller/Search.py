@@ -69,175 +69,175 @@ def search_patent_index(res, key, redio):
     for w in list(key):
         if not w.__contains__('boolType'):
             if w['type'] == '4':
-                res = res.using('patent_index').filter(PaperKeywords=w['words'])
+                res = res.using('patent').filter(PaperKeywords=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.using('patent_index').filter_or(PaperKeywords=ow)
+                        res = res.using('patent').filter_or(PaperKeywords=ow)
             elif w['type'] == '1':
-                res = res.using('patent_index').filter(text=w['words'])
+                res = res.using('patent').filter(text=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.using('patent_index').filter_or(text=ow)
+                        res = res.using('patent').filter_or(text=ow)
 
             elif w['type'] == '2':
-                res = res.using('patent_index').filter(PaperTitle=w['words'])
+                res = res.using('patent').filter(PaperTitle=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.using('patent_index').filter_or(PaperTitle=ow)
+                        res = res.using('patent').filter_or(PaperTitle=ow)
 
             elif w['type'] == '5':
-                res = res.using('patent_index').filter(PaperAbstract=w['words'])
+                res = res.using('patent').filter(PaperAbstract=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.using('patent_index').filter_or(PaperAbstract=ow)
+                        res = res.using('patent').filter_or(PaperAbstract=ow)
 
             elif w['type'] == '3':
-                res = res.using('patent_index').filter(PaperAuthors=w['words'])
+                res = res.using('patent').filter(PaperAuthors=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.using('patent_index').filter_or(PaperAuthors=ow)
+                        res = res.using('patent').filter_or(PaperAuthors=ow)
 
             elif w['type'] == 'PaperOrg':
-                res = res.using('patent_index').filter(PaperOrg=w['words'])
+                res = res.using('patent').filter(PaperOrg=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.using('patent_index').filter_or(PaperOrg=ow)
+                        res = res.using('patent').filter_or(PaperOrg=ow)
 
         else:
             if w['boolType'] == '1':
                 if w['type'] == '4':
-                    res = res.using('patent_index').filter_and(PaperKeywords=w['words'])
+                    res = res.using('patent').filter_and(PaperKeywords=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent_index').filter_or(PaperKeywords=ow)
+                            res = res.using('patent').filter_or(PaperKeywords=ow)
 
                 elif w['type'] == '1':
-                    res = res.using('patent_index').filter_and(text=w['words'])
+                    res = res.using('patent').filter_and(text=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent_index').filter_or(text=ow)
+                            res = res.using('patent').filter_or(text=ow)
 
                 elif w['type'] == '2':
-                    res = res.using('patent_index').filter_and(PaperTitle=w['words'])
+                    res = res.using('patent').filter_and(PaperTitle=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent_index').filter_or(PaperTitle=ow)
+                            res = res.using('patent').filter_or(PaperTitle=ow)
 
                 elif w['type'] == '5':
-                    res = res.using('patent_index').filter_and(PaperAbstract=w['words'])
+                    res = res.using('patent').filter_and(PaperAbstract=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent_index').filter_or(PaperAbstract=ow)
+                            res = res.using('patent').filter_or(PaperAbstract=ow)
 
                 elif w['type'] == '3':
-                    res = res.using('patent_index').filter_and(PaperAuthors=w['words'])
+                    res = res.using('patent').filter_and(PaperAuthors=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent_index').filter_or(PaperAuthors=ow)
+                            res = res.using('patent').filter_or(PaperAuthors=ow)
 
                 elif w['type'] == 'PaperOrg':
-                    res = res.using('patent_index').filter_and(PaperOrg=w['words'])
+                    res = res.using('patent').filter_and(PaperOrg=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent_index').filter_or(PaperOrg=ow)
+                            res = res.using('patent').filter_or(PaperOrg=ow)
 
             elif w['boolType'] == '2':
                 if w['type'] == '4':
-                    res = res.using('patent_index').filter_or(PaperKeywords=w['words'])
+                    res = res.using('patent').filter_or(PaperKeywords=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent_index').filter_or(PaperKeywords=ow)
+                            res = res.using('patent').filter_or(PaperKeywords=ow)
 
                 elif w['type'] == '1':
-                    res = res.using('patent_index').filter_or(text=w['words'])
+                    res = res.using('patent').filter_or(text=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent_index').filter_or(text=ow)
+                            res = res.using('patent').filter_or(text=ow)
 
                 elif w['type'] == '2':
-                    res = res.using('patent_index').filter_or(PaperTitle=w['words'])
+                    res = res.using('patent').filter_or(PaperTitle=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent_index').filter_or(PaperTitle=ow)
+                            res = res.using('patent').filter_or(PaperTitle=ow)
 
                 elif w['type'] == '5':
-                    res = res.using('patent_index').filter_or(PaperAbstract=w['words'])
+                    res = res.using('patent').filter_or(PaperAbstract=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent_index').filter_or(PaperAbstract=ow)
+                            res = res.using('patent').filter_or(PaperAbstract=ow)
 
                 elif w['type'] == '3':
-                    res = res.using('patent_index').filter_or(PaperAuthors=w['words'])
+                    res = res.using('patent').filter_or(PaperAuthors=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent_index').filter_or(PaperAuthors=ow)
+                            res = res.using('patent').filter_or(PaperAuthors=ow)
 
                 elif w['type'] == 'PaperOrg':
-                    res = res.using('patent_index').filter_or(PaperOrg=w['words'])
+                    res = res.using('patent').filter_or(PaperOrg=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent_index').filter_or(PaperOrg=ow)
+                            res = res.using('patent').filter_or(PaperOrg=ow)
 
             elif w['boolType'] == '3':
                 if w['type'] == '4':
-                    res = res.using('patent_index').exclude(PaperKeywords=w['words'])
+                    res = res.using('patent').exclude(PaperKeywords=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent_index').exclude(PaperKeywords=ow)
+                            res = res.using('patent').exclude(PaperKeywords=ow)
 
                 elif w['type'] == '1':
-                    res = res.using('patent_index').exclude(text=w['words'])
+                    res = res.using('patent').exclude(text=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent_index').exclude(text=ow)
+                            res = res.using('patent').exclude(text=ow)
 
                 elif w['type'] == '2':
-                    res = res.using('patent_index').exclude(PaperTitle=w['words'])
+                    res = res.using('patent').exclude(PaperTitle=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent_index').exclude(PaperTitle=ow)
+                            res = res.using('patent').exclude(PaperTitle=ow)
 
                 elif w['type'] == '5':
-                    res = res.using('patent_index').exclude(PaperAbstract=w['words'])
+                    res = res.using('patent').exclude(PaperAbstract=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent_index').exclude(PaperAbstract=ow)
+                            res = res.using('patent').exclude(PaperAbstract=ow)
 
                 elif w['type'] == '3':
-                    res = res.using('patent_index').exclude(PaperAuthors=w['words'])
+                    res = res.using('patent').exclude(PaperAuthors=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent_index').exclude(PaperAuthors=ow)
+                            res = res.using('patent').exclude(PaperAuthors=ow)
 
                 elif w['type'] == 'PaperOrg':
-                    res = res.using('patent_index').exclude(PaperOrg=w['words'])
+                    res = res.using('patent').exclude(PaperOrg=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('patent_index').exclude(PaperOrg=ow)
+                            res = res.using('patent').exclude(PaperOrg=ow)
 
             else:
                 pass
@@ -245,180 +245,187 @@ def search_patent_index(res, key, redio):
     return res
 
 
-
 def search_project_index(res, key, redio):
     for w in list(key):
         if not w.__contains__('boolType'):
             if w['type'] == '4':
-                res = res.using('project_index').filter(PaperKeywords=w['words'])
+                res = res.using('project').filter(SubjectHeadingCN=w['words']).filter_or(SubjectHeadingEN=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.using('project_index').filter_or(PaperKeywords=ow)
+                        res = res.using('project').filter_or(SubjectHeadingCN=ow).filter_or(SubjectHeadingEN=ow)
             elif w['type'] == '1':
-                res = res.using('project_index').filter(text=w['words'])
+                res = res.using('project').filter(text=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.using('project_index').filter_or(text=ow)
+                        res = res.using('project').filter_or(text=ow)
 
             elif w['type'] == '2':
-                res = res.using('project_index').filter(PaperTitle=w['words'])
+                res = res.using('project').filter(ProjectTitle=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.using('project_index').filter_or(PaperTitle=ow)
+                        res = res.using('project').filter_or(ProjectTitle=ow)
 
             elif w['type'] == '5':
-                res = res.using('project_index').filter(PaperAbstract=w['words'])
+                res = res.using('project').filter(ZhAbstract=w['words']).\
+                    filter_or(EnAbstract=w['words']).filter_or(FinalAbstract=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.using('project_index').filter_or(PaperAbstract=ow)
+                        res = res.using('project').filter_or(PaperAbstract=ow). \
+                            filter_or(EnAbstract=ow).filter_or(FinalAbstract=ow)
 
             elif w['type'] == '3':
-                res = res.using('project_index').filter(PaperAuthors=w['words'])
+                res = res.using('project').filter(ProjectLeader=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.using('project_index').filter_or(PaperAuthors=ow)
+                        res = res.using('project').filter_or(ProjectLeader=ow)
 
             elif w['type'] == 'PaperOrg':
-                res = res.using('project_index').filter(PaperOrg=w['words'])
+                res = res.using('project').filter(SupportUnits=w['words'])
                 if redio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
-                        res = res.using('project_index').filter_or(PaperOrg=ow)
+                        res = res.using('project').filter_or(SupportUnits=ow)
 
         else:
             if w['boolType'] == '1':
                 if w['type'] == '4':
-                    res = res.using('project_index').filter_and(PaperKeywords=w['words'])
+                    res = res.using('project').filter_and(SubjectHeadingCN=w['words']).filter_or(SubjectHeadingEN=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('project_index').filter_or(PaperKeywords=ow)
+                            res = res.using('project').filter_and(SubjectHeadingEN=ow).filter_or(SubjectHeadingEN=ow)
 
                 elif w['type'] == '1':
-                    res = res.using('project_index').filter_and(text=w['words'])
+                    res = res.using('project').filter_and(text=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('project_index').filter_or(text=ow)
+                            res = res.using('project').filter_or(text=ow)
 
                 elif w['type'] == '2':
-                    res = res.using('project_index').filter_and(PaperTitle=w['words'])
+                    res = res.using('project').filter_and(ProjectTitle=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('project_index').filter_or(PaperTitle=ow)
+                            res = res.using('project').filter_or(ProjectTitle=ow)
 
                 elif w['type'] == '5':
-                    res = res.using('project_index').filter_and(PaperAbstract=w['words'])
+                    res = res.using('project').filter_and(ZhAbstract=w['words']). \
+                            filter_or(EnAbstract=w['words']).filter_or(FinalAbstract=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('project_index').filter_or(PaperAbstract=ow)
+                            res = res.using('project').filter_and(EnAbstract=w['words']). \
+                                filter_or(ZhAbstract=w['words']).filter_or(FinalAbstract=w['words'])
 
                 elif w['type'] == '3':
-                    res = res.using('project_index').filter_and(PaperAuthors=w['words'])
+                    res = res.using('project').filter_and(ProjectLeader=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('project_index').filter_or(PaperAuthors=ow)
+                            res = res.using('project').filter_or(ProjectLeader=ow)
 
                 elif w['type'] == 'PaperOrg':
-                    res = res.using('project_index').filter_and(PaperOrg=w['words'])
+                    res = res.using('project').filter_and(SupportUnits=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('project_index').filter_or(PaperOrg=ow)
+                            res = res.using('project').filter_or(SupportUnits=ow)
 
             elif w['boolType'] == '2':
                 if w['type'] == '4':
-                    res = res.using('project_index').filter_or(PaperKeywords=w['words'])
+                    res = res.using('project').filter_or(SubjectHeadingCN=w['words']).filter_or(SubjectHeadingEN=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('project_index').filter_or(PaperKeywords=ow)
+                            res = res.using('project').filter_or(SubjectHeadingCN=ow).filter_or(SubjectHeadingEN=ow)
 
                 elif w['type'] == '1':
-                    res = res.using('project_index').filter_or(text=w['words'])
+                    res = res.using('project').filter_or(text=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('project_index').filter_or(text=ow)
+                            res = res.using('project').filter_or(text=ow)
 
                 elif w['type'] == '2':
-                    res = res.using('project_index').filter_or(PaperTitle=w['words'])
+                    res = res.using('project').filter_or(ProjectTitle=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('project_index').filter_or(PaperTitle=ow)
+                            res = res.using('project').filter_or(ProjectTitle=ow)
 
                 elif w['type'] == '5':
-                    res = res.using('project_index').filter_or(PaperAbstract=w['words'])
+                    res = res.using('project').filter_or(ZhAbstract=w['words']). \
+                        filter_or(EnAbstract=w['words']).filter_or(FinalAbstract=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('project_index').filter_or(PaperAbstract=ow)
+                            res = res.using('project').filter_or(ZhAbstract=ow). \
+                                filter_or(EnAbstract=ow).filter_or(FinalAbstract=ow)
 
                 elif w['type'] == '3':
-                    res = res.using('project_index').filter_or(PaperAuthors=w['words'])
+                    res = res.using('project').filter_or(ProjectLeader=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('project_index').filter_or(PaperAuthors=ow)
+                            res = res.using('project').filter_or(ProjectLeader=ow)
 
                 elif w['type'] == 'PaperOrg':
-                    res = res.using('project_index').filter_or(PaperOrg=w['words'])
+                    res = res.using('project').filter_or(SupportUnits=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('project_index').filter_or(PaperOrg=ow)
+                            res = res.using('project').filter_or(SupportUnits=ow)
 
             elif w['boolType'] == '3':
                 if w['type'] == '4':
-                    res = res.using('project_index').exclude(PaperKeywords=w['words'])
+                    res = res.using('project').exclude(SubjectHeadingCN=w['words']).exclude(SubjectHeadingEN=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('project_index').exclude(PaperKeywords=ow)
+                            res = res.using('project').exclude(SubjectHeadingCN=ow).exclude(SubjectHeadingEN=ow)
 
                 elif w['type'] == '1':
-                    res = res.using('project_index').exclude(text=w['words'])
+                    res = res.using('project').exclude(text=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('project_index').exclude(text=ow)
+                            res = res.using('project').exclude(text=ow)
 
                 elif w['type'] == '2':
-                    res = res.using('project_index').exclude(PaperTitle=w['words'])
+                    res = res.using('project').exclude(ProjectTitle=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('project_index').exclude(PaperTitle=ow)
+                            res = res.using('project').exclude(ProjectTitle=ow)
 
                 elif w['type'] == '5':
-                    res = res.using('project_index').exclude(PaperAbstract=w['words'])
+                    res = res.using('project').exclude(ZhAbstract=w['words'])\
+                        .exclude(EnAbstract=w['words']).exclude(FinalAbstract=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('project_index').exclude(PaperAbstract=ow)
+                            res = res.using('project').exclude(ZhAbstract=ow).\
+                                exclude(EnAbstract=ow).exclude(FinalAbstract=ow)
 
                 elif w['type'] == '3':
-                    res = res.using('project_index').exclude(PaperAuthors=w['words'])
+                    res = res.using('project').exclude(ProjectLeader=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('project_index').exclude(PaperAuthors=ow)
+                            res = res.using('project').exclude(ProjectLeader=ow)
 
                 elif w['type'] == 'PaperOrg':
-                    res = res.using('project_index').exclude(PaperOrg=w['words'])
+                    res = res.using('project').exclude(SupportUnits=w['words'])
                     if redio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('project_index').exclude(PaperOrg=ow)
+                            res = res.using('project').exclude(SupportUnits=ow)
 
             else:
                 pass
