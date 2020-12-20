@@ -4,13 +4,32 @@ from ResModel.models import HubUser
 from django.http import HttpResponse, JsonResponse
 from ResHub.redispool import r
 from ResHub.sendMail import send_email
+from ResModel.models import Researcher
+
 def identity_check(request):
     uid = request.POST.get('userId')
     pwd = request.POST.get('password')
     print(uid, pwd)
     u = HubUser.objects.filter(UserEmail=uid).filter(UserPassword=pwd)
-    res = u.__len__() > 0
-    return JsonResponse({'result': u[0]})
+    if(u.__len__() > 0):
+        id=u[0].UserEmail
+        head=u[0].UserImage
+        user = Researcher.objects.filter(ResEmail=id)
+        if(user.__len__()>0):
+            isPortal = True
+            protalId = user[0].ResId
+        else:
+            isPortal = False
+            protalId = None
+        if(u[0].UserEmail == "root@root"):
+            isAdministrator = True
+        else:
+            isAdministrator = False
+        label = u[0].UserIntroduction
+        return JsonResponse({'myId':id,'userHead':head,'isPortal':isPortal,'portalId':protalId,'isAdministrator':isAdministrator,'label':label,'result':True})
+
+    else:
+        return JsonResponse({'result': False})
 
 
 def bandwidth_test(request):
