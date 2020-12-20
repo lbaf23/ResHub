@@ -6,10 +6,9 @@ from ResModel.models import Concern, Researcher, HubUser
 
 def get_my_concern(request):
     if request.method == "GET":
-        data = json.loads(request.body)
-        UserEmail = data.get("UserEmail")
+        UserEmail = request.GET.get("UserEmail")
         if UserEmail is not None:
-            concern = Concern.objects.filter(UserEmail=UserEmail).order_by("ConcernTime")
+            concern = Concern.objects.filter(UserEmail_id=UserEmail).order_by("ConcernTime")
             concernlist = list(concern)
             if len(concernlist) == 0:
                 return JsonResponse({
@@ -50,7 +49,7 @@ def cancel_concern(request):
         UserEmail = data.get("UserEmail")
         ResearchId = data.get("ResearchId")
         if UserEmail is not None and ResearchId is not None:
-            concern = Concern.objects.filter(UserEmail=UserEmail, ResearchId=ResearchId).first()
+            concern = Concern.objects.filter(UserEmail_id=UserEmail, ResearchId_id=ResearchId).first()
             concern.delete()
             return JsonResponse({
                 "status": 1,
@@ -74,9 +73,10 @@ def add_concern(request):
         UserEmail = data.get("UserEmail")
         ResearchId = data.get("ResearchId")
         if UserEmail is not None and ResearchId is not None:
-            concern = Concern.objects.filter(UserEmail=UserEmail, ResearchId=ResearchId).first()
+            concern = Concern.objects.filter(UserEmail_id=UserEmail, ResearchId_id=ResearchId).first()
             if concern is None:
-                concern.save(UserEmail=UserEmail, ResearchId=ResearchId)
+                concern1 = Concern(UserEmail_id=UserEmail,ResearchId_id=ResearchId)
+                concern1.save()
                 return JsonResponse({
                     "status": 1,
                     "message": "关注成功",

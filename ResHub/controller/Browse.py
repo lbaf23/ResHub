@@ -10,10 +10,9 @@ from ResModel.models import Project
 
 def browse_history(request):
     if request.method == "GET":
-        data = json.loads(request.body)
-        userEmailId = data.get("userEmailId")
+        userEmailId = request.GET.get("UserEmail")
         if userEmailId is not None:
-            History = Browse.objects.filter(UserEmail=userEmailId).order_by("BrowseTime")
+            History = Browse.objects.filter(UserEmail_id=userEmailId).order_by("BrowseTime")
             HistoryList = list(History)
             if len(HistoryList)==0:
                 return JsonResponse({
@@ -24,7 +23,7 @@ def browse_history(request):
             retPaperTitleList = []
             retTimeList = []
             for i in HistoryList:
-                paper = Paper.objects.filter(PaperId= i.PaperId).first()
+                paper = Paper.objects.filter(PaperId= i.PaperId_id).first()
                 retPaperUrlList.append(paper.PaperUrl)
                 retPaperTitleList.append(paper.PaperTitle)
                 retTimeList.append(i.BrowseTime)
