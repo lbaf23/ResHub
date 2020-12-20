@@ -1,7 +1,7 @@
 from haystack.query import SearchQuerySet, SQ
 from django.http import JsonResponse
 import json
-from ResModel.models import PaperAuthor, Project, Paper, PaperReference
+from ResModel.models import PaperAuthor, Project, Paper, PaperReference, Patent, Collection
 import re
 import requests
 
@@ -641,6 +641,7 @@ def search_words(request):
 
 def show_paper_info(request):
     pid = request.POST.get('id')
+    uid = request.POST.get('userId')
     type = request.POST.get('type')
 
     if type == 'paper':
@@ -671,6 +672,17 @@ def show_paper_info(request):
                 reft.append(r.RePaperId_PaperTitle)
                 refi.append(r.RePaperId_id)
 
+            ct = ''
+            if uid == '':
+                cs = False
+            else:
+                c = Collection.objects.filter(UserEmail=pid).filter(PaperId=pid)
+                if len(c) > 0:
+                    cs = True
+                    ct = c.CollectionTime
+                else :
+                    cs = False
+
             return JsonResponse({
                 'paperId': p.PaperId,
                 'title': p.PaperTitle,
@@ -694,10 +706,77 @@ def show_paper_info(request):
                 'PaperVenue': '' if p.PaperVenue is None else p.PaperVenue,
                 'keywords': re.sub(r'[\[|\'|\]]', '', str(p.PaperKeywords)),
                 'referenceTitle': reft,
-                'referenceLink': refi
+                'referenceLink': refi,
+                'collectStatue': cs,
+                'collectTime': ct
             })
     elif type == 'project':
-        pass
+        pl = Project.objects.filer(ProjectId=pid)
+        if len(pl) > 0:
+            project = pl[0]
+
+            ct = ''
+            if uid == '':
+                cs = False
+            else :
+                c = Collection.objects.filter(UserEmail=pid).filter(ProjectId=pid)
+                if len(c) > 0:
+                    ct = c.CollectionTime
+                    cs = True
+                else :
+                    cs = False
+
+            return JsonResponse({
+                'paperId': pid,
+                'title': project.ProjectTitle,
+                'zhAbstract': project.ZhAbstract,
+                'enKeywords': project.EnAbstract,
+                'period': project.StudyPeriod,
+                'category':project.ProjectCategory,
+                'year': project.GrantYear,
+                'author': project.ProjectLeader,
+                'authorTitle': project.ProjectLeaderTitle,
+                'fund': project.Funding,
+                'support': project.SupportUnits,
+                'collectStatue': cs,
+                'collectionSum': project.CollectionNum,
+                'viewSum': project.ReadNum,
+                'link': project.ProjectUrl,
+                'collectTime': ct
+            })
+        else:
+            pass
+    elif type == 'patent':
+        pl = Patent.objects.filer(PatentId=pid)
+        if len(pl) > 0:
+            patent = pl[0]
+            ct = ''
+            if uid == '':
+                cs = False
+            else:
+                c = Collection.objects.filter(UserEmail=pid).filter(PatentId=pid)
+                if len(c) > 0:
+                    ct = c.CollectionTime
+                    cs = True
+                else:
+                    cs = False
+
+            return JsonResponse({
+                'id': pid,
+                'paperId': pid,
+                'title': patent.PatentTitle,
+                'abstract': patent.PatentAbstract,
+                'date': patent.PatentDate,
+                'author': patent.PatentAuthor,
+                'collectStatue': cs,
+                'collectionSum': patent.CollectionNum,
+                'viewSum': patent.ReadNum,
+                'link': patent.PatentUrl,
+                'collectTime': ct,
+                'institution': patent.PatentCompany
+            })
+        else:
+            pass
 
 
 def search_authors(request):
