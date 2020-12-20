@@ -63,6 +63,8 @@ def getResearchInstitute(request):
                     res_temp['name'] = this_reseacher.ResName
                     try:
                         UserEmail_id = this_reseacher.UserEmail_id
+                        this_user = HubUser.objects.get(UserEmail=UserEmail_id)
+                        res['avatar'] = this_user.UserImage
                         if(UserEmail_id is None):
                             res['mail'] = ''
                         else:
@@ -118,7 +120,7 @@ def getResearchInstitute(request):
                     try:
                         data_temp = PaperAuthor.objects.get(ResearcherId_id=i)
                     except Exception as e:
-                        aaaaaaaaa = 1
+                        data_temp = None
                     if(data_temp is not None):
                         res_temp = {}
                         paper = Paper.objects.get(PaperId=data_temp.PaperId_id)
