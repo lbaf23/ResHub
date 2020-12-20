@@ -8,10 +8,16 @@ def author_array(authors):
     len = authors.__len__()
     index1 = 0
     index2 = authors.find(',', index1+1)
-    while(index2 < len-1):
+    if(index2 == -1):
+        temp.append(authors[index1:len])
+    index1 = index2
+    index2 = authors.find(',', index1+1)
+    while((index2 < len-1) and (index1 != -1)) and (index2 != -1):
         temp.append(authors[index1:index2])
         index1 = index2
         index2 = authors.find(',', index1+1)
+        if(index2 == -1):
+            break
     return temp
 
 
@@ -29,7 +35,7 @@ def getResearchInstitute(request):
                     })
                 # insname
                 insname = institute.InsName
-                res['InsName'] = insname
+                res['insname'] = insname
 
                 # domain
                 res['domain'] = institute.InsField
@@ -37,10 +43,8 @@ def getResearchInstitute(request):
                 # reseachers
                 reseachers = ResInstitution.objects.filter(
                     InstitutionId=instituteId).all()
-                res['researchers'] = reseachers.__len__()
+                res['researchers'] = str(reseachers.__len__())
 
-                quoted = 0
-                papernum = 0
                 resdata = []
                 hotData = []
                 datas = [0, 0, 0, 0, 0, 0, 0, 0]
@@ -81,37 +85,49 @@ def getResearchInstitute(request):
                 ind = 0
                 confCount = 0
                 magCount = 0
+                quoted = 0
+                papernum = 0
                 for i in hotData_temp:
-                    data_temp = PaperAuthor.objects.get(ResearcherId=i)
-                    res_temp = {}
-                    res_temp['paperid'] = data_temp.PaperId.PaperId
-                    res_temp['title'] = data_temp.PaperId.PaperTitle
-                    res_temp['msg'] = data_temp.PaperId.PaperAbstract
-                    authors = data_temp.PaperId.PaperAuthors
-                    res_temp['author'] = author_array(authors)
-                    authorid = []
-                    authorid.append(i)
-                    res_temp['authorid'] = authorid
-                    res_temp['link'] = data_temp.PaperId.PaperUrl
-                    hotData.append(res_temp)
+                    papernum = papernum + PaperAuthor.objects.filter(
+                        ResearcherId=i).all().__len__()
 
-                    papersid = PaperAuthor.objects.filter(
-                        ResearcherId=1).all()
-                    for j in papersid:
-                        year = j.PaperId.PaperTime
-                        index = 8 - (2020-year)
-                        if(index < 0):
-                            continue
-                        datas[index] = datas[index] + 1
-                        quotes[index] = quotes[index] + i.PaperId.PaperCitation
-                    magCount = magCount + papersid.__len__()
                     projectauthor = ProjectAuthor.objects.filter(
                         ResearcherId=i).all()
-                    magCount = magCount + projectauthor.__len__()
+                    confCount = confCount+projectauthor.__len__()
+
+                    data_temp = PaperAuthor.objects.get(ResearcherId=i)
+                    if(data_temp is not None):
+                        res_temp = {}
+                        res_temp['paperid'] = data_temp.PaperId.PaperId
+                        res_temp['title'] = data_temp.PaperId.PaperTitle
+                        res_temp['msg'] = data_temp.PaperId.PaperAbstract
+                        quoted = quoted+data_temp.PaperId.PaperCitation
+                        authors = data_temp.PaperId.PaperAuthors
+                        res_temp['author'] = author_array(authors)
+                        authorid = []
+                        authorid.append(i)
+                        res_temp['authorid'] = authorid
+                        res_temp['link'] = data_temp.PaperId.PaperUrl
+                        hotData.append(res_temp)
+
+                        papersid = PaperAuthor.objects.filter(
+                            ResearcherId=1).all()
+                        for j in papersid:
+                            year = j.PaperId.PaperTime
+                            index = 8 - (2020-year)
+                            if(index < 0):
+                                continue
+                            datas[index] = datas[index] + 1
+                            quotes[index] = quotes[index] + \
+                                j.PaperId.PaperCitation
+                        magCount = magCount + papersid.__len__()
+                        projectauthor = ProjectAuthor.objects.filter(
+                            ResearcherId=i).all()
+                        magCount = magCount + projectauthor.__len__()
                     ind = ind + 1
                     if (ind == 5):
                         break
-
+                res['hotdata'] = hotData
                 all_have = magCount+confCount
                 magpar = str(int(float(magCount)/float(all_have)*100))+'%'
                 confpar = str(
@@ -120,6 +136,17 @@ def getResearchInstitute(request):
                 res['magpar'] = magpar
                 res['confcount'] = confCount
                 res['confpar'] = confpar
+                res['quoted'] = str(quoted)
+                res['papernum'] = str(papernum)
+
+                resCount = []
+                quoCount = []
+                for i in datas:
+                    resCount.append(str(i))
+                for i in quotes:
+                    quoCount.append(str(i))
+                res['rescount'] = resCount
+                res['quocount'] = quoCount
 
                 return JsonResponse(res)
             else:
