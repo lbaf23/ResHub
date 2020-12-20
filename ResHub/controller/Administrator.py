@@ -48,7 +48,7 @@ def getList(request):
             AppealList0_out.append(r)
 
         for i in AppealList1:
-            r= { }
+            r= {}
             r['id']=i.id
             r['AppealState']=i.AppealState
             r['AppealTime'] = i.AppealTime
