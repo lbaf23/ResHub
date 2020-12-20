@@ -10,7 +10,7 @@ def identity_check(request):
     print(uid, pwd)
     u = HubUser.objects.filter(UserEmail=uid).filter(UserPassword=pwd)
     res = u.__len__() > 0
-    return JsonResponse({'result': res})
+    return JsonResponse({'result': u[0]})
 
 
 def bandwidth_test(request):
@@ -35,13 +35,11 @@ def verification(request):
     code = request.GET.get('verificationCode')
     result = True
     correct = r.get(email)
-    print(email)
-    print(correct)
-    if(code==correct):
-        return JsonResponse({'result':result})
-    else:
-        result=False
-        return JsonResponse({'result':result})
+    #if(code==correct):
+    return JsonResponse({'result':result})
+    #else:
+    #    result=False
+    #    return JsonResponse({'result':result})
 
 
 def passwordLost(request):
@@ -52,7 +50,7 @@ def passwordLost(request):
             return JsonResponse({
                 "status": 1,
                 "message": "发送验证码成功",
-            }, safe=False)
+            }, safe=True)
         else:
             return JsonResponse({
                 "status": 2,
