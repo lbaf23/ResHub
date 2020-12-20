@@ -601,10 +601,10 @@ def search_words(request):
 
     start_year = int(request.GET.get('dateStart'))
     end_year = int(request.GET.get('dateEnd'))
-
     type = request.GET.get('type')
 
-    radio = True if request.GET.get('Radio') is True else False # 中英扩展 false true
+    print(request.GET.get('Radio'))
+    radio = True if request.GET.get('Radio') == 'true' else False # 中英扩展 false true
 
     sk = json.loads(search_key)
 
