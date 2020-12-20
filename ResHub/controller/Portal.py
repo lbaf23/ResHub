@@ -43,10 +43,9 @@ def catch_portal(request):
 
 def new_portal(request):
     if request.method == "POST":
-        data = json.loads(request.body)
         resId= tid_maker()
-        userEmail = data.get("UserEmail")
-        resEmail = data.get("ResEmail")
+        userEmail = request.POST.get("UserEmail")
+        resEmail = request.POST.get("ResEmail")
         if userEmail is not None and resEmail is not None:
             resemail_exists = Researcher.objects.filter(ResEmail=resEmail)
             if resemail_exists.exists():
@@ -74,10 +73,9 @@ def new_portal(request):
 
 def appeal_portal(request):
     if request.method == "POST":
-        data = json.loads(request.body)
-        resId = data.get("ReserchId")
-        resEmail = data.get("ResEmail")
-        userEmail = data.get("UserEmail")
+        resId = request.POST.get("ReserchId")
+        resEmail = request.POST.get("ResEmail")
+        userEmail = request.POST.get("UserEmail")
         if resId is not None and resEmail is not None and userEmail is not None:
             user = HubUser.objects.filter(UserEmail=userEmail).first()
             researcher = Researcher.objects.filter(ResId=resId).first()
