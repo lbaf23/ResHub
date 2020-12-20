@@ -9,8 +9,7 @@ def changeHead(request):
         userEmail = request.POST.get("userId")
         userHead =  request.POST.get("url")
         if userEmail is not None and userHead is not None:
-            user = HubUser.objects.filter(UserEmail=userEmail).first()
-            user.UserImage = userHead
+            user = HubUser.objects.filter(UserEmail=userEmail).update(UserImage=userHead)
             user.save()
             return JsonResponse({
                 "status": 1,
