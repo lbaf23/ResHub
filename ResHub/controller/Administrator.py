@@ -48,7 +48,7 @@ def getList(request):
             # })
             r = {}
 
-            user = HubUser.objects.filter(UserEmail=i.UserEmail).first()
+            user = HubUser.objects.filter(UserEmail=i.UserEmail_id).first()
             researcher = Researcher.objects.filter(ResId=i.ResearchId_id).first()
 
             r['id'] = i.id
@@ -63,8 +63,8 @@ def getList(request):
         for i in AppealList1:
             r= {}
 
-            user = HubUser.objects.filter(UserEmail=i.UserEmail).first()
-            researcher = Researcher.objects.filter(ResId=i.ResearchId).first()
+            user = HubUser.objects.filter(UserEmail=i.UserEmail_id).first()
+            researcher = Researcher.objects.filter(ResId=i.ResearchId_id).first()
 
             r['id']=i.id
             r['AppealState']= i.AppealState
@@ -78,7 +78,7 @@ def getList(request):
         for i in ReviewList0:
             r= { }
 
-            user = HubUser.objects.filter(UserEmail=i.UserEmail).first()
+            user = HubUser.objects.filter(UserEmail=i.UserEmail_id).first()
 
             r['id']=i.id
             r['ReviewPath']=i.ReviewPath
@@ -92,7 +92,7 @@ def getList(request):
         for i in ReviewList1:
             r= { }
 
-            user = HubUser.objects.filter(UserEmail=i.UserEmail).first()
+            user = HubUser.objects.filter(UserEmail=i.UserEmail_id).first()
 
             r['id']=i.id
             r['ReviewPath']=i.ReviewPath
