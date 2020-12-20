@@ -10,8 +10,7 @@ from ResModel.models import Project
 
 def browse_history(request):
     if request.method == "GET":
-        data = json.loads(request.body)
-        userEmailId = data.get("UserEmail")
+        userEmailId = request.GET.get("UserEmail")
         if userEmailId is not None:
             History = Browse.objects.filter(UserEmail_id=userEmailId).order_by("BrowseTime")
             HistoryList = list(History)
