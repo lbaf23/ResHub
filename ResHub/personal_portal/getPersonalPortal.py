@@ -22,7 +22,7 @@ def getPersonalPortal(request):
                         ResEmail=resId).update(VisitNum=visitnumber)
 
                     res = {}
-
+                    res['authorid'] = resId
                     # is_have
                     try:
                         is_have = Researcher.objects.get(UserEmail=userId)
