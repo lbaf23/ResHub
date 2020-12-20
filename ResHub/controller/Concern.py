@@ -19,11 +19,19 @@ def get_my_concern(request):
             for i in concernlist:
                 j = {}
                 researcher = Researcher.objects.filter(ResId=i.ResearchId_id).first()
-                user = HubUser.objects.filter(UserEmail=researcher.UserEmail_id).first()
-                j['name'] = user.UserName
-                j['headImage'] = user.UserImage
-                j['id'] = user.UserEmail
-                j['label'] = user.UserIntroduction
+                if researcher.UserEmail is not None:
+                    user = HubUser.objects.filter(UserEmail=researcher.UserEmail_id).first()
+                    j['name'] = user.UserName
+                    j['headImage'] = user.UserImage
+                    j['userEmail'] = user.UserEmail
+                    j['id'] = researcher.ResId
+                    j['label'] = user.UserIntroduction
+                else :
+                    j['name'] = researcher.ResName
+                    j['headImage'] = "head17.jpg"
+                    j['userEmail'] = " "
+                    j['id'] = researcher.ResId
+                    j['label'] = " "
                 retconcernList.append(j)
 
             return JsonResponse({
