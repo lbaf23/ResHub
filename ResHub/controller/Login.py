@@ -35,11 +35,12 @@ def verification(request):
     code = request.GET.get('verificationCode')
     result = True
     correct = r.get(email)
-    #if(code==correct):
-    return JsonResponse({'result':result})
-    #else:
-    #    result=False
-    #    return JsonResponse({'result':result})
+    if(code==correct):
+        r.delete(str(email), code)
+        return JsonResponse({'result':result})
+    else:
+       result=False
+       return JsonResponse({'result':result})
 
 
 def passwordLost(request):
