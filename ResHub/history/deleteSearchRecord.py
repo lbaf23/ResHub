@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from ResModel.models import Browse
+from ResModel.models import Browse, Search
 
 
 def deleteSearchRecord(request):
@@ -9,7 +9,7 @@ def deleteSearchRecord(request):
             if userId is not None:
                 res = {}
                 list = []
-                browse = Browse.objects.filter(UserEmail_id=userId).all()
+                browse = Search.objects.filter(UserEmail_id=userId).all()
                 len = browse.__len__()
                 if(len == 0):
                     return JsonResponse({
