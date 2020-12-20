@@ -4,12 +4,32 @@ from ResModel.models import HubUser
 from django.http import HttpResponse, JsonResponse
 from ResHub.redispool import r
 from ResHub.sendMail import send_email
+from ResModel.models import Researcher
+
 def identity_check(request):
     uid = request.POST.get('userId')
     pwd = request.POST.get('password')
+    print(uid, pwd)
     u = HubUser.objects.filter(UserEmail=uid).filter(UserPassword=pwd)
-    res = u.__len__() > 0
-    return JsonResponse({'result': res})
+    if(u.__len__() > 0):
+        id=u[0].UserEmail
+        head=u[0].UserImage
+        user = Researcher.objects.filter(ResEmail=id)
+        if(user.__len__()>0):
+            isPortal = True
+            protalId = user[0].ResId
+        else:
+            isPortal = False
+            protalId = None
+        if(u[0].UserEmail == "root@root"):
+            isAdministrator = True
+        else:
+            isAdministrator = False
+        label = u[0].UserIntroduction
+        return JsonResponse({'myId':id,'userHead':head,'isPortal':isPortal,'portalId':protalId,'isAdministrator':isAdministrator,'label':label,'result':True})
+
+    else:
+        return JsonResponse({'result': False})
 
 
 def bandwidth_test(request):
@@ -33,14 +53,14 @@ def verification(request):
     email = request.GET.get('mailAddress')
     code = request.GET.get('verificationCode')
     result = True
-    correct = r.get(email)
-    print(email)
-    print(correct)
-    if(code==correct):
+    Code = int(code)
+    r.get(email)
+    if r.get(email) is not None and Code==int(r.get(email)):
+        r.delete(str(email), Code)
         return JsonResponse({'result':result})
     else:
-        result=False
-        return JsonResponse({'result':result})
+       result=False
+       return JsonResponse({'result':result})
 
 
 def passwordLost(request):
@@ -48,17 +68,12 @@ def passwordLost(request):
         UserEmail = request.GET.get('mailAddress')
         if UserEmail is not None:
             send_email(UserEmail)
-            return JsonResponse({
-                "status": 1,
-                "message": "发送验证码成功",
-            }, safe=False)
+            result = True
+            return JsonResponse({'result': result})
         else:
-            return JsonResponse({
-                "status": 2,
-                "message": "请求参数错误"
-            })
+            result = False
+            return JsonResponse({'result': result})
+
     else:
-        return JsonResponse({
-          "status": 3,
-          "message": "请求方法错误"
-        })
+        result = False
+        return JsonResponse({'result': result})

@@ -6,13 +6,10 @@ from ResModel.models import HubUser
 
 def changeHead(request):
     if request.method == "POST":
-        data = json.loads(request.body)
-        userEmail = data.get("userEmail")
-        userHead = data.get("userHead")
+        userEmail = request.POST.get("userId")
+        userHead =  request.POST.get("url")
         if userEmail is not None and userHead is not None:
-            user = HubUser.objects.filter(UserEmail=userEmail).first()
-            user.UserImage = userHead
-            user.save()
+            user = HubUser.objects.filter(UserEmail=userEmail).update(UserImage=userHead)
             return JsonResponse({
                 "status": 1,
                 "message": "更换头像成功",
