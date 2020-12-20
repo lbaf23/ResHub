@@ -90,7 +90,7 @@ def getPersonalPortal(request):
                         institution = Institution.objects.get(id=institutionid)
                         res['insname'] = institution.InsName
                     except Exception as e:
-                        res['follownum'] = ""
+                        res['insname'] = ""
 
                     # insId
                     try:
