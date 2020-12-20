@@ -55,17 +55,35 @@ def getResearchInstitute(request):
                 hotData_temp = []
                 for i in reseachers:
                     res_temp = {}
-                    this_reseacher = Researcher.objects.get(i.ResId)
-                    resid = i.ResId.ResId
+                    this_reseacher = Researcher.objects.get(ResId=i.ResId)
+                    resid = i.ResId
                     res_temp['resid'] = this_reseacher.ResId
                     hotData_temp.append(this_reseacher.ResId)
                     res_temp['name'] = this_reseacher.ResName
-                    res_temp['mail'] = this_reseacher.UserEmail_id
-                    res_temp['domain'] = this_reseacher.ResField
-                    res_temp['viewsum'] = this_reseacher.VisitNum
+                    try:
+                        UserEmail_id = this_reseacher.UserEmail_id
+                        if(UserEmail_id is None):
+                            res['mail'] = ''
+                        else:
+                            res_temp['mail'] = this_reseacher.UserEmail_id
+                    except Exception as e:
+                        res_temp['mail'] = ''
+
+                    ResField = this_reseacher.ResField
+                    if(ResField is not None):
+                        res_temp['domain'] = this_reseacher.ResField
+                    else:
+                        res_temp['domain'] = ''
+
+                    VisitNum = this_reseacher.VisitNum
+                    if(VisitNum is not None):
+                        res_temp['viewsum'] = this_reseacher.VisitNum
+                    else:
+                        res_temp['viewsum'] = 0
+
                     try:
                         collection = Collection.objects.filter(
-                            UserEmail=this_reseacher.UserEmail_id).all()
+                            UserEmail_id=this_reseacher.UserEmail_id).all()
                         if(collection.__len__() == 0):
                             res_temp['collectstatus'] = True
                             res_temp['collectionsum'] = collection.__len__()
