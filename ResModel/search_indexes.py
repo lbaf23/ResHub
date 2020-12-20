@@ -62,7 +62,7 @@ class PatentIndex(indexes.SearchIndex, indexes.Indexable):
         return self.get_model().objects.filter()
 
 
-class AuthorIndex(indexes.SearchIndex, indexes.Indexable):
+class ResearcherIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     ResCompany = indexes.CharField(model_attr='ResCompany', null=True)
 
