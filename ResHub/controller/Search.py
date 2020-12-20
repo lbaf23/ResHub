@@ -54,51 +54,51 @@ def translate_by_api(str):
 
 # boolType {1:AND ; 2:OR ; 3:NOT}
 # type {1：主题；2：标题；3：作者；4：关键词；5：摘要; }
-def search_el_indexes(res, key, redio, type):
+def search_el_indexes(res, key, radio, type):
     if type == 'paper':
-        return search_paper_index(res, key, redio)
+        return search_paper_index(res, key, radio)
     elif type == 'project':
-        return search_project_index(res, key, redio)
+        return search_project_index(res, key, radio)
     elif type == 'patent':
-        return search_patent_index(res, key, redio)
+        return search_patent_index(res, key, radio)
     else:
         return SearchQuerySet()
 
 
-def search_patent_index(res, key, redio):
+def search_patent_index(res, key, radio):
     for w in list(key):
         if not w.__contains__('boolType'):
             if w['type'] == '1' or w['type'] == '4':
                 res = res.using('patent').filter(text=w['words'])
-                if redio:
+                if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.using('patent').filter_or(text=ow)
 
             elif w['type'] == '2':
                 res = res.using('patent').filter(PatentTitle=w['words'])
-                if redio:
+                if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.using('patent').filter_or(PatentTitle=ow)
 
             elif w['type'] == '5':
                 res = res.using('patent').filter(PatentAbstract=w['words'])
-                if redio:
+                if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.using('patent').filter_or(PatentAbstract=ow)
 
             elif w['type'] == '3':
                 res = res.using('patent').filter(PatentAuthor=w['words'])
-                if redio:
+                if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.using('patent').filter_or(PatentAuthor=ow)
 
             elif w['type'] == 'PaperOrg':
                 res = res.using('patent').filter(PatentCompany=w['words'])
-                if redio:
+                if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.using('patent').filter_or(PatentCompany=ow)
@@ -107,35 +107,35 @@ def search_patent_index(res, key, redio):
             if w['boolType'] == '1':
                 if w['type'] == '1' or w['type'] == '4':
                     res = res.using('patent').filter_and(text=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('patent').filter_or(text=ow)
 
                 elif w['type'] == '2':
                     res = res.using('patent').filter_and(PatentTitle=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('patent').filter_or(PatentTitle=ow)
 
                 elif w['type'] == '5':
                     res = res.using('patent').filter_and(PatentAbstract=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('patent').filter_or(PatentAbstract=ow)
 
                 elif w['type'] == '3':
                     res = res.using('patent').filter_and(PatentAuthor=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('patent').filter_or(PatentAuthor=ow)
 
                 elif w['type'] == 'PaperOrg':
                     res = res.using('patent').filter_and(PatentCompany=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('patent').filter_or(PatentCompany=ow)
@@ -143,35 +143,35 @@ def search_patent_index(res, key, redio):
             elif w['boolType'] == '2':
                 if w['type'] == '1' or w['type'] == '4':
                     res = res.using('patent').filter_or(text=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('patent').filter_or(text=ow)
 
                 elif w['type'] == '2':
                     res = res.using('patent').filter_or(PatentTitle=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('patent').filter_or(PatentTitle=ow)
 
                 elif w['type'] == '5':
                     res = res.using('patent').filter_or(PatentAbstract=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('patent').filter_or(PatentAbstract=ow)
 
                 elif w['type'] == '3':
                     res = res.using('patent').filter_or(PatentAuthor=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('patent').filter_or(PatentAuthor=ow)
 
                 elif w['type'] == 'PaperOrg':
                     res = res.using('patent').filter_or(PatentCompany=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('patent').filter_or(PatentCompany=ow)
@@ -179,35 +179,35 @@ def search_patent_index(res, key, redio):
             elif w['boolType'] == '3':
                 if w['type'] == '1' or w['type'] == '4':
                     res = res.using('patent').exclude(text=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('patent').exclude(text=ow)
 
                 elif w['type'] == '2':
                     res = res.using('patent').exclude(PatentTitle=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('patent').exclude(PatentTitle=ow)
 
                 elif w['type'] == '5':
                     res = res.using('patent').exclude(PatentAbstract=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('patent').exclude(PatentAbstract=ow)
 
                 elif w['type'] == '3':
                     res = res.using('patent').exclude(PatentAuthor=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('patent').exclude(PatentAuthor=ow)
 
                 elif w['type'] == 'PaperOrg':
                     res = res.using('patent').exclude(PatentCompany=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('patent').exclude(PatentCompany=ow)
@@ -218,25 +218,25 @@ def search_patent_index(res, key, redio):
     return res
 
 
-def search_project_index(res, key, redio):
+def search_project_index(res, key, radio):
     for w in list(key):
         if not w.__contains__('boolType'):
             if w['type'] == '4':
                 res = res.using('project').filter(SubjectHeadingCN=w['words']).filter_or(SubjectHeadingEN=w['words'])
-                if redio:
+                if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.using('project').filter_or(SubjectHeadingCN=ow).filter_or(SubjectHeadingEN=ow)
             elif w['type'] == '1':
                 res = res.using('project').filter(text=w['words'])
-                if redio:
+                if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.using('project').filter_or(text=ow)
 
             elif w['type'] == '2':
                 res = res.using('project').filter(ProjectTitle=w['words'])
-                if redio:
+                if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.using('project').filter_or(ProjectTitle=ow)
@@ -244,7 +244,7 @@ def search_project_index(res, key, redio):
             elif w['type'] == '5':
                 res = res.using('project').filter(ZhAbstract=w['words']).\
                     filter_or(EnAbstract=w['words']).filter_or(FinalAbstract=w['words'])
-                if redio:
+                if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.using('project').filter_or(PaperAbstract=ow). \
@@ -252,14 +252,14 @@ def search_project_index(res, key, redio):
 
             elif w['type'] == '3':
                 res = res.using('project').filter(ProjectLeader=w['words'])
-                if redio:
+                if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.using('project').filter_or(ProjectLeader=ow)
 
             elif w['type'] == 'PaperOrg':
                 res = res.using('project').filter(SupportUnits=w['words'])
-                if redio:
+                if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.using('project').filter_or(SupportUnits=ow)
@@ -268,21 +268,21 @@ def search_project_index(res, key, redio):
             if w['boolType'] == '1':
                 if w['type'] == '4':
                     res = res.using('project').filter_and(SubjectHeadingCN=w['words']).filter_or(SubjectHeadingEN=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('project').filter_and(SubjectHeadingEN=ow).filter_or(SubjectHeadingEN=ow)
 
                 elif w['type'] == '1':
                     res = res.using('project').filter_and(text=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('project').filter_or(text=ow)
 
                 elif w['type'] == '2':
                     res = res.using('project').filter_and(ProjectTitle=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('project').filter_or(ProjectTitle=ow)
@@ -290,7 +290,7 @@ def search_project_index(res, key, redio):
                 elif w['type'] == '5':
                     res = res.using('project').filter_and(ZhAbstract=w['words']). \
                             filter_or(EnAbstract=w['words']).filter_or(FinalAbstract=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('project').filter_and(EnAbstract=w['words']). \
@@ -298,14 +298,14 @@ def search_project_index(res, key, redio):
 
                 elif w['type'] == '3':
                     res = res.using('project').filter_and(ProjectLeader=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('project').filter_or(ProjectLeader=ow)
 
                 elif w['type'] == 'PaperOrg':
                     res = res.using('project').filter_and(SupportUnits=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('project').filter_or(SupportUnits=ow)
@@ -313,21 +313,21 @@ def search_project_index(res, key, redio):
             elif w['boolType'] == '2':
                 if w['type'] == '4':
                     res = res.using('project').filter_or(SubjectHeadingCN=w['words']).filter_or(SubjectHeadingEN=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('project').filter_or(SubjectHeadingCN=ow).filter_or(SubjectHeadingEN=ow)
 
                 elif w['type'] == '1':
                     res = res.using('project').filter_or(text=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('project').filter_or(text=ow)
 
                 elif w['type'] == '2':
                     res = res.using('project').filter_or(ProjectTitle=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('project').filter_or(ProjectTitle=ow)
@@ -335,7 +335,7 @@ def search_project_index(res, key, redio):
                 elif w['type'] == '5':
                     res = res.using('project').filter_or(ZhAbstract=w['words']). \
                         filter_or(EnAbstract=w['words']).filter_or(FinalAbstract=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('project').filter_or(ZhAbstract=ow). \
@@ -343,14 +343,14 @@ def search_project_index(res, key, redio):
 
                 elif w['type'] == '3':
                     res = res.using('project').filter_or(ProjectLeader=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('project').filter_or(ProjectLeader=ow)
 
                 elif w['type'] == 'PaperOrg':
                     res = res.using('project').filter_or(SupportUnits=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('project').filter_or(SupportUnits=ow)
@@ -358,21 +358,21 @@ def search_project_index(res, key, redio):
             elif w['boolType'] == '3':
                 if w['type'] == '4':
                     res = res.using('project').exclude(SubjectHeadingCN=w['words']).exclude(SubjectHeadingEN=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('project').exclude(SubjectHeadingCN=ow).exclude(SubjectHeadingEN=ow)
 
                 elif w['type'] == '1':
                     res = res.using('project').exclude(text=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('project').exclude(text=ow)
 
                 elif w['type'] == '2':
                     res = res.using('project').exclude(ProjectTitle=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('project').exclude(ProjectTitle=ow)
@@ -380,7 +380,7 @@ def search_project_index(res, key, redio):
                 elif w['type'] == '5':
                     res = res.using('project').exclude(ZhAbstract=w['words'])\
                         .exclude(EnAbstract=w['words']).exclude(FinalAbstract=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('project').exclude(ZhAbstract=ow).\
@@ -388,14 +388,14 @@ def search_project_index(res, key, redio):
 
                 elif w['type'] == '3':
                     res = res.using('project').exclude(ProjectLeader=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('project').exclude(ProjectLeader=ow)
 
                 elif w['type'] == 'PaperOrg':
                     res = res.using('project').exclude(SupportUnits=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.using('project').exclude(SupportUnits=ow)
@@ -406,46 +406,47 @@ def search_project_index(res, key, redio):
     return res
 
 
-def search_paper_index(res, key, redio):
+def search_paper_index(res, key, radio):
     for w in list(key):
         if not w.__contains__('boolType'):
             if w['type'] == '4':
                 res = res.filter(PaperKeywords=w['words'])
-                if redio:
+                if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.filter_or(PaperKeywords=ow)
             elif w['type'] == '1':
                 res = res.filter(text=w['words'])
-                if redio:
+                if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
+                        print(ow)
                         res = res.filter_or(text=ow)
 
             elif w['type'] == '2':
                 res = res.filter(PaperTitle=w['words'])
-                if redio:
+                if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.filter_or(PaperTitle=ow)
 
             elif w['type'] == '5':
                 res = res.filter(PaperAbstract=w['words'])
-                if redio:
+                if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.filter_or(PaperAbstract=ow)
 
             elif w['type'] == '3':
                 res = res.filter(PaperAuthors=w['words'])
-                if redio:
+                if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.filter_or(PaperAuthors=ow)
 
             elif w['type'] == 'PaperOrg':
                 res = res.filter(PaperOrg=w['words'])
-                if redio:
+                if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.filter_or(PaperOrg=ow)
@@ -454,42 +455,42 @@ def search_paper_index(res, key, redio):
             if w['boolType'] == '1':
                 if w['type'] == '4':
                     res = res.filter_and(PaperKeywords=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.filter_or(PaperKeywords=ow)
 
                 elif w['type'] == '1':
                     res = res.filter_and(text=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.filter_or(text=ow)
 
                 elif w['type'] == '2':
                     res = res.filter_and(PaperTitle=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.filter_or(PaperTitle=ow)
 
                 elif w['type'] == '5':
                     res = res.filter_and(PaperAbstract=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.filter_or(PaperAbstract=ow)
 
                 elif w['type'] == '3':
                     res = res.filter_and(PaperAuthors=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.filter_or(PaperAuthors=ow)
 
                 elif w['type'] == 'PaperOrg':
                     res = res.filter_and(PaperOrg=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.filter_or(PaperOrg=ow)
@@ -497,42 +498,42 @@ def search_paper_index(res, key, redio):
             elif w['boolType'] == '2':
                 if w['type'] == '4':
                     res = res.filter_or(PaperKeywords=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.filter_or(PaperKeywords=ow)
 
                 elif w['type'] == '1':
                     res = res.filter_or(text=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.filter_or(text=ow)
 
                 elif w['type'] == '2':
                     res = res.filter_or(PaperTitle=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.filter_or(PaperTitle=ow)
 
                 elif w['type'] == '5':
                     res = res.filter_or(PaperAbstract=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.filter_or(PaperAbstract=ow)
 
                 elif w['type'] == '3':
                     res = res.filter_or(PaperAuthors=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.filter_or(PaperAuthors=ow)
 
                 elif w['type'] == 'PaperOrg':
                     res = res.filter_or(PaperOrg=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.filter_or(PaperOrg=ow)
@@ -540,42 +541,42 @@ def search_paper_index(res, key, redio):
             elif w['boolType'] == '3':
                 if w['type'] == '4':
                     res = res.exclude(PaperKeywords=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.exclude(PaperKeywords=ow)
 
                 elif w['type'] == '1':
                     res = res.exclude(text=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.exclude(text=ow)
 
                 elif w['type'] == '2':
                     res = res.exclude(PaperTitle=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.exclude(PaperTitle=ow)
 
                 elif w['type'] == '5':
                     res = res.exclude(PaperAbstract=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.exclude(PaperAbstract=ow)
 
                 elif w['type'] == '3':
                     res = res.exclude(PaperAuthors=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.exclude(PaperAuthors=ow)
 
                 elif w['type'] == 'PaperOrg':
                     res = res.exclude(PaperOrg=w['words'])
-                    if redio:
+                    if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.exclude(PaperOrg=ow)
