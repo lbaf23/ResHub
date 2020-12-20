@@ -28,6 +28,8 @@ from ResHub.user import newPassword, changeHead
 from ResHub.controller import Collection
 from ResHub.controller import Search
 from ResHub.controller import Administrator
+from ResHub.controller import searchHistory
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 
@@ -46,6 +48,8 @@ urlpatterns = [
     path('passwordLost', Login.passwordLost),
     path('getList', Administrator.getList),
     path('changeHead', changeHead.changeHead),
+    path('addConcern',Concern.add_concern),
+
 
     # LKY
     #path('temp', temp.temp),
@@ -70,6 +74,8 @@ urlpatterns = [
     path('reject1', Administrator.reject_review),
     path('pass2', Administrator.pass_appeal),
     path('reject2', Administrator.reject_appeal),
+    path('addSearchRecord',searchHistory.add_search_history),
+
 
     path('searchWords', Search.search_words),
     path('openPaper', Search.show_paper_info),

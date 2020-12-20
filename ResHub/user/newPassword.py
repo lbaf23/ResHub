@@ -13,27 +13,27 @@ def newPassword(request):
                 if(temp is None):
                     return JsonResponse({
                         "status": 0,
-                        "message": False
+                        "result": False
                     })
                 else:
                     temp.UserPassword = newPassword
                     temp.save()
                     return JsonResponse({
                         "status": 1,
-                        "message": True
+                        "result": True
                     })
             else:
                 return JsonResponse({
                     "status": 2,
-                    "message": "请求参数错误"
+                    "result": False
                 })
         else:
             return JsonResponse({
                 "status": 3,
-                "message": "请求方法错误"
+                "result": False
             })
     except Exception as e:
         return JsonResponse({
             "status": 4,
-            "message": str(e)
+            "result": False
         })

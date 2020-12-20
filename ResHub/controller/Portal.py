@@ -12,16 +12,9 @@ def catch_portal(request):
         data = json.loads(request.body)
         UserEmail = data.get("UserEmail")
         ResEmail = data.get("ResEmail")
-        id = int(data.get("id"))
-        code = int(data.get('code'))
-        if r.get(ResEmail) is None or code != int(r.get(ResEmail)):
-            return JsonResponse({
-                "status": 0,
-                "message": "验证码错误",
-            })
-        r.delete(str(ResEmail), code)
+        id = data.get("ResId")
         if id is not None:
-            Portal = Researcher.objects.filter(id=id).first()
+            Portal = Researcher.objects.filter(ResId=id).first()
             if Portal.IsClaim == 0:
                 Portal.IsClaim = 1
                 Portal.ResEmail = ResEmail
