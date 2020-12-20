@@ -7,6 +7,7 @@ from ResHub.sendMail import send_email
 def identity_check(request):
     uid = request.POST.get('userId')
     pwd = request.POST.get('password')
+    print(uid, pwd)
     u = HubUser.objects.filter(UserEmail=uid).filter(UserPassword=pwd)
     res = u.__len__() > 0
     return JsonResponse({'result': res})
