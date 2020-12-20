@@ -6,8 +6,7 @@ from ResModel.models import Concern, Researcher, HubUser
 
 def get_my_concern(request):
     if request.method == "GET":
-        data = json.loads(request.body)
-        UserEmail = data.get("UserEmail")
+        UserEmail = request.GET.get("UserEmail")
         if UserEmail is not None:
             concern = Concern.objects.filter(UserEmail_id=UserEmail).order_by("ConcernTime")
             concernlist = list(concern)

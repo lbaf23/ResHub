@@ -32,7 +32,7 @@ def catch_portal(request):
         else:
             return JsonResponse({
                 "status": 3,
-                "message": "该门户不存在"
+                "message": "没有输入ResId"
             })
     else:
         return JsonResponse({
@@ -81,7 +81,7 @@ def appeal_portal(request):
         if resId is not None and resEmail is not None and userEmail is not None:
             user = HubUser.objects.filter(UserEmail=userEmail).first()
             researcher = Researcher.objects.filter(ResId=resId).first()
-            appeal = Appeal.objects.filter(ResearchId=researcher, UserEmail=user, AppealState=0).first()
+            appeal = Appeal.objects.filter(ResearchId_id=researcher, UserEmail_id=user, AppealState=0).first()
             if appeal is not None:
                 return JsonResponse({
                     "status": 1,
@@ -97,7 +97,7 @@ def appeal_portal(request):
                     "status": 3,
                     "message": "该门户未被认领！",
                 }, safe=False)
-            Appeal.objects.create(ResearchId=researcher, UserEmail=user, AppealState=False)
+            Appeal.objects.create(ResearchId_id=researcher.ResId, UserEmail_id=user.UserEmail, AppealState=0)
             return JsonResponse({
                 "status": 4,
                 "message": "提交申诉成功！"
