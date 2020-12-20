@@ -48,6 +48,8 @@ urlpatterns = [
     path('passwordLost', Login.passwordLost),
     path('getList', Administrator.getList),
     path('changeHead', changeHead.changeHead),
+    path('addConcern',Concern.add_concern),
+
 
     # LKY
     #path('temp', temp.temp),
