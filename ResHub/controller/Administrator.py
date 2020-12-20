@@ -44,6 +44,7 @@ def getList(request):
             r['AppealTime'] = i.AppealTime
             r['ResearchId'] = i.ResearchId
             r['UserEmail'] = i.UserEmail
+            r['content'] = i.content
             AppealList0_out.append(r)
 
         for i in AppealList1:
@@ -53,6 +54,8 @@ def getList(request):
             r['AppealTime'] = i.AppealTime
             r['ResearchId'] = i.ResearchId
             r['UserEmail'] = i.UserEmail
+            r['content'] = i.content
+
             AppealList1_out.append(r)
 
         for i in ReviewList0:
@@ -63,6 +66,7 @@ def getList(request):
             r['UploadTime'] = i.UploadTime
             r['ReviewState'] = i.ReviewState
             r['ReviewTime'] = i.ReviewTime
+            r['content'] = i.content
 
             ReviewList0_out.append(r)
         for i in ReviewList1:
@@ -73,6 +77,7 @@ def getList(request):
             r['UploadTime'] = i.UploadTime
             r['ReviewState'] = i.ReviewState
             r['ReviewTime'] = i.ReviewTime
+            r['content'] = i.content
 
             ReviewList1_out.append(r)
 
