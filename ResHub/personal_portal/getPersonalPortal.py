@@ -41,7 +41,7 @@ def getPersonalPortal(request):
                             UserEmail=keyword_email)
                         res['avatar'] = keyword_hubuser.UserImage
                     except Exception as e:
-                        res['avatar'] = 'head17.jpg'
+                        res['avatar'] = 'trump.jpg'
 
                     # isClaimed
                     res['isclaimed'] = researcher.IsClaim
