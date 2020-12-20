@@ -14,14 +14,18 @@ def browse_history(request):
         if userEmailId is not None:
             History = Browse.objects.filter(UserEmail_id=userEmailId).order_by("BrowseTime")
             HistoryList = list(History)
-            if len(HistoryList)==0:
-                return JsonResponse({
-                    "status": 4,
-                    "message": "列表为空"
-                })
             retPaperUrlList = []
             retPaperTitleList = []
             retTimeList = []
+            if len(HistoryList)==0:
+                return JsonResponse({
+                    "status": 4,
+                    "Timelist": retTimeList,
+                    "PaperUrlList" : retPaperUrlList,
+                    "PaperTitleList" : retPaperTitleList,
+                    "message": "列表为空"
+                })
+
             for i in HistoryList:
                 paper = Paper.objects.filter(PaperId= i.PaperId_id).first()
                 retPaperUrlList.append(paper.PaperUrl)
