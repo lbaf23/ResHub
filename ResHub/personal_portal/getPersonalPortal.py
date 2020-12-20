@@ -1,6 +1,6 @@
 from django.http import JsonResponse
-from ResModel.models import HubUser, Researcher, Relationship, Collection
-from ResModel.models import ProjectAuthor, Concern, ResInstitution, PaperAuthor
+from ResModel.models import HubUser, Researcher, Relationship, Collection, Institution
+from ResModel.models import ProjectAuthor, Concern, ResInstitution, PaperAuthor, Paper
 
 
 def getPersonalPortal(request):
@@ -24,30 +24,37 @@ def getPersonalPortal(request):
                     res = {}
 
                     # is_have
-                    is_have = Researcher.objects.get(UserEmail=userId)
-                    if(is_have is not None):
-                        res['ishave'] = True
-                    else:
+                    try:
+                        is_have = Researcher.objects.get(UserEmail=userId)
+                        if(is_have is not None):
+                            res['ishave'] = True
+                        else:
+                            res['ishave'] = False
+                    except Exception as e:
                         res['ishave'] = False
 
                     # avatar
-                    keyword_email = researcher.UserEmail
-                    keyword_hubuser = HubUser.objects.get(
-                        UserEmail=keyword_email)
-                    res['avatar'] = keyword_hubuser.UserImage
+                    try:
+                        keyword_email = researcher.UserEmail_id
+                        keyword_hubuser = HubUser.objects.get(
+                            UserEmail=keyword_email)
+                        res['avatar'] = keyword_hubuser.UserImage
+                    except Exception as e:
+                        res['ishave'] = ''
 
                     # isClaimed
                     res['isclaimed'] = researcher.IsClaim
 
                     # isFollowing
                     try:
-                        concern = Concern.objects.get(
-                            UserEmail=userId, ResearchId=researcher.ResId)
+                        concern = Concern.objects.filter(
+                            UserEmail_id=userId, ResearchId_id=researcher.ResId).all()
                         if(concern is not None):
                             res['isfollowing'] = True
                         else:
                             res['isfollowing'] = False
                     except Exception as e:
+                        print(str(e))
                         res['isfollowing'] = False
 
                     # isMyPortal
@@ -77,10 +84,18 @@ def getPersonalPortal(request):
                     res['Resname'] = researcher.ResName
 
                     # insName
-                    res['insname'] = resinstitution.InstitutionId.InsName
+                    try:
+                        institutionid = resinstitution.InstitutionId
+                        institution = Institution.objects.get(id=institutionid)
+                        res['insname'] = institution.InsName
+                    except Exception as e:
+                        res['follownum'] = ""
 
                     # insId
-                    res['insid'] = resinstitution.InstitutionId_id
+                    try:
+                        res['insid'] = resinstitution.InstitutionId
+                    except Exception as e:
+                        res['insid'] = ""
 
                     # mail
                     res['mail'] = researcher.UserEmail_id
@@ -94,19 +109,19 @@ def getPersonalPortal(request):
                     # resCount & quoteNum & quoCount
                     try:
                         papersid = PaperAuthor.objects.filter(
-                            ResearcherId=resId).all()
+                            ResearcherId_id=resId).all()
                         datas = [0, 0, 0, 0, 0, 0, 0, 0]
                         quotes = [0, 0, 0, 0, 0, 0, 0, 0]
                         quoteNum = 0
                         for i in papersid:
-                            year = i.PaperId.PaperTime
-                            index = 8 - (2020-year)
+                            paper = Paper.objects.get(PaperId=i.PaperId_id)
+                            year = paper.PaperTime
+                            index = (8 - (2020-year)) % 5
                             if(index < 0):
                                 continue
                             datas[index] = datas[index] + 1
-                            quotes[index] = quotes[index] + \
-                                i.PaperId.PaperCitation
-                            quoteNum = quoteNum + i.PaperId.PaperCitation
+                            quotes[index] = quotes[index] + paper.PaperCitation
+                            quoteNum = quoteNum + paper.PaperCitation
                         resCount = []
                         quoCount = []
                         for i in datas:
@@ -117,6 +132,7 @@ def getPersonalPortal(request):
                         res['quocount'] = quoCount
                         res['quotenum'] = str(quoteNum)
                     except Exception as e:
+                        print(str(e))
                         res['rescount'] = [
                             '0', '0', '0', '0', '0', '0', '0', '0']
                         res['quocount'] = [
@@ -152,12 +168,23 @@ def getPersonalPortal(request):
                             if(coopData.__len__() == 5):
                                 break
                             res_temp = {}
-                            reseacher_relation = i.ResearchId2
+                            reseacher_relation_temp = i.ResearchId2_id
+                            reseacher_relation = Researcher.objects.get(
+                                ResId=reseacher_relation_temp)
+                            email = reseacher_relation.UserEmail_id
+                            try:
+                                user_temp = HubUser.objects.get(
+                                    UserEmail=email)
+                                res_temp['avatar'] = user_temp.UserImage
+                            except Exception as e:
+                                res_temp['avatar'] = ''
                             resinstitution_temp = ResInstitution.objects.get(
                                 ResId=reseacher_relation.ResId)
+                            institution_this = Institution.objects.get(
+                                id=resinstitution_temp.InstitutionId)
                             res_temp['name'] = reseacher_relation.ResName
-                            res_temp['institute'] = resinstitution_temp.InstitutionId.InsName
-                            res_temp['avatar'] = reseacher_relation.UserEmail.UserImage
+                            res_temp['institute'] = institution_this.InsName
+
                             res_temp['link'] = reseacher_relation.ResId
                             coopData.append(res_temp)
                         if(coopData.__len__() == 5):
@@ -169,17 +196,29 @@ def getPersonalPortal(request):
                                 if(coopData.__len__() == 5):
                                     break
                                 res_temp = {}
-                                reseacher_relation = i.ResearchId2
+                                reseacher_relation_temp = i.ResearchId1_id
+                                reseacher_relation = Researcher.objects.get(
+                                    ResId=reseacher_relation_temp)
+                                email = reseacher_relation.UserEmail_id
+                                try:
+                                    user_temp = HubUser.objects.get(
+                                        UserEmail=email)
+                                    res_temp['avatar'] = user_temp.UserImage
+                                except Exception as e:
+                                    res_temp['avatar'] = ''
                                 resinstitution_temp = ResInstitution.objects.get(
                                     ResId=reseacher_relation.ResId)
+                                institution_this = Institution.objects.get(
+                                    id=resinstitution_temp.InstitutionId)
                                 res_temp['name'] = reseacher_relation.ResName
-                                res_temp['institute'] = resinstitution_temp.InstitutionId.InsName
-                                res_temp['avatar'] = reseacher_relation.UserEmail.UserImage
+                                res_temp['institute'] = institution_this.InsName
+
                                 res_temp['link'] = reseacher_relation.ResId
                                 coopData.append(res_temp)
 
                         res['coopdata'] = coopData
                     except Exception as e:
+                        print(str(e))
                         res['coopdata'] = []
 
                     try:
@@ -188,11 +227,12 @@ def getPersonalPortal(request):
                         for i in papersid:
                             try:
                                 res_temp = {}
+                                paper = Paper.objects.get(PaperId=i.PaperId_id)
                                 res_temp['paperId'] = i.PaperId_id
-                                res_temp['title'] = i.PaperId.PaperTitle
-                                res_temp['msg'] = i.PaperId.PaperAbstract[:60]
-                                res_temp['collectionSum'] = i.PaperId.CollectionNum
-                                res_temp['link'] = i.PaperId.PaperUrl
+                                res_temp['title'] = paper.PaperTitle
+                                res_temp['msg'] = paper.PaperAbstract[:60]
+                                res_temp['collectionSum'] = paper.CollectionNum
+                                res_temp['link'] = paper.PaperUrl
                                 res_temp['type'] = '文章'
                                 try:
                                     pp = Collection.objects.get(
@@ -202,8 +242,10 @@ def getPersonalPortal(request):
                                     else:
                                         res_temp['collectStatus'] = False
                                 except Exception as e:
+                                    print(e)
                                     res_temp['collectStatus'] = False
                             except Exception as e:
+                                print(str(e))
                                 continue
                             tabledata.append(res_temp)
                             count = count + 1
