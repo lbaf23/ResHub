@@ -6,8 +6,8 @@ from ResModel.models import HubUser
 
 def changeHead(request):
     if request.method == "POST":
-        userEmail = request.GET.get("userId")
-        userHead =  request.GET.get("url")
+        userEmail = request.POST.get("userId")
+        userHead =  request.POST.get("url")
         if userEmail is not None and userHead is not None:
             user = HubUser.objects.filter(UserEmail=userEmail).first()
             user.UserImage = userHead
