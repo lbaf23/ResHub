@@ -13,8 +13,8 @@ class HubUser(models.Model):
 
 
 class ResInstitution(models.Model):
-    ResId = models.ForeignKey('Researcher', to_field='ResId', on_delete=models.CASCADE)
-    InstitutionId = models.ForeignKey('Institution', to_field='id', on_delete=models.CASCADE)
+    ResId = models.ForeignKey(max_length=50)
+    InstitutionId = models.ForeignKey(max_length=50)
 
 
 class Institution(models.Model):
