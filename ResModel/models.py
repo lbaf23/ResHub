@@ -13,8 +13,8 @@ class HubUser(models.Model):
 
 
 class ResInstitution(models.Model):
-    ResId = models.ForeignKey(max_length=50)
-    InstitutionId = models.ForeignKey(max_length=50)
+    ResId = models.CharField(max_length=50)
+    InstitutionId = models.CharField(max_length=50)
 
 
 class Institution(models.Model):
