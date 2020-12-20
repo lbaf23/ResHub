@@ -690,7 +690,7 @@ def show_paper_info(request):
                 'author': alist,
                 'authorId': authorId,
                 'authorOrg': olist,
-                'doi': '' if p.PaperDoi is None else p.PaperDoi,
+                'paperDoi': '' if p.PaperDoi is None else p.PaperDoi,
                 'link': re.sub(r'[\[|\]|\'| ]','',p.PaperUrl).split(','),
                 'CollectionNum': p.CollectionNum,
                 'ReadNum': p.ReadNum,
