@@ -34,9 +34,10 @@ def verification(request):
     email = request.GET.get('mailAddress')
     code = request.GET.get('verificationCode')
     result = True
+    Code = int(code)
     correct = r.get(email)
-    if(code==correct):
-        r.delete(str(email), code)
+    if(Code==correct):
+        r.delete(str(email), Code)
         return JsonResponse({'result':result})
     else:
        result=False
@@ -45,7 +46,7 @@ def verification(request):
 
 def passwordLost(request):
     if request.method == "GET":
-        UserEmail = request.GET.get('mailAddress')
+        UserEmail = request.Get.get('mailAddress')
         if UserEmail is not None:
             send_email(UserEmail)
             result = True
