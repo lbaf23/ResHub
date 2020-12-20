@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from ResModel.models import Institution, Researcher, ResInstitution, HubUser
 from ResModel.models import Concern, Collection, PaperAuthor, Paper, ProjectAuthor
+import re
 
 
 def author_array(authors):
@@ -114,23 +115,35 @@ def getResearchInstitute(request):
                         ResearcherId=i).all()
                     confCount = confCount+projectauthor.__len__()
 
-                    data_temp = PaperAuthor.objects.get(ResearcherId=i)
+                    try:
+                        data_temp = PaperAuthor.objects.get(ResearcherId_id=i)
+                    except Exception as e:
+                        continue
                     if(data_temp is not None):
                         res_temp = {}
-                        res_temp['paperid'] = data_temp.PaperId.PaperId
-                        res_temp['title'] = data_temp.PaperId.PaperTitle
-                        res_temp['msg'] = data_temp.PaperId.PaperAbstract
-                        quoted = quoted+data_temp.PaperId.PaperCitation
-                        authors = data_temp.PaperId.PaperAuthors
-                        res_temp['author'] = author_array(authors)
+                        paper = Paper.objects.get(PaperId=data_temp.PaperId_id)
+                        res_temp['paperid'] = paper.PaperId
+                        res_temp['title'] = paper.PaperTitle
+                        res_temp['msg'] = paper.PaperAbstract
+                        if(paper.PaperCitation is None):
+                            quoted = quoted
+                        else:
+                            quoted = quoted + paper.PaperCitation
+                        authors = paper.PaperAuthors
+                        res_temp['author'] = re.sub(
+                            r'[\[|\]|\'| ]', '', authors).split(',')[:-1]
                         authorid = []
-                        authorid.append(i)
+                        paper_authors = PaperAuthor.objects.filter(
+                            PaperId_id=paper.PaperId)
+                        for k in paper_authors:
+                            authorid.append(k.ResearcherId_id)
                         res_temp['authorid'] = authorid
-                        res_temp['link'] = data_temp.PaperId.PaperUrl
+                        res_temp['link'] = re.sub(
+                            r'[\[|\]|\'| ]', '', paper.PaperUrl).split(',')[0]
                         hotData.append(res_temp)
 
                         papersid = PaperAuthor.objects.filter(
-                            ResearcherId=1).all()
+                            ResearcherId=i).all()
                         for j in papersid:
                             year = j.PaperId.PaperTime
                             index = 8 - (2020-year)
