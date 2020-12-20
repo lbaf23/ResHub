@@ -603,7 +603,7 @@ def search_words(request):
 
     type = request.GET.get('type')
 
-    radio = request.GET.get('Redio') # 中英扩展 false true
+    radio = request.GET.get('Radio') # 中英扩展 false true
 
     sk = json.loads(search_key)
 
