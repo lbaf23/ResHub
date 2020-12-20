@@ -3,7 +3,7 @@ import json
 from django.http import  HttpResponse,JsonResponse
 from ResModel.models import Administrators
 from ResModel.models import Review
-from ResModel.models import Appeal
+from ResModel.models import Appeal,HubUser,Researcher
 
 def reject_review(request):
     review_id=request.GET.get('id')
@@ -38,31 +38,51 @@ def getList(request):
         ReviewList0_out = []
         ReviewList1_out = []
         for i in AppealList0:
-            r= {}
-            r['id']=i.id
-            r['AppealState']=i.AppealState
+            # AppealList0_out.append({
+            # 'id': i.id,
+            # 'AppealState':i.AppealState,
+            # 'AppealTime': i.AppealTime ,
+            # 'ResearchId': i.ResearchId ,
+            # 'UserEmail' : i.UserEmail ,
+            # 'content'   : i.content
+            # })
+            r = {}
+
+            user = HubUser.objects.filter(UserEmail=i.UserEmail).first()
+            researcher = Researcher.objects.filter(ResId=i.ResearchId).first()
+
+            r['id'] = i.id
+            r['AppealState'] = i.AppealState
             r['AppealTime'] = i.AppealTime
-            r['ResearchId'] = i.ResearchId
-            r['UserEmail'] = i.UserEmail
+            r['ResearchId'] = researcher.ResId
+            r['UserEmail'] = user.UserEmail
             r['content'] = i.content
+
             AppealList0_out.append(r)
 
         for i in AppealList1:
             r= {}
+
+            user = HubUser.objects.filter(UserEmail=i.UserEmail).first()
+            researcher = Researcher.objects.filter(ResId=i.ResearchId).first()
+
             r['id']=i.id
-            r['AppealState']=i.AppealState
+            r['AppealState']= i.AppealState
             r['AppealTime'] = i.AppealTime
-            r['ResearchId'] = i.ResearchId
-            r['UserEmail'] = i.UserEmail
+            r['ResearchId'] = researcher.ResId
+            r['UserEmail'] = user.UserEmail
             r['content'] = i.content
 
             AppealList1_out.append(r)
 
         for i in ReviewList0:
             r= { }
+
+            user = HubUser.objects.filter(UserEmail=i.UserEmail).first()
+
             r['id']=i.id
             r['ReviewPath']=i.ReviewPath
-            r['UserEmail'] = i.UserEmail
+            r['UserEmail'] = user.UserEmail
             r['UploadTime'] = i.UploadTime
             r['ReviewState'] = i.ReviewState
             r['ReviewTime'] = i.ReviewTime
@@ -71,9 +91,12 @@ def getList(request):
             ReviewList0_out.append(r)
         for i in ReviewList1:
             r= { }
+
+            user = HubUser.objects.filter(UserEmail=i.UserEmail).first()
+
             r['id']=i.id
             r['ReviewPath']=i.ReviewPath
-            r['UserEmail'] = i.UserEmail
+            r['UserEmail'] = user.UserEmail
             r['UploadTime'] = i.UploadTime
             r['ReviewState'] = i.ReviewState
             r['ReviewTime'] = i.ReviewTime
