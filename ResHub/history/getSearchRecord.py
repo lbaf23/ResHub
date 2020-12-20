@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from ResModel.models import Search
+import re
 
 
 def getSearchRecord(request):
@@ -17,7 +18,9 @@ def getSearchRecord(request):
                 for i in search:
                     temp = {}
                     temp['SearchContent'] = i.SearchContent
-                    temp['SearchTime'] = str(i.SearchTime)
+                    string = str(i.SearchTime)
+                    cock = string.split(' ')
+                    temp['SearchTime'] = cock[0]
                     temp['id'] = i.id
                     list.append(temp)
                 res['len'] = search.__len__()
