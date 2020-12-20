@@ -9,7 +9,7 @@ def deleteSearchRecord(request):
             if userId is not None:
                 res = {}
                 list = []
-                browse = Browse.objects.filter(UserEmail=userId)
+                browse = Browse.objects.filter(UserEmail_id=userId)
                 len = browse.__len__()
                 if(len == 0):
                     return JsonResponse({
