@@ -604,7 +604,7 @@ def search_words(request):
 
     type = request.GET.get('type')
 
-    radio = request.GET.get('Radio') # 中英扩展 false true
+    radio = True if request.GET.get('Radio') is True else False # 中英扩展 false true
 
     sk = json.loads(search_key)
 
