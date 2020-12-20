@@ -45,9 +45,8 @@ def get_my_concern(request):
 
 def cancel_concern(request):
     if request.method == "POST":
-        data = json.loads(request.body)
-        UserEmail = data.get("UserEmail")
-        ResearchId = data.get("ResearchId")
+        UserEmail = request.POST.get("UserEmail")
+        ResearchId = request.POST.get("ResearchId")
         if UserEmail is not None and ResearchId is not None:
             concern = Concern.objects.filter(UserEmail_id=UserEmail, ResearchId_id=ResearchId).first()
             concern.delete()
@@ -69,9 +68,8 @@ def cancel_concern(request):
 
 def add_concern(request):
     if request.method == "POST":
-        data = json.loads(request.body)
-        UserEmail = data.get("UserEmail")
-        ResearchId = data.get("ResearchId")
+        UserEmail = request.POST.get("UserEmail")
+        ResearchId = request.POST.get("ResearchId")
         if UserEmail is not None and ResearchId is not None:
             concern = Concern.objects.filter(UserEmail_id=UserEmail, ResearchId_id=ResearchId).first()
             if concern is None:
