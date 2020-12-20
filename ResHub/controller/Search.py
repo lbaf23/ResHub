@@ -660,7 +660,7 @@ def show_paper_info(request):
             else:
                 olist = []
 
-            authorId = ['null']*len(alist)
+            authorId = ['']*len(alist)
             aulist = PaperAuthor.objects.filter(PaperId=p.PaperId)
             for a in aulist:
                 authorId[int(a.ResearcherRank)] = a.ResearcherId
@@ -680,22 +680,22 @@ def show_paper_info(request):
                 if len(c) > 0:
                     cs = True
                     ct = c.CollectionTime
-                else :
+                else:
                     cs = False
 
             return JsonResponse({
                 'paperId': p.PaperId,
                 'title': p.PaperTitle,
-                'abstract': '' if p.PaperAbstract is None else p.PaperAbstract,
+                'msg': '' if p.PaperAbstract is None else p.PaperAbstract,
                 'author': alist,
                 'authorId': authorId,
                 'authorOrg': olist,
-                'doi': '' if p.PaperDoi is None else p.PaperDoi,
+                'paperDoi': '' if p.PaperDoi is None else p.PaperDoi,
                 'link': re.sub(r'[\[|\]|\'| ]','',p.PaperUrl).split(','),
                 'CollectionNum': p.CollectionNum,
                 'ReadNum': p.ReadNum,
-                'PaperTime': p.PaperTime,
-                'PaperCitation': p.PaperCitation,
+                'PaperTime': 0 if p.PaperTime is None else p.PaperTime,
+                'PaperCitation': 0 if p.PaperCitation is None else p.PaperCitation,
                 'PaperStart': 0 if p.PaperStart is None else p.PaperStart,
                 'PaperEnd': 0 if p.PaperEnd is None else p.PaperEnd,
                 'PaperLang': '' if p.PaperLang is None else p.PaperLang,
@@ -723,7 +723,7 @@ def show_paper_info(request):
                 if len(c) > 0:
                     ct = c.CollectionTime
                     cs = True
-                else :
+                else:
                     cs = False
 
             return JsonResponse({
