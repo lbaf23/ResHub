@@ -57,15 +57,15 @@ def getResearchInstitute(request):
                     res_temp = {}
                     this_reseacher = Researcher.objects.get(i.ResId)
                     resid = i.ResId.ResId
-                    res_temp['resid'] = i.ResId.ResId
-                    hotData_temp.append(i.ResId.ResId)
-                    res_temp['name'] = i.ResId.ResName
-                    res_temp['mail'] = i.ResId.UserEmail.UserEmail
-                    res_temp['domain'] = i.ResId.ResField
-                    res_temp['viewsum'] = i.ResId.VisitNum
+                    res_temp['resid'] = this_reseacher.ResId
+                    hotData_temp.append(this_reseacher.ResId)
+                    res_temp['name'] = this_reseacher.ResName
+                    res_temp['mail'] = this_reseacher.UserEmail_id
+                    res_temp['domain'] = this_reseacher.ResField
+                    res_temp['viewsum'] = this_reseacher.VisitNum
                     try:
                         collection = Collection.objects.filter(
-                            UserEmail=i.ResId.UserEmail.UserEmail).all()
+                            UserEmail=this_reseacher.UserEmail_id).all()
                         if(collection.__len__() == 0):
                             res_temp['collectstatus'] = True
                             res_temp['collectionsum'] = collection.__len__()
