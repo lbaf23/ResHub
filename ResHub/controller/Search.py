@@ -660,7 +660,7 @@ def show_paper_info(request):
             else:
                 olist = []
 
-            authorId = ['null']*len(alist)
+            authorId = ['']*len(alist)
             aulist = PaperAuthor.objects.filter(PaperId=p.PaperId)
             for a in aulist:
                 authorId[int(a.ResearcherRank)] = a.ResearcherId
@@ -680,22 +680,22 @@ def show_paper_info(request):
                 if len(c) > 0:
                     cs = True
                     ct = c.CollectionTime
-                else :
+                else:
                     cs = False
 
             return JsonResponse({
                 'paperId': p.PaperId,
                 'title': p.PaperTitle,
-                'abstract': '' if p.PaperAbstract is None else p.PaperAbstract,
+                'msg': '' if p.PaperAbstract is None else p.PaperAbstract,
                 'author': alist,
                 'authorId': authorId,
                 'authorOrg': olist,
-                'doi': '' if p.PaperDoi is None else p.PaperDoi,
+                'paperDoi': '' if p.PaperDoi is None else p.PaperDoi,
                 'link': re.sub(r'[\[|\]|\'| ]','',p.PaperUrl).split(','),
-                'CollectionNum': p.CollectionNum,
-                'ReadNum': p.ReadNum,
-                'PaperTime': p.PaperTime,
-                'PaperCitation': p.PaperCitation,
+                'collectionSum': p.CollectionNum,
+                'viewSum': p.ReadNum,
+                'PaperTime': 0 if p.PaperTime is None else p.PaperTime,
+                'citation': 0 if p.PaperCitation is None else p.PaperCitation,
                 'PaperStart': 0 if p.PaperStart is None else p.PaperStart,
                 'PaperEnd': 0 if p.PaperEnd is None else p.PaperEnd,
                 'PaperLang': '' if p.PaperLang is None else p.PaperLang,
@@ -707,7 +707,7 @@ def show_paper_info(request):
                 'keywords': re.sub(r'[\[|\'|\]]', '', str(p.PaperKeywords)),
                 'referenceTitle': reft,
                 'referenceLink': refi,
-                'collectStatue': cs,
+                'collectStatus': cs,
                 'collectTime': ct
             })
     elif type == 'project':
@@ -723,7 +723,7 @@ def show_paper_info(request):
                 if len(c) > 0:
                     ct = c.CollectionTime
                     cs = True
-                else :
+                else:
                     cs = False
 
             return JsonResponse({
@@ -738,7 +738,7 @@ def show_paper_info(request):
                 'authorTitle': project.ProjectLeaderTitle,
                 'fund': project.Funding,
                 'support': project.SupportUnits,
-                'collectStatue': cs,
+                'collectStatus': cs,
                 'collectionSum': project.CollectionNum,
                 'viewSum': project.ReadNum,
                 'link': project.ProjectUrl,
@@ -768,7 +768,7 @@ def show_paper_info(request):
                 'abstract': patent.PatentAbstract,
                 'date': patent.PatentDate,
                 'author': patent.PatentAuthor,
-                'collectStatue': cs,
+                'collectStatus': cs,
                 'collectionSum': patent.CollectionNum,
                 'viewSum': patent.ReadNum,
                 'link': patent.PatentUrl,

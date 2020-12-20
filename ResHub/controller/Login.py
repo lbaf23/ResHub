@@ -26,7 +26,7 @@ def identity_check(request):
         else:
             isAdministrator = False
         label = u[0].UserIntroduction
-        return JsonResponse({'myId':id,'userHead':head,'isPortal':isPortal,'portalId':protalId,'isAdministrator':isAdministrator,'label':label,'result':True})
+        return JsonResponse({'userId':id,'userHead':head,'isPortal':isPortal,'portalId':protalId,'isAdministrator':isAdministrator,'label':label,'result':True})
 
     else:
         return JsonResponse({'result': False})

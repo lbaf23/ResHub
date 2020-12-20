@@ -10,7 +10,7 @@ def getPersonalPortal(request):
             resId = request.GET.get('resId')
             if ((userId is not None) and (resId is not None)):
 
-                researcher = Researcher.objects.get(ResEmail=resId)
+                researcher = Researcher.objects.get(ResId=resId)
                 hubuser = HubUser.objects.get(UserEmail=userId)
                 resinstitution = ResInstitution.objects.get(ResId=resId)
 
@@ -31,7 +31,10 @@ def getPersonalPortal(request):
                         res['ishave'] = False
 
                     # avatar
-                    res['avatar'] = researcher.UserEmail.UserImage
+                    keyword_email = researcher.UserEmail
+                    keyword_hubuser = HubUser.objects.get(
+                        UserEmail=keyword_email)
+                    res['avatar'] = keyword_hubuser.UserImage
 
                     # isClaimed
                     res['isclaimed'] = researcher.IsClaim
