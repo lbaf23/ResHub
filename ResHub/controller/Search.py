@@ -707,7 +707,7 @@ def show_paper_info(request):
                 'keywords': re.sub(r'[\[|\'|\]]', '', str(p.PaperKeywords)),
                 'referenceTitle': reft,
                 'referenceLink': refi,
-                'collectStatue': cs,
+                'collectStatus': cs,
                 'collectTime': ct
             })
     elif type == 'project':
@@ -738,7 +738,7 @@ def show_paper_info(request):
                 'authorTitle': project.ProjectLeaderTitle,
                 'fund': project.Funding,
                 'support': project.SupportUnits,
-                'collectStatue': cs,
+                'collectStatus': cs,
                 'collectionSum': project.CollectionNum,
                 'viewSum': project.ReadNum,
                 'link': project.ProjectUrl,
@@ -768,7 +768,7 @@ def show_paper_info(request):
                 'abstract': patent.PatentAbstract,
                 'date': patent.PatentDate,
                 'author': patent.PatentAuthor,
-                'collectStatue': cs,
+                'collectStatus': cs,
                 'collectionSum': patent.CollectionNum,
                 'viewSum': patent.ReadNum,
                 'link': patent.PatentUrl,
