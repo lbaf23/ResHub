@@ -4,7 +4,7 @@ from ResModel.models import HubUser
 from ResModel.models import Paper
 from ResModel.models import Patent
 from ResModel.models import Project
-
+import re
 def get_collection(request):
     user_id = request.GET.get('userId')
     user = HubUser.objects.get(UserEmail=user_id)
@@ -22,7 +22,7 @@ def get_collection(request):
             'type': t,
             'collectionSum':paper.CollectionNum,
             'viewSum':paper.ReadNum,
-            'link':paper.PaperUrl,
+            'link':re.sub(r'[\[|\]|\'| ]','',paper.PaperUrl).split(','),
             'collectTime':c[i].CollectionTime
             }
         elif t==2:
@@ -35,7 +35,7 @@ def get_collection(request):
             'type': t,
             'collectionSum':patent.CollectionNum,
             'viewSum':patent.ReadNum,
-            'link':patent.PatentUrl,
+            'link':re.sub(r'[\[|\]|\'| ]','',paper.PaperUrl).split(','),
             'collectTime':c[i].CollectionTime
             }
         elif t==3:
@@ -48,7 +48,7 @@ def get_collection(request):
             'type': t,
             'collectionSum':project.CollectionNum,
             'viewSum':project.ReadNum,
-            'link':project.PatentUrl,
+            'link':re.sub(r'[\[|\]|\'| ]','',paper.PaperUrl).split(','),
             'collectTime':c[i].CollectionTime
             }
         res.append(j)
