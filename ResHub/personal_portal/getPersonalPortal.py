@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from ResModel.models import HubUser, Researcher, Relationship, Collection, Institution
 from ResModel.models import ProjectAuthor, Concern, ResInstitution, PaperAuthor, Paper
+import re
 
 
 def getPersonalPortal(request):
@@ -232,7 +233,8 @@ def getPersonalPortal(request):
                                 res_temp['title'] = paper.PaperTitle
                                 res_temp['msg'] = paper.PaperAbstract[:60]
                                 res_temp['collectionSum'] = paper.CollectionNum
-                                res_temp['link'] = paper.PaperUrl
+                                res_temp['link'] = re.sub(
+                                    r'[\[|\]|\'| ]', '', paper.PaperUrl).split(',')[0]
                                 res_temp['type'] = '文章'
                                 try:
                                     pp = Collection.objects.get(
