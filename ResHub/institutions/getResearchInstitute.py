@@ -55,6 +55,7 @@ def getResearchInstitute(request):
                 hotData_temp = []
                 for i in reseachers:
                     res_temp = {}
+                    this_reseacher = Researcher.objects.get(i.ResId)
                     resid = i.ResId.ResId
                     res_temp['resid'] = i.ResId.ResId
                     hotData_temp.append(i.ResId.ResId)
