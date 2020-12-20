@@ -118,7 +118,7 @@ def getResearchInstitute(request):
                     try:
                         data_temp = PaperAuthor.objects.get(ResearcherId_id=i)
                     except Exception as e:
-                        continue
+                        aaaaaaaaa = 1
                     if(data_temp is not None):
                         res_temp = {}
                         paper = Paper.objects.get(PaperId=data_temp.PaperId_id)
@@ -145,16 +145,20 @@ def getResearchInstitute(request):
                         papersid = PaperAuthor.objects.filter(
                             ResearcherId=i).all()
                         for j in papersid:
-                            year = j.PaperId.PaperTime
-                            index = 8 - (2020-year)
+                            paper = Paper.objects.get(PaperId=j.PaperId_id)
+                            year = paper.PaperTime
+                            index = (8 - (2020-year)) % 5
                             if(index < 0):
                                 continue
                             datas[index] = datas[index] + 1
-                            quotes[index] = quotes[index] + \
-                                j.PaperId.PaperCitation
+                            if(paper.PaperCitation is None):
+                                quotes[index] = quotes[index] + 0
+                            else:
+                                quotes[index] = quotes[index] + \
+                                    paper.PaperCitation
                         magCount = magCount + papersid.__len__()
                         projectauthor = ProjectAuthor.objects.filter(
-                            ResearcherId=i).all()
+                            ResearcherId_id=i).all()
                         magCount = magCount + projectauthor.__len__()
                     ind = ind + 1
                     if (ind == 5):
