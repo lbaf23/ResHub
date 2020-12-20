@@ -65,7 +65,7 @@ def verification(request):
 
 def passwordLost(request):
     if request.method == "GET":
-        UserEmail = request.Get.get('mailAddress')
+        UserEmail = request.GET.get('mailAddress')
         if UserEmail is not None:
             send_email(UserEmail)
             result = True
