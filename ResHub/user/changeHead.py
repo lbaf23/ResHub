@@ -10,7 +10,6 @@ def changeHead(request):
         userHead =  request.POST.get("url")
         if userEmail is not None and userHead is not None:
             user = HubUser.objects.filter(UserEmail=userEmail).update(UserImage=userHead)
-            user.save()
             return JsonResponse({
                 "status": 1,
                 "message": "更换头像成功",
