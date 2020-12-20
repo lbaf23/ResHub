@@ -47,8 +47,10 @@ def getList(request):
             # 'content'   : i.content
             # })
             r = {}
+
             user = HubUser.objects.filter(UserEmail=i.UserEmail).first()
-            researcher = Researcher.objects.filter(ResId=i.ResearchId).first()
+            researcher = Researcher.objects.filter(ResId=i.ResearchId_id).first()
+
             r['id'] = i.id
             r['AppealState'] = i.AppealState
             r['AppealTime'] = i.AppealTime

@@ -64,7 +64,6 @@ class PatentIndex(indexes.SearchIndex, indexes.Indexable):
 
 class ResearcherIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
-    ResCompany = indexes.CharField(model_attr='ResCompany', null=True)
 
     def get_model(self):
         # 返回建立索引的模型 数据库表
