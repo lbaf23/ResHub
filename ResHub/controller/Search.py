@@ -603,7 +603,6 @@ def search_words(request):
     end_year = int(request.GET.get('dateEnd'))
     type = request.GET.get('type')
 
-    print(request.GET.get('Radio'))
     radio = True if request.GET.get('Radio') == 'true' else False # 中英扩展 false true
 
     sk = json.loads(search_key)
