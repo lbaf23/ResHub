@@ -76,6 +76,7 @@ def appeal_portal(request):
         resId = request.POST.get("ReserchId")
         resEmail = request.POST.get("ResEmail")
         userEmail = request.POST.get("UserEmail")
+        conTent = request.POST.get("ConTent")
         if resId is not None and resEmail is not None and userEmail is not None:
             user = HubUser.objects.filter(UserEmail=userEmail).first()
             researcher = Researcher.objects.filter(ResId=resId).first()
@@ -95,7 +96,7 @@ def appeal_portal(request):
                     "status": 3,
                     "message": "该门户未被认领！",
                 }, safe=False)
-            Appeal.objects.create(ResearchId_id=researcher.ResId, UserEmail_id=user.UserEmail, AppealState=0)
+            Appeal.objects.create(ResearchId_id=researcher.ResId, UserEmail_id=user.UserEmail, content=conTent ,AppealState=0)
             return JsonResponse({
                 "status": 4,
                 "message": "提交申诉成功！"
