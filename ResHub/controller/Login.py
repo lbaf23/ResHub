@@ -47,17 +47,12 @@ def passwordLost(request):
         UserEmail = request.GET.get('mailAddress')
         if UserEmail is not None:
             send_email(UserEmail)
-            return JsonResponse({
-                "status": 1,
-                "message": "发送验证码成功",
-            }, safe=True)
+            result = True
+            return JsonResponse({'result': result})
         else:
-            return JsonResponse({
-                "status": 2,
-                "message": "请求参数错误"
-            })
+            result = False
+            return JsonResponse({'result': result})
+
     else:
-        return JsonResponse({
-          "status": 3,
-          "message": "请求方法错误"
-        })
+        result = False
+        return JsonResponse({'result': result})
