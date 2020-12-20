@@ -97,7 +97,7 @@ def appeal_portal(request):
                     "status": 3,
                     "message": "该门户未被认领！",
                 }, safe=False)
-            Appeal.objects.create(ResearchId_id=researcher, UserEmail_id=user, AppealState=False)
+            Appeal.objects.create(ResearchId_id=researcher.ResId, UserEmail_id=user.UserEmail, AppealState=0)
             return JsonResponse({
                 "status": 4,
                 "message": "提交申诉成功！"
