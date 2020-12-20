@@ -54,13 +54,6 @@ def new_portal(request):
         resId= tid_maker()
         userEmail = data.get("UserEmail")
         resEmail = data.get("ResEmail")
-        code = int(data.get('code'))
-        if r.get(resEmail) is None or code != int(r.get(resEmail)):
-            return JsonResponse({
-                "status": 0,
-                "message": "验证码错误",
-            })
-        r.delete(str(resEmail), code)
         if userEmail is not None and resEmail is not None:
             resemail_exists = Researcher.objects.filter(ResEmail=resEmail)
             if resemail_exists.exists():
@@ -92,13 +85,6 @@ def appeal_portal(request):
         resId = data.get("ReserchId")
         resEmail = data.get("ResEmail")
         userEmail = data.get("UserEmail")
-        code = int(data.get('code'))
-        if r.get(resEmail) is None or code != int(r.get(resEmail)):
-            return JsonResponse({
-                "status": 0,
-                "message": "验证码错误",
-            })
-        r.delete(str(resEmail), code)
         if resId is not None and resEmail is not None and userEmail is not None:
             user = HubUser.objects.filter(UserEmail=userEmail).first()
             researcher = Researcher.objects.filter(ResId=resId).first()

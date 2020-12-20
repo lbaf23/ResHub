@@ -20,19 +20,21 @@ def browse_history(request):
                     "status": 4,
                     "message": "列表为空"
                 })
-            retLiteratureId = []
+            retPaperUrlList = []
+            retPaperTitleList = []
             retTimeList = []
-            cnt = 0
             for i in HistoryList:
-                retLiteratureId.append(i.LiteratureId)
+                paper = Paper.objects.filter(PaperId= i.PaperId).first()
+                retPaperUrlList.append(paper.PaperUrl)
+                retPaperTitleList.append(paper.PaperTitle)
                 retTimeList.append(i.BrowseTime)
-                cnt += 1
             return JsonResponse({
                 "status": 1,
-                "LiteratureIdlist":retLiteratureId,
-                "timelist": retTimeList,
+                "Timelist": retTimeList,
+                "PaperUrlList" : retPaperUrlList,
+                "PaperTitleList" : retPaperTitleList,
                 "message": "已经返回浏览记录列表",
-            }, safe=False)
+            })
         else:
             return JsonResponse({
                 "status": 2,
