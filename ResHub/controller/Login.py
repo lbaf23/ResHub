@@ -54,7 +54,7 @@ def verification(request):
     code = request.GET.get('verificationCode')
     result = True
     Code = int(code)
-    correct = r.get(email)
+    correct = int(r.get(email))
     if(Code==correct):
         r.delete(str(email), Code)
         return JsonResponse({'result':result})
