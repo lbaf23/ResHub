@@ -9,7 +9,7 @@ def deleteSearchRecord(request):
             if userId is not None:
                 res = {}
                 list = []
-                browse = Browse.objects.filter(UserEmail_id=userId)
+                browse = Browse.objects.filter(UserEmail_id=userId).all()
                 len = browse.__len__()
                 if(len == 0):
                     return JsonResponse({
@@ -17,10 +17,11 @@ def deleteSearchRecord(request):
                         "message": "Nothing"
                     })
                 for i in browse:
-                    temp = i.id
+                    temp = str(i.id)
                     i.delete()
                     list.append(temp)
                 res['len'] = browse.__len__()
+                res['userId'] = userId
                 res['list'] = list
                 return JsonResponse(res)
             else:
