@@ -705,7 +705,7 @@ def show_paper_info(request):
                 'paperFos': [] if p.PaperFos is None else re.sub(r'[\[|\]|\'| ]', '', p.PaperFos).split(','),
                 'paperVenue': '' if p.PaperVenue is None else p.PaperVenue,
                 'keywords': re.sub(r'[\[|\'|\]]', '', str(p.PaperKeywords)),
-                'referenceTitle': reft,
+                'reference': reft,
                 'referenceLink': refi,
                 'collectStatus': cs,
                 'collectTime': ct
