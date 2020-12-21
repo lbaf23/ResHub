@@ -125,7 +125,7 @@ def getResearchInstitute(request):
                         res_temp = {}
                         paper = Paper.objects.get(PaperId=data_temp.PaperId_id)
                         res_temp['paperId'] = paper.PaperId
-                        if(paper.PaperTitle > 20):
+                        if(paper.PaperTitle.__len__() > 20):
                             res_temp['title'] = paper.PaperTitle[:20]+'...'
                         else:
                             res_temp['title'] = paper.PaperTitle
