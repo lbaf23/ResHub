@@ -16,11 +16,6 @@ def getPersonalPortal(request):
                 resinstitution = ResInstitution.objects.get(ResId=resId)
 
                 if((researcher is not None) and (hubuser is not None)):
-                    # 浏览量加一
-                    visitnumber = researcher.VisitNum + 1
-                    researcher.VisitNum = visitnumber
-                    Researcher.objects.filter(
-                        ResEmail=resId).update(VisitNum=visitnumber)
 
                     res = {}
                     res['authorid'] = resId
@@ -33,6 +28,12 @@ def getPersonalPortal(request):
                             res['ishave'] = False
                     except Exception as e:
                         res['ishave'] = False
+
+                    # 浏览量加一
+                    visitnumber = researcher.VisitNum + 1
+                    researcher.VisitNum = visitnumber
+                    Researcher.objects.filter(
+                        ResEmail=resId).update(VisitNum=visitnumber)
 
                     # avatar
                     try:
