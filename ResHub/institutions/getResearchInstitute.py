@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from ResModel.models import Institution, Researcher, ResInstitution, HubUser
 from ResModel.models import Concern, Collection, PaperAuthor, Paper, ProjectAuthor
+import re
 
 
 def author_array(authors):
@@ -55,26 +56,47 @@ def getResearchInstitute(request):
                 hotData_temp = []
                 for i in reseachers:
                     res_temp = {}
-                    resid = i.ResId.ResId
-                    res_temp['resid'] = i.ResId.ResId
-                    hotData_temp.append(i.ResId.ResId)
-                    res_temp['name'] = i.ResId.ResName
-                    res_temp['mail'] = i.ResId.UserEmail.UserEmail
-                    res_temp['domain'] = i.ResId.ResField
-                    res_temp['viewsum'] = i.ResId.VisitNum
+                    this_reseacher = Researcher.objects.get(ResId=i.ResId)
+                    resid = i.ResId
+                    res_temp['resId'] = this_reseacher.ResId
+                    hotData_temp.append(this_reseacher.ResId)
+                    res_temp['name'] = this_reseacher.ResName
+                    try:
+                        UserEmail_id = this_reseacher.UserEmail_id
+                        this_user = HubUser.objects.get(UserEmail=UserEmail_id)
+                        res_temp['avatar'] = this_user.UserImage
+                        if(UserEmail_id is None):
+                            res['mail'] = ''
+                        else:
+                            res_temp['mail'] = this_reseacher.UserEmail_id
+                    except Exception as e:
+                        res_temp['mail'] = ''
+
+                    ResField = this_reseacher.ResField
+                    if(ResField is not None):
+                        res_temp['domain'] = this_reseacher.ResField
+                    else:
+                        res_temp['domain'] = ''
+
+                    VisitNum = this_reseacher.VisitNum
+                    if(VisitNum is not None):
+                        res_temp['viewSum'] = this_reseacher.VisitNum
+                    else:
+                        res_temp['viewSum'] = 0
+
                     try:
                         collection = Collection.objects.filter(
-                            UserEmail=i.ResId.UserEmail.UserEmail).all()
+                            UserEmail_id=this_reseacher.UserEmail_id).all()
                         if(collection.__len__() == 0):
-                            res_temp['collectstatus'] = True
-                            res_temp['collectionsum'] = collection.__len__()
+                            res_temp['collectStatus'] = True
+                            res_temp['collectionSum'] = collection.__len__()
                         else:
-                            res_temp['collectstatus'] = False
-                            res_temp['collectionsum'] = 0
+                            res_temp['collectStatus'] = False
+                            res_temp['collectionSum'] = 0
                     except Exception as e:
                         print(e)
-                        res_temp['collectstatus'] = False
-                        res_temp['collectionsum'] = 0
+                        res_temp['collectStatus'] = False
+                        res_temp['collectionSum'] = 0
                     resdata.append(res_temp)
                     index = index + 1
                     if(index == 10):
@@ -95,34 +117,53 @@ def getResearchInstitute(request):
                         ResearcherId=i).all()
                     confCount = confCount+projectauthor.__len__()
 
-                    data_temp = PaperAuthor.objects.get(ResearcherId=i)
+                    try:
+                        data_temp = PaperAuthor.objects.get(ResearcherId_id=i)
+                    except Exception as e:
+                        data_temp = None
                     if(data_temp is not None):
                         res_temp = {}
-                        res_temp['paperid'] = data_temp.PaperId.PaperId
-                        res_temp['title'] = data_temp.PaperId.PaperTitle
-                        res_temp['msg'] = data_temp.PaperId.PaperAbstract
-                        quoted = quoted+data_temp.PaperId.PaperCitation
-                        authors = data_temp.PaperId.PaperAuthors
-                        res_temp['author'] = author_array(authors)
+                        paper = Paper.objects.get(PaperId=data_temp.PaperId_id)
+                        res_temp['paperId'] = paper.PaperId
+                        if(paper.PaperTitle.__len__() > 20):
+                            res_temp['title'] = paper.PaperTitle[:20]+'...'
+                        else:
+                            res_temp['title'] = paper.PaperTitle
+                        res_temp['msg'] = paper.PaperAbstract
+                        if(paper.PaperCitation is None):
+                            quoted = quoted
+                        else:
+                            quoted = quoted + paper.PaperCitation
+                        authors = paper.PaperAuthors
+                        res_temp['author'] = re.sub(
+                            r'[\[|\]|\'| ]', '', authors).split(',')[:-1]
                         authorid = []
-                        authorid.append(i)
-                        res_temp['authorid'] = authorid
-                        res_temp['link'] = data_temp.PaperId.PaperUrl
+                        paper_authors = PaperAuthor.objects.filter(
+                            PaperId_id=paper.PaperId)
+                        for k in paper_authors:
+                            authorid.append(k.ResearcherId_id)
+                        res_temp['authorId'] = authorid
+                        res_temp['link'] = re.sub(
+                            r'[\[|\]|\'| ]', '', paper.PaperUrl).split(',')[0]
                         hotData.append(res_temp)
 
                         papersid = PaperAuthor.objects.filter(
-                            ResearcherId=1).all()
+                            ResearcherId=i).all()
                         for j in papersid:
-                            year = j.PaperId.PaperTime
-                            index = 8 - (2020-year)
+                            paper = Paper.objects.get(PaperId=j.PaperId_id)
+                            year = paper.PaperTime
+                            index = (8 - (2020-year))
                             if(index < 0):
                                 continue
                             datas[index] = datas[index] + 1
-                            quotes[index] = quotes[index] + \
-                                j.PaperId.PaperCitation
+                            if(paper.PaperCitation is None):
+                                quotes[index] = quotes[index] + 0
+                            else:
+                                quotes[index] = quotes[index] + \
+                                    paper.PaperCitation
                         magCount = magCount + papersid.__len__()
                         projectauthor = ProjectAuthor.objects.filter(
-                            ResearcherId=i).all()
+                            ResearcherId_id=i).all()
                         magCount = magCount + projectauthor.__len__()
                     ind = ind + 1
                     if (ind == 5):
@@ -137,7 +178,7 @@ def getResearchInstitute(request):
                 res['confcount'] = confCount
                 res['confpar'] = confpar
                 res['quoted'] = str(quoted)
-                res['papernum'] = str(papernum)
+                res['papernum'] = str(magCount+confCount)
 
                 resCount = []
                 quoCount = []
