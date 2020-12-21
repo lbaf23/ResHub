@@ -256,10 +256,10 @@ def getPersonalPortal(request):
                                     break
                                 res_temp = {}
                                 reseacher_relation_temp = i.ResearchId1_id
-                                reseacher_relation = Researcher.objects.get(
-                                    ResId=reseacher_relation_temp)
-                                email = reseacher_relation.UserEmail_id
                                 try:
+                                    reseacher_relation = Researcher.objects.get(
+                                        ResId=reseacher_relation_temp)
+                                    email = reseacher_relation.UserEmail_id
                                     if(email is not None):
                                         user_temp = HubUser.objects.get(
                                             UserEmail=email)
