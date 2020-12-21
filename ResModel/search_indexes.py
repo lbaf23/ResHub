@@ -6,6 +6,9 @@ class PaperIndex(indexes.SearchIndex, indexes.Indexable):
     # 必须写的字段
     text = indexes.CharField(document=True, use_template=True)
 
+    PaperCitation = indexes.IntegerField(model_attr='PaperCitation', null=True)
+    CollectionNum = indexes.IntegerField(model_attr='CollectionNum', null=True)
+    ReadNum = indexes.IntegerField(model_attr='ReadNum', null=True)
     PaperTime = indexes.IntegerField(model_attr='PaperTime', null=True)
     PaperAbstract = indexes.CharField(model_attr='PaperAbstract', null=True)
     PaperKeywords = indexes.CharField(model_attr='PaperKeywords', null=True)
@@ -25,6 +28,8 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     # 必须写的字段
     text = indexes.CharField(document=True, use_template=True)
 
+    CollectionNum = indexes.IntegerField(model_attr='CollectionNum', null=True)
+    ReadNum = indexes.IntegerField(model_attr='ReadNum', null=True)
     GrantYear = indexes.IntegerField(model_attr='GrantYear', null=True)
     ProjectTitle = indexes.CharField(model_attr='ProjectTitle', null=True)
     Subject = indexes.CharField(model_attr='Subject', null=True)
@@ -48,6 +53,8 @@ class PatentIndex(indexes.SearchIndex, indexes.Indexable):
     # 必须写的字段
     text = indexes.CharField(document=True, use_template=True)
 
+    CollectionNum = indexes.IntegerField(model_attr='CollectionNum', null=True)
+    ReadNum = indexes.IntegerField(model_attr='ReadNum', null=True)
     PatentDate = indexes.DateField(model_attr='PatentDate', null=True)
     PatentTitle = indexes.CharField(model_attr='PatentTitle', null=True)
     PatentAbstract = indexes.CharField(model_attr='PatentAbstract', null=True)
@@ -64,7 +71,6 @@ class PatentIndex(indexes.SearchIndex, indexes.Indexable):
 
 class ResearcherIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
-    InstitutionName = indexes.CharField(model_attr='InstitutionName', null=True)
 
     def get_model(self):
         # 返回建立索引的模型 数据库表
