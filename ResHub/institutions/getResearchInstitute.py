@@ -149,7 +149,7 @@ def getResearchInstitute(request):
                         for j in papersid:
                             paper = Paper.objects.get(PaperId=j.PaperId_id)
                             year = paper.PaperTime
-                            index = (8 - (2020-year)) % 5
+                            index = (8 - (2020-year))
                             if(index < 0):
                                 continue
                             datas[index] = datas[index] + 1
