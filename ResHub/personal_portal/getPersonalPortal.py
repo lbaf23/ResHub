@@ -82,7 +82,7 @@ def getPersonalPortal(request):
                         res['follownum'] = 0
 
                     # realName
-                    res['Resname'] = researcher.ResName
+                    res['realname'] = researcher.ResName
 
                     # insName
                     try:
