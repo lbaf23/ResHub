@@ -175,7 +175,7 @@ def getResearchInstitute(request):
                 res['confcount'] = confCount
                 res['confpar'] = confpar
                 res['quoted'] = str(quoted)
-                res['papernum'] = str(papernum)
+                res['papernum'] = str(magCount+confCount)
 
                 resCount = []
                 quoCount = []
