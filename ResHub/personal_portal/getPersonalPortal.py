@@ -99,10 +99,10 @@ def getPersonalPortal(request):
                         if(institution_id is not None):
                             res['insname'] = institutionid
                         else:
-                            res['insname'] = ""
+                            res['insname'] = "暂无"
                     except Exception as e:
                         print(str(e))
-                        res['insname'] = ""
+                        res['insname'] = "暂无"
 
                     # insId
                     try:
@@ -126,7 +126,7 @@ def getPersonalPortal(request):
                     if(researcher.ResField is not None):
                         res['resfield'] = researcher.ResField
                     else:
-                        res['resfield'] = ""
+                        res['resfield'] = "未知"
 
                     # 一堆东西
                     try:
