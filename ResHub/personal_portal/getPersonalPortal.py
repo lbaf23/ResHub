@@ -102,9 +102,6 @@ def getPersonalPortal(request):
                     # mail
                     res['mail'] = researcher.UserEmail_id
 
-                    # paperNum
-                    res['papernum'] = researcher.LiteratureNum
-
                     # resField
                     res['resfield'] = researcher.ResField
 
@@ -155,11 +152,13 @@ def getPersonalPortal(request):
                         res['magpar'] = magpar
                         res['confcount'] = confCount
                         res['confpar'] = confpar
+                        res['papernum'] = magCount+confCount
                     except Exception as e:
                         res['magcount'] = 0
                         res['magpar'] = '0%'
                         res['confcount'] = 0
                         res['confpar'] = '0%'
+                        res['papernum'] = 0
                     # coopData
                     try:
                         count = 0
