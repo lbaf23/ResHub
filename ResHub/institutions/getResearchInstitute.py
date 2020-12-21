@@ -64,7 +64,7 @@ def getResearchInstitute(request):
                     try:
                         UserEmail_id = this_reseacher.UserEmail_id
                         this_user = HubUser.objects.get(UserEmail=UserEmail_id)
-                        res['avatar'] = this_user.UserImage
+                        res_temp['avatar'] = this_user.UserImage
                         if(UserEmail_id is None):
                             res['mail'] = ''
                         else:
