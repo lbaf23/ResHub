@@ -124,23 +124,48 @@ def getPersonalPortal(request):
                     else:
                         res['resfield'] = ""
 
-                    # resCount & quoteNum & quoCount
+                    # 一堆东西
                     try:
                         papersid = PaperAuthor.objects.filter(
                             ResearcherId_id=resId).all()
                         datas = [0, 0, 0, 0, 0, 0, 0, 0]
                         quotes = [0, 0, 0, 0, 0, 0, 0, 0]
+                        tabledata = []
                         quoteNum = 0
                         for i in papersid:
+                            res_temp = {}
                             try:
                                 paper = Paper.objects.get(PaperId=i.PaperId_id)
                             except Exception as e:
                                 print(str(e))
                                 continue
+                            res_temp['paperId'] = i.PaperId_id
+                            if(paper.PaperTitle.__len__() > 30):
+                                res_temp['title'] = paper.PaperTitle[:30]+'...'
+                            else:
+                                res_temp['title'] = paper.PaperTitle
+                            if(paper.PaperAbstract.__len__() > 60):
+                                res_temp['msg'] = paper.PaperAbstract[:60]+'...'
+                            else:
+                                res_temp['msg'] = paper.PaperAbstract
+                            res_temp['collectionSum'] = paper.CollectionNum
+                            res_temp['link'] = re.sub(
+                                r'[\[|\]|\'| ]', '', paper.PaperUrl).split(',')[0]
+                            res_temp['type'] = '文章'
+                            try:
+                                pp = paper.CollectionNum
+                                if(pp == 0):
+                                    res_temp['collectStatus'] = True
+                                else:
+                                    res_temp['collectStatus'] = False
+                            except Exception as e:
+                                print(e)
+                                res_temp['collectStatus'] = False
+                            tabledata.append(res_temp)
                             year = paper.PaperTime
-                            index = (8 - (2020-year))
-                            if(index < 0):
-                                continue
+                            index = (8 - (2020-year)) % 5
+                            # if(index < 0):
+                            #     continue
                             datas[index] = datas[index] + 1
                             quotes[index] = quotes[index] + paper.PaperCitation
                             quoteNum = quoteNum + paper.PaperCitation
@@ -153,6 +178,7 @@ def getPersonalPortal(request):
                         res['rescount'] = resCount
                         res['quocount'] = quoCount
                         res['quotenum'] = str(quoteNum)
+                        res['tabledata'] = tabledata
                     except Exception as e:
                         print(str(e))
                         res['rescount'] = [
@@ -160,6 +186,8 @@ def getPersonalPortal(request):
                         res['quocount'] = [
                             '0', '0', '0', '0', '0', '0', '0', '0']
                         res['quotenum'] = '0'
+                        res['tabledata'] = []
+
                     # magCount ....
                     try:
                         projectauthor = ProjectAuthor.objects.filter(
@@ -251,51 +279,7 @@ def getPersonalPortal(request):
                         res['coopdata'] = coopData
                     except Exception as e:
                         print(str(e))
-                        res['coopdata'] = []
-
-                    try:
-                        tabledata = []
-                        count = 0
-                        for i in papersid:
-                            try:
-                                res_temp = {}
-                                try:
-                                    paper = Paper.objects.get(
-                                        PaperId=i.PaperId_id)
-                                except Exception as e:
-                                    continue
-                                res_temp['paperId'] = i.PaperId_id
-                                if(paper.PaperTitle.__len__() > 30):
-                                    res_temp['title'] = paper.PaperTitle[:30]+'...'
-                                else:
-                                    res_temp['title'] = paper.PaperTitle
-                                if(paper.PaperAbstract.__len__() > 60):
-                                    res_temp['msg'] = paper.PaperAbstract[:60]+'...'
-                                else:
-                                    res_temp['msg'] = paper.PaperAbstract
-                                res_temp['collectionSum'] = paper.CollectionNum
-                                res_temp['link'] = re.sub(
-                                    r'[\[|\]|\'| ]', '', paper.PaperUrl).split(',')[0]
-                                res_temp['type'] = '文章'
-                                try:
-                                    pp = paper.CollectionNum
-                                    if(pp == 0):
-                                        res_temp['collectStatus'] = True
-                                    else:
-                                        res_temp['collectStatus'] = False
-                                except Exception as e:
-                                    print(e)
-                                    res_temp['collectStatus'] = False
-                            except Exception as e:
-                                print(str(e))
-                                continue
-                            tabledata.append(res_temp)
-                            count = count + 1
-                            if(count == 5):
-                                break
-                        res['tabledata'] = tabledata
-                    except Exception as e:
-                        res['tabledata'] = []
+                        res['coopdata'] = [
 
                     return JsonResponse(res)
                 else:
