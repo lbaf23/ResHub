@@ -125,7 +125,10 @@ def getResearchInstitute(request):
                         res_temp = {}
                         paper = Paper.objects.get(PaperId=data_temp.PaperId_id)
                         res_temp['paperId'] = paper.PaperId
-                        res_temp['title'] = paper.PaperTitle
+                        if(paper.PaperTitle > 20):
+                            res_temp['title'] = paper.PaperTitle[:20]+'...'
+                        else:
+                            res_temp['title'] = paper.PaperTitle
                         res_temp['msg'] = paper.PaperAbstract
                         if(paper.PaperCitation is None):
                             quoted = quoted
