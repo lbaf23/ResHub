@@ -37,6 +37,7 @@ class Researcher(models.Model):
     VisitNum = models.IntegerField(default=0)  # 浏览次数
     ConcernNum = models.IntegerField(default=0)  # 关注人数
     ResPubs = models.CharField(max_length=2000, null=True)  # 作者发表的文章
+    ResCompany_id = models.ForeignKey('Institution',to_field='id',on_delete=models.CASCADE(),null=True)
 
 
 class Paper(models.Model):
