@@ -11,18 +11,6 @@ class HubUser(models.Model):
     UserImage = models.CharField(max_length=50)
     UserIntroduction = models.CharField(max_length=2000, null=True)
 
-
-class ResInstitution(models.Model):
-    ResId = models.CharField(max_length=50)
-    InstitutionId = models.CharField(max_length=50)
-
-
-class Institution(models.Model):
-    InsName = models.CharField(max_length=50)
-    InsField = models.CharField(max_length=50, null=True)
-    InsIntroduction = models.CharField(max_length=50)
-
-
 class Researcher(models.Model):
     ResId = models.CharField(max_length=50, primary_key=True)
     IsClaim = models.BooleanField()  # 是否认领
@@ -36,7 +24,7 @@ class Researcher(models.Model):
     CitedNum = models.IntegerField(null=True)  # 文章被引用次数
     VisitNum = models.IntegerField(default=0)  # 浏览次数
     ConcernNum = models.IntegerField(default=0)  # 关注人数
-    ResPubs = models.CharField(max_length=2000, null=True)  # 作者发表的文章
+    InstitutionName = models.CharField(max_length=100)#作者机构名
 
 
 class Paper(models.Model):
