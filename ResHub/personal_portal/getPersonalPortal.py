@@ -42,7 +42,7 @@ def getPersonalPortal(request):
                             UserEmail=keyword_email)
                         res['avatar'] = keyword_hubuser.UserImage
                     except Exception as e:
-                        res['avatar'] = 'trump.jpg'
+                        res['avatar'] = 'head00.jpg'
 
                     # isClaimed
                     res['isclaimed'] = researcher.IsClaim
@@ -118,7 +118,7 @@ def getPersonalPortal(request):
                         for i in papersid:
                             paper = Paper.objects.get(PaperId=i.PaperId_id)
                             year = paper.PaperTime
-                            index = (8 - (2020-year)) % 5
+                            index = (8 - (2020-year))
                             if(index < 0):
                                 continue
                             datas[index] = datas[index] + 1
@@ -244,9 +244,8 @@ def getPersonalPortal(request):
                                     r'[\[|\]|\'| ]', '', paper.PaperUrl).split(',')[0]
                                 res_temp['type'] = '文章'
                                 try:
-                                    pp = Collection.objects.get(
-                                        UserEmail=userId, PaperId=i.PaperId_id)
-                                    if(pp is not None):
+                                    pp = paper.CollectionNum
+                                    if(pp == 0):
                                         res_temp['collectStatus'] = True
                                     else:
                                         res_temp['collectStatus'] = False
