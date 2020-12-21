@@ -15,6 +15,7 @@ def getPersonalPortal(request):
                 try:
                     institution_id = researcher.ResCompany_id
                 except Exception as e:
+                    print(str(e))
                     institution_id = None
 
                 if(researcher is not None):
@@ -23,12 +24,13 @@ def getPersonalPortal(request):
                     res['authorid'] = resId
                     # is_have
                     try:
-                        is_have = Researcher.objects.get(UserEmail=userId)
+                        is_have = Researcher.objects.get(UserEmail_id=userId)
                         if(is_have is not None):
                             res['ishave'] = True
                         else:
                             res['ishave'] = False
                     except Exception as e:
+                        print(str(e))
                         res['ishave'] = False
 
                     # 浏览量加一
@@ -47,6 +49,7 @@ def getPersonalPortal(request):
                         else:
                             res['avatar'] = 'head00.jpg'
                     except Exception as e:
+                        print(str(e))
                         res['avatar'] = 'head00.jpg'
 
                     # isClaimed
@@ -71,6 +74,7 @@ def getPersonalPortal(request):
                         else:
                             res['ismyportal'] = False
                     except Exception as e:
+                        print(str(e))
                         res['ismyportal'] = False
 
                     # visitNum
@@ -82,8 +86,9 @@ def getPersonalPortal(request):
                         if(follow is None):
                             res['follownum'] = 0
                         else:
-                            res['follownum'] = follow.__len__()
+                            res['follownum'] = follow
                     except Exception as e:
+                        print(str(e))
                         res['follownum'] = 0
 
                     # realName
@@ -99,6 +104,7 @@ def getPersonalPortal(request):
                         else:
                             res['insname'] = ""
                     except Exception as e:
+                        print(str(e))
                         res['insname'] = ""
 
                     # insId
@@ -108,6 +114,7 @@ def getPersonalPortal(request):
                         else:
                             res['insid'] = ""
                     except Exception as e:
+                        print(str(e))
                         res['insid'] = ""
 
                     # mail
@@ -205,6 +212,7 @@ def getPersonalPortal(request):
                         res['confpar'] = confpar
                         res['papernum'] = magCount+confCount
                     except Exception as e:
+                        print(str(e))
                         res['magcount'] = 0
                         res['magpar'] = '0%'
                         res['confcount'] = 0
@@ -233,6 +241,7 @@ def getPersonalPortal(request):
                                 else:
                                     res_temp['avatar'] = user_temp.UserImage
                             except Exception as e:
+                                print(str(e))
                                 res_temp['avatar'] = 'head00.jpg'
                             resinstitution_temp = ResInstitution.objects.get(
                                 ResId=reseacher_relation.ResId)
@@ -264,6 +273,7 @@ def getPersonalPortal(request):
                                     else:
                                         res_temp['avatar'] = 'head00.jpg'
                                 except Exception as e:
+                                    print(str(e))
                                     res_temp['avatar'] = 'head00.jpg'
                                 institution_this = Institution.objects.get(
                                     id=reseacher_relation.ResCompany_id)
@@ -298,6 +308,7 @@ def getPersonalPortal(request):
                 "message": "请求方法错误"
             })
     except Exception as e:
+        print(str(e))
         return JsonResponse({
             "status": 5,
             "message": str(e)
