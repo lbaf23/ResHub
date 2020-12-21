@@ -48,8 +48,8 @@ def getPersonalPortal(request):
 
                     # isFollowing
                     try:
-                        concern = Concern.objects.filter(
-                            UserEmail_id=userId, ResearchId_id=researcher.ResId).all()
+                        concern = Concern.objects.get(
+                            UserEmail_id=userId, ResearchId_id=researcher.ResId)
                         if(concern is not None):
                             res['isfollowing'] = True
                         else:
