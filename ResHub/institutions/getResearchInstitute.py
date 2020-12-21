@@ -127,44 +127,51 @@ def getResearchInstitute(request):
                         data_temp = None
                     if(data_temp is not None):
                         res_temp = {}
-                        paper = Paper.objects.get(PaperId=data_temp.PaperId_id)
-                        res_temp['paperId'] = paper.PaperId
-                        if(paper.PaperTitle.__len__() > 20):
-                            res_temp['title'] = paper.PaperTitle[:20]+'...'
-                        else:
-                            res_temp['title'] = paper.PaperTitle
-                        res_temp['msg'] = paper.PaperAbstract
-                        if(paper.PaperCitation is None):
-                            quoted = quoted
-                        else:
-                            quoted = quoted + paper.PaperCitation
-                        authors = paper.PaperAuthors
-                        res_temp['author'] = re.sub(
-                            r'[\[|\]|\'| ]', '', authors).split(',')[:-1]
-                        authorid = []
-                        paper_authors = PaperAuthor.objects.filter(
-                            PaperId_id=paper.PaperId)
-                        for k in paper_authors:
-                            authorid.append(k.ResearcherId_id)
-                        res_temp['authorId'] = authorid
-                        res_temp['link'] = re.sub(
-                            r'[\[|\]|\'| ]', '', paper.PaperUrl).split(',')[0]
-                        hotData.append(res_temp)
+                        try:
+                            paper = Paper.objects.get(
+                                PaperId=data_temp.PaperId_id)
+                            res_temp['paperId'] = paper.PaperId
+                            if(paper.PaperTitle.__len__() > 20):
+                                res_temp['title'] = paper.PaperTitle[:20]+'...'
+                            else:
+                                res_temp['title'] = paper.PaperTitle
+                            res_temp['msg'] = paper.PaperAbstract
+                            if(paper.PaperCitation is None):
+                                quoted = quoted
+                            else:
+                                quoted = quoted + paper.PaperCitation
+                            authors = paper.PaperAuthors
+                            res_temp['author'] = re.sub(
+                                r'[\[|\]|\'| ]', '', authors).split(',')[:-1]
+                            authorid = []
+                            paper_authors = PaperAuthor.objects.filter(
+                                PaperId_id=paper.PaperId)
+                            for k in paper_authors:
+                                authorid.append(k.ResearcherId_id)
+                            res_temp['authorId'] = authorid
+                            res_temp['link'] = re.sub(
+                                r'[\[|\]|\'| ]', '', paper.PaperUrl).split(',')[0]
+                            hotData.append(res_temp)
+                        except Exception as e:
+                            donothing = 1
 
                         papersid = PaperAuthor.objects.filter(
                             ResearcherId=i).all()
                         for j in papersid:
-                            paper = Paper.objects.get(PaperId=j.PaperId_id)
-                            year = paper.PaperTime
-                            index = (8 - (2020-year)) % 5
-                            if(index < 0):
-                                continue
-                            datas[index] = datas[index] + 1
-                            if(paper.PaperCitation is None):
-                                quotes[index] = quotes[index] + 0
-                            else:
-                                quotes[index] = quotes[index] + \
-                                    paper.PaperCitation
+                            try:
+                                paper = Paper.objects.get(PaperId=j.PaperId_id)
+                                year = paper.PaperTime
+                                index = (year-1980) % 5
+                                if(index < 0):
+                                    continue
+                                datas[index] = datas[index] + 1
+                                if(paper.PaperCitation is None):
+                                    quotes[index] = quotes[index] + 0
+                                else:
+                                    quotes[index] = quotes[index] + \
+                                        paper.PaperCitation
+                            except Exception as e:
+                                donothing = 1
                         magCount = magCount + papersid.__len__()
                         projectauthor = ProjectAuthor.objects.filter(
                             ResearcherId_id=i).all()
@@ -174,7 +181,7 @@ def getResearchInstitute(request):
                         break
                 res['hotdata'] = hotData
                 all_have = magCount+confCount
-                if(all_have!=0):
+                if(all_have != 0):
                     magpar = str(int(float(magCount)/float(all_have)*100))+'%'
                     confpar = str(
                         int(float(confCount)/float(all_have)*100))+'%'
