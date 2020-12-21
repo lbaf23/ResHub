@@ -33,11 +33,13 @@ def getPersonalPortal(request):
                         print(str(e))
                         res['ishave'] = False
 
+                    # visitNum
+                    res['visitnum'] = researcher.VisitNum
+
                     # 浏览量加一
-                    visitnumber = researcher.VisitNum + 1
-                    researcher.VisitNum = visitnumber
-                    Researcher.objects.filter(
-                        ResEmail=resId).update(VisitNum=visitnumber)
+                    visitnumber = researcher.VisitNum
+                    Researcher.objects.filter(ResId=resId).update(
+                        VisitNum=visitnumber+1)
 
                     # avatar
                     try:
@@ -76,9 +78,6 @@ def getPersonalPortal(request):
                     except Exception as e:
                         print(str(e))
                         res['ismyportal'] = False
-
-                    # visitNum
-                    res['visitnum'] = researcher.VisitNum
 
                     # followNum
                     try:
