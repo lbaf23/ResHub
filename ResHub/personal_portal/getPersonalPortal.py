@@ -230,8 +230,14 @@ def getPersonalPortal(request):
                                 res_temp = {}
                                 paper = Paper.objects.get(PaperId=i.PaperId_id)
                                 res_temp['paperId'] = i.PaperId_id
-                                res_temp['title'] = paper.PaperTitle
-                                res_temp['msg'] = paper.PaperAbstract[:60]
+                                if(paper.__len__() > 30):
+                                    res_temp['title'] = paper.PaperTitle[:30]+'...'
+                                else:
+                                    res_temp['title'] = paper.PaperTitle
+                                if(paper.paper.PaperAbstract > 60):
+                                    res_temp['msg'] = paper.PaperAbstract[:60]+'...'
+                                else:
+                                    res_temp['msg'] = paper.PaperAbstract
                                 res_temp['collectionSum'] = paper.CollectionNum
                                 res_temp['link'] = re.sub(
                                     r'[\[|\]|\'| ]', '', paper.PaperUrl).split(',')[0]
