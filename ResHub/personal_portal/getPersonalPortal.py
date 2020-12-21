@@ -97,9 +97,7 @@ def getPersonalPortal(request):
                     try:
                         institutionid = institution_id
                         if(institution_id is not None):
-                            institution = Institution.objects.get(
-                                id=institutionid)
-                            res['insname'] = institution.InsName
+                            res['insname'] = institutionid
                         else:
                             res['insname'] = ""
                     except Exception as e:
