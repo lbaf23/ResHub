@@ -1,6 +1,6 @@
 from django.http import JsonResponse
-from ResModel.models import HubUser, Researcher, Relationship, Collection, Institution
-from ResModel.models import ProjectAuthor, Concern, ResInstitution, PaperAuthor, Paper
+from ResModel.models import HubUser, Researcher, Relationship, Collection
+from ResModel.models import ProjectAuthor, Concern, PaperAuthor, Paper
 import re
 
 
@@ -13,7 +13,7 @@ def getPersonalPortal(request):
 
                 researcher = Researcher.objects.get(ResId=resId)
                 try:
-                    institution_id = researcher.ResCompany_id
+                    institution_id = researcher.InstitutionName
                 except Exception as e:
                     print(str(e))
                     institution_id = None
@@ -240,12 +240,9 @@ def getPersonalPortal(request):
                             except Exception as e:
                                 print(str(e))
                                 res_temp['avatar'] = 'head00.jpg'
-                            resinstitution_temp = ResInstitution.objects.get(
-                                ResId=reseacher_relation.ResId)
-                            institution_this = Institution.objects.get(
-                                id=resinstitution_temp.InstitutionId)
+
                             res_temp['name'] = reseacher_relation.ResName
-                            res_temp['institute'] = institution_this.InsName
+                            res_temp['institute'] = reseacher_relation.InstitutionName
 
                             res_temp['link'] = reseacher_relation.ResId
                             coopData.append(res_temp)
@@ -272,13 +269,11 @@ def getPersonalPortal(request):
                                 except Exception as e:
                                     print(str(e))
                                     res_temp['avatar'] = 'head00.jpg'
-                                institution_this = Institution.objects.get(
-                                    id=reseacher_relation.ResCompany_id)
-                                if(institution_this is not None):
-                                    res_temp['name'] = reseacher_relation.ResName
-                                    res_temp['institute'] = institution_this.InsName
+
+                                res_temp['name'] = reseacher_relation.ResName
+                                if(reseacher_relation.InstitutionName is not None):
+                                    res_temp['institute'] = reseacher_relation.InstitutionName
                                 else:
-                                    res_temp['name'] = ""
                                     res_temp['institute'] = ""
                                 res_temp['link'] = reseacher_relation.ResId
                                 coopData.append(res_temp)

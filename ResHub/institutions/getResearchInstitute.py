@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from ResModel.models import Institution, Researcher, ResInstitution, HubUser
+from ResModel.models import Researcher, HubUser
 from ResModel.models import Concern, Collection, PaperAuthor, Paper, ProjectAuthor
 import re
 
@@ -28,23 +28,26 @@ def getResearchInstitute(request):
             instituteId = request.GET.get('instituteId')
             if (instituteId is not None):
                 res = {}
-                institute = Institution.objects.get(id=instituteId)
+                institute = Researcher.objects.filter(
+                    InstitutionName=instituteId)
                 if(institute is None):
                     return JsonResponse({
                         "status": 0,
                         "message": "Nothing"
                     })
                 # insname
-                insname = institute.InsName
-                res['insname'] = insname
+                res['insname'] = instituteId
 
                 # domain
-                res['domain'] = institute.InsField
+                for i in institute:
+                    if(i is None):
+                        res['domain'] = institute[0].ResField
+                        break
+                    else:
+                        return JsonResponse({"error": 'error'})
 
                 # reseachers
-                reseachers = ResInstitution.objects.filter(
-                    InstitutionId=instituteId).all()
-                res['researchers'] = str(reseachers.__len__())
+                res['researchers'] = str(institute.__len__())
 
                 resdata = []
                 hotData = []
@@ -54,9 +57,9 @@ def getResearchInstitute(request):
                 confcount = 0
                 index = 0
                 hotData_temp = []
-                for i in reseachers:
+                for i in institute:
                     res_temp = {}
-                    this_reseacher = Researcher.objects.get(ResId=i.ResId)
+                    this_reseacher = i
                     resid = i.ResId
                     res_temp['resId'] = this_reseacher.ResId
                     hotData_temp.append(this_reseacher.ResId)
@@ -70,6 +73,7 @@ def getResearchInstitute(request):
                         else:
                             res_temp['mail'] = this_reseacher.UserEmail_id
                     except Exception as e:
+                        res_temp['avatar'] = 'head00.jpg'
                         res_temp['mail'] = ''
 
                     ResField = this_reseacher.ResField
@@ -152,7 +156,7 @@ def getResearchInstitute(request):
                         for j in papersid:
                             paper = Paper.objects.get(PaperId=j.PaperId_id)
                             year = paper.PaperTime
-                            index = (8 - (2020-year))
+                            index = (8 - (2020-year)) % 5
                             if(index < 0):
                                 continue
                             datas[index] = datas[index] + 1
@@ -170,9 +174,13 @@ def getResearchInstitute(request):
                         break
                 res['hotdata'] = hotData
                 all_have = magCount+confCount
-                magpar = str(int(float(magCount)/float(all_have)*100))+'%'
-                confpar = str(
-                    int(float(confCount)/float(all_have)*100))+'%'
+                if(all_have!=0):
+                    magpar = str(int(float(magCount)/float(all_have)*100))+'%'
+                    confpar = str(
+                        int(float(confCount)/float(all_have)*100))+'%'
+                else:
+                    magpar = '0%'
+                    confpar = '0%'
                 res['magcount'] = magCount
                 res['magpar'] = magpar
                 res['confcount'] = confCount

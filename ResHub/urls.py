@@ -21,8 +21,8 @@ from ResModel.views import PaperSearchViewSet
 
 from ResHub.controller import Chatting
 from ResHub.controller import Login, Browse, Portal, Concern
-from ResHub.personal_portal import getPersonalPortal, getPersonalList, temp
-from ResHub.institutions import getResearchInstitute, getDaGongRen
+from ResHub.personal_portal import getPersonalPortal
+from ResHub.institutions import getResearchInstitute
 from ResHub.history import getSearchRecord, deleteSearchRecord
 from ResHub.user import newPassword, changeHead
 from ResHub.controller import Collection
@@ -48,15 +48,13 @@ urlpatterns = [
     path('passwordLost', Login.passwordLost),
     path('getList', Administrator.getList),
     path('changeHead', changeHead.changeHead),
-    path('addConcern',Concern.add_concern),
+    path('addConcern', Concern.add_concern),
 
 
     # LKY
     #path('temp', temp.temp),
     path('getPersonalPortal', getPersonalPortal.getPersonalPortal),
-    path('getPersonalList', getPersonalList.getPersonalList),
     path('getResearchInstitute', getResearchInstitute.getResearchInstitute),
-    path('getDaGongRen', getDaGongRen.getDaGongRen),
     path('getSearchRecord', getSearchRecord.getSearchRecord),
     path('deleteSearchRecord', deleteSearchRecord.deleteSearchRecord),
     path('newPassword', newPassword.newPassword),
@@ -74,7 +72,7 @@ urlpatterns = [
     path('reject1', Administrator.reject_review),
     path('pass2', Administrator.pass_appeal),
     path('reject2', Administrator.reject_appeal),
-    path('addSearchRecord',searchHistory.add_search_history),
+    path('addSearchRecord', searchHistory.add_search_history),
 
 
     path('searchWords', Search.search_words),
