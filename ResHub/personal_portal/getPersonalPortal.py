@@ -12,10 +12,12 @@ def getPersonalPortal(request):
             if ((userId is not None) and (resId is not None)):
 
                 researcher = Researcher.objects.get(ResId=resId)
-                hubuser = HubUser.objects.get(UserEmail=userId)
-                resinstitution = ResInstitution.objects.get(ResId=resId)
+                try:
+                    institution_id = researcher.ResCompany_id
+                except Exception as e:
+                    institution_id = None
 
-                if((researcher is not None) and (hubuser is not None)):
+                if(researcher is not None):
 
                     res = {}
                     res['authorid'] = resId
@@ -38,9 +40,12 @@ def getPersonalPortal(request):
                     # avatar
                     try:
                         keyword_email = researcher.UserEmail_id
-                        keyword_hubuser = HubUser.objects.get(
-                            UserEmail=keyword_email)
-                        res['avatar'] = keyword_hubuser.UserImage
+                        if(keyword_email is not None):
+                            keyword_hubuser = HubUser.objects.get(
+                                UserEmail=keyword_email)
+                            res['avatar'] = keyword_hubuser.UserImage
+                        else:
+                            res['avatar'] = 'head00.jpg'
                     except Exception as e:
                         res['avatar'] = 'head00.jpg'
 
@@ -61,7 +66,7 @@ def getPersonalPortal(request):
 
                     # isMyPortal
                     try:
-                        if(researcher.UserEmail_id == hubuser.UserEmail):
+                        if(researcher.UserEmail_id == userId):
                             res['ismyportal'] = True
                         else:
                             res['ismyportal'] = False
@@ -73,8 +78,7 @@ def getPersonalPortal(request):
 
                     # followNum
                     try:
-                        follow = Concern.objects.filter(
-                            ResearchId=researcher.UserEmail_id).all()
+                        follow = researcher.ConcernNum
                         if(follow is None):
                             res['follownum'] = 0
                         else:
@@ -87,23 +91,38 @@ def getPersonalPortal(request):
 
                     # insName
                     try:
-                        institutionid = resinstitution.InstitutionId
-                        institution = Institution.objects.get(id=institutionid)
-                        res['insname'] = institution.InsName
+                        institutionid = institution_id
+                        if(institution_id is not None):
+                            institution = Institution.objects.get(
+                                id=institutionid)
+                            res['insname'] = institution.InsName
+                        else:
+                            res['insname'] = ""
                     except Exception as e:
                         res['insname'] = ""
 
                     # insId
                     try:
-                        res['insid'] = resinstitution.InstitutionId
+                        if(institution_id is not None):
+                            res['insid'] = institution_id
+                        else:
+                            res['insid'] = ""
                     except Exception as e:
                         res['insid'] = ""
 
                     # mail
-                    res['mail'] = researcher.UserEmail_id
+                    if(researcher.ResEmail is not None):
+                        res['mail'] = researcher.ResEmail
+                    elif(researcher.UserEmail_id is not None):
+                        res['mail'] = researcher.UserEmail_id
+                    else:
+                        res['mail'] = ""
 
                     # resField
-                    res['resfield'] = researcher.ResField
+                    if(researcher.ResField is not None):
+                        res['resfield'] = researcher.ResField
+                    else:
+                        res['resfield'] = ""
 
                     # resCount & quoteNum & quoCount
                     try:
@@ -113,7 +132,11 @@ def getPersonalPortal(request):
                         quotes = [0, 0, 0, 0, 0, 0, 0, 0]
                         quoteNum = 0
                         for i in papersid:
-                            paper = Paper.objects.get(PaperId=i.PaperId_id)
+                            try:
+                                paper = Paper.objects.get(PaperId=i.PaperId_id)
+                            except Exception as e:
+                                print(str(e))
+                                continue
                             year = paper.PaperTime
                             index = (8 - (2020-year))
                             if(index < 0):
@@ -142,8 +165,8 @@ def getPersonalPortal(request):
                         projectauthor = ProjectAuthor.objects.filter(
                             ResearcherId=resId).all()
                         confCount = projectauthor.__len__()
-                        magCount = papersid.__len__()
-                        all_have = projectauthor.__len__() + papersid.__len__()
+                        magCount = researcher.LiteratureNum
+                        all_have = projectauthor.__len__() + researcher.LiteratureNum
                         magpar = str(
                             int(float(magCount)/float(all_have)*100))+'%'
                         confpar = str(
@@ -159,6 +182,7 @@ def getPersonalPortal(request):
                         res['confcount'] = 0
                         res['confpar'] = '0%'
                         res['papernum'] = 0
+
                     # coopData
                     try:
                         count = 0
@@ -174,11 +198,14 @@ def getPersonalPortal(request):
                                 ResId=reseacher_relation_temp)
                             email = reseacher_relation.UserEmail_id
                             try:
-                                user_temp = HubUser.objects.get(
-                                    UserEmail=email)
-                                res_temp['avatar'] = user_temp.UserImage
+                                if(email is not None):
+                                    user_temp = HubUser.objects.get(
+                                        UserEmail=email)
+                                    res_temp['avatar'] = user_temp.UserImage
+                                else:
+                                    res_temp['avatar'] = user_temp.UserImage
                             except Exception as e:
-                                res_temp['avatar'] = ''
+                                res_temp['avatar'] = 'head00.jpg'
                             resinstitution_temp = ResInstitution.objects.get(
                                 ResId=reseacher_relation.ResId)
                             institution_this = Institution.objects.get(
@@ -202,18 +229,22 @@ def getPersonalPortal(request):
                                     ResId=reseacher_relation_temp)
                                 email = reseacher_relation.UserEmail_id
                                 try:
-                                    user_temp = HubUser.objects.get(
-                                        UserEmail=email)
-                                    res_temp['avatar'] = user_temp.UserImage
+                                    if(email is not None):
+                                        user_temp = HubUser.objects.get(
+                                            UserEmail=email)
+                                        res_temp['avatar'] = user_temp.UserImage
+                                    else:
+                                        res_temp['avatar'] = 'head00.jpg'
                                 except Exception as e:
-                                    res_temp['avatar'] = ''
-                                resinstitution_temp = ResInstitution.objects.get(
-                                    ResId=reseacher_relation.ResId)
+                                    res_temp['avatar'] = 'head00.jpg'
                                 institution_this = Institution.objects.get(
-                                    id=resinstitution_temp.InstitutionId)
-                                res_temp['name'] = reseacher_relation.ResName
-                                res_temp['institute'] = institution_this.InsName
-
+                                    id=reseacher_relation.ResCompany_id)
+                                if(institution_this is not None):
+                                    res_temp['name'] = reseacher_relation.ResName
+                                    res_temp['institute'] = institution_this.InsName
+                                else:
+                                    res_temp['name'] = ""
+                                    res_temp['institute'] = ""
                                 res_temp['link'] = reseacher_relation.ResId
                                 coopData.append(res_temp)
 
@@ -228,13 +259,17 @@ def getPersonalPortal(request):
                         for i in papersid:
                             try:
                                 res_temp = {}
-                                paper = Paper.objects.get(PaperId=i.PaperId_id)
+                                try:
+                                    paper = Paper.objects.get(
+                                        PaperId=i.PaperId_id)
+                                except Exception as e:
+                                    continue
                                 res_temp['paperId'] = i.PaperId_id
-                                if(paper.PaperTitle__len__() > 30):
+                                if(paper.PaperTitle.__len__() > 30):
                                     res_temp['title'] = paper.PaperTitle[:30]+'...'
                                 else:
                                     res_temp['title'] = paper.PaperTitle
-                                if(paper.paper.PaperAbstract > 60):
+                                if(paper.PaperAbstract.__len__() > 60):
                                     res_temp['msg'] = paper.PaperAbstract[:60]+'...'
                                 else:
                                     res_temp['msg'] = paper.PaperAbstract
