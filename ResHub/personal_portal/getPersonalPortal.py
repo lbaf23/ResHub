@@ -231,7 +231,7 @@ def getPersonalPortal(request):
                                 res_temp = {}
                                 paper = Paper.objects.get(PaperId=i.PaperId_id)
                                 res_temp['paperId'] = i.PaperId_id
-                                if(paper.__len__() > 30):
+                                if(paper.PaperTitle__len__() > 30):
                                     res_temp['title'] = paper.PaperTitle[:30]+'...'
                                 else:
                                     res_temp['title'] = paper.PaperTitle
