@@ -279,7 +279,7 @@ def getPersonalPortal(request):
                         res['coopdata'] = coopData
                     except Exception as e:
                         print(str(e))
-                        res['coopdata'] = [
+                        res['coopdata'] = []
 
                     return JsonResponse(res)
                 else:
