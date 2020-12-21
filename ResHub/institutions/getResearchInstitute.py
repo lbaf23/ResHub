@@ -58,7 +58,7 @@ def getResearchInstitute(request):
                     res_temp = {}
                     this_reseacher = Researcher.objects.get(ResId=i.ResId)
                     resid = i.ResId
-                    res_temp['resid'] = this_reseacher.ResId
+                    res_temp['resId'] = this_reseacher.ResId
                     hotData_temp.append(this_reseacher.ResId)
                     res_temp['name'] = this_reseacher.ResName
                     try:
@@ -80,23 +80,23 @@ def getResearchInstitute(request):
 
                     VisitNum = this_reseacher.VisitNum
                     if(VisitNum is not None):
-                        res_temp['viewsum'] = this_reseacher.VisitNum
+                        res_temp['viewSum'] = this_reseacher.VisitNum
                     else:
-                        res_temp['viewsum'] = 0
+                        res_temp['viewSum'] = 0
 
                     try:
                         collection = Collection.objects.filter(
                             UserEmail_id=this_reseacher.UserEmail_id).all()
                         if(collection.__len__() == 0):
-                            res_temp['collectstatus'] = True
-                            res_temp['collectionsum'] = collection.__len__()
+                            res_temp['collectStatus'] = True
+                            res_temp['collectionSum'] = collection.__len__()
                         else:
-                            res_temp['collectstatus'] = False
-                            res_temp['collectionsum'] = 0
+                            res_temp['collectStatus'] = False
+                            res_temp['collectionSum'] = 0
                     except Exception as e:
                         print(e)
-                        res_temp['collectstatus'] = False
-                        res_temp['collectionsum'] = 0
+                        res_temp['collectStatus'] = False
+                        res_temp['collectionSum'] = 0
                     resdata.append(res_temp)
                     index = index + 1
                     if(index == 10):
@@ -124,7 +124,7 @@ def getResearchInstitute(request):
                     if(data_temp is not None):
                         res_temp = {}
                         paper = Paper.objects.get(PaperId=data_temp.PaperId_id)
-                        res_temp['paperid'] = paper.PaperId
+                        res_temp['paperId'] = paper.PaperId
                         res_temp['title'] = paper.PaperTitle
                         res_temp['msg'] = paper.PaperAbstract
                         if(paper.PaperCitation is None):
@@ -139,7 +139,7 @@ def getResearchInstitute(request):
                             PaperId_id=paper.PaperId)
                         for k in paper_authors:
                             authorid.append(k.ResearcherId_id)
-                        res_temp['authorid'] = authorid
+                        res_temp['authorId'] = authorid
                         res_temp['link'] = re.sub(
                             r'[\[|\]|\'| ]', '', paper.PaperUrl).split(',')[0]
                         hotData.append(res_temp)
