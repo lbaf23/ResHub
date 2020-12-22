@@ -20,7 +20,7 @@ class PaperIndex(indexes.SearchIndex, indexes.Indexable):
         # 返回建立索引的模型 数据库表
         return Paper
 
-    def index_queryset(self, using=None):
+    def index_queryset(self, using='paper_index'):
         return self.get_model().objects.filter()
 
 

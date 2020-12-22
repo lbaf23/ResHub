@@ -787,8 +787,8 @@ def search_authors(request):
 
     radio = True if request.GET.get('Radio') == 'true' else False
 
-    print(search_name)
-    res = SearchQuerySet().filter(text=search_name)
+    res = SearchQuerySet().using('researcher').filter(text=search_name)
+    print(len(res))
     if radio:
         t = translate_by_api(search_name)
         if t != '':
