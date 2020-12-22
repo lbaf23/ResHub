@@ -886,7 +886,11 @@ def fast_search(request):
     res = []
     for i in l:
         id = i['_source']['django_id']
-        p = Paper.objects.get(PaperId=id)
+        try:
+            p = Paper.objects.get(PaperId=id)
+        except Exception:
+            print(id)
+            continue
         res.append({
             'link': re.sub(r'[\[|\]|\'| ]', '', p.PaperUrl).split(','),
             'paperId': p.PaperId,
