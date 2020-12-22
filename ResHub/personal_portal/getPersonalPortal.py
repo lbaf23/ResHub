@@ -183,6 +183,7 @@ def getPersonalPortal(request):
                         res['quocount'] = quoCount
                         res['quotenum'] = str(quoteNum)
                         res['tabledata'] = tabledata
+                        res['papernum'] = tabledata.__len__()
                     except Exception as e:
                         print(str(e))
                         res['rescount'] = [
@@ -191,6 +192,7 @@ def getPersonalPortal(request):
                             '0', '0', '0', '0', '0', '0', '0', '0']
                         res['quotenum'] = '0'
                         res['tabledata'] = []
+                        res['papernum'] = 0
 
                     # magCount ....
                     try:
@@ -207,14 +209,13 @@ def getPersonalPortal(request):
                         res['magpar'] = magpar
                         res['confcount'] = confCount
                         res['confpar'] = confpar
-                        res['papernum'] = magCount+confCount
+
                     except Exception as e:
                         print(str(e))
                         res['magcount'] = 0
                         res['magpar'] = '0%'
                         res['confcount'] = 0
                         res['confpar'] = '0%'
-                        res['papernum'] = 0
 
                     # coopData
                     try:
