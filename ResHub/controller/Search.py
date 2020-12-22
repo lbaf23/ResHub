@@ -785,7 +785,13 @@ def search_authors(request):
     per_page = int(request.GET.get('PerPage')) #每页的数量
     order_by = request.GET.get('orderBy')
 
+    radio = True if request.GET.get('Radio') == 'true' else False
+
     res = SearchQuerySet().using('researcher').filter(text=search_name)
+    if radio:
+        t = translate_by_api(search_name)
+        if t != '':
+            res = res.using('researcher').filter_or(text=t)
     num = res.count()
     res = res.values('object')[(page-1)*per_page: page*per_page]
     l = []
