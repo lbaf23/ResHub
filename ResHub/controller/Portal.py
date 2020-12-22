@@ -9,10 +9,9 @@ from ResModel.models import Researcher, HubUser, Appeal
 
 def catch_portal(request):
     if request.method == "POST":
-        data = json.loads(request.body)
-        UserEmail = data.get("UserEmail")
-        ResEmail = data.get("ResEmail")
-        id = data.get("ResId")
+        UserEmail = request.POST.get("UserEmail")
+        ResEmail = request.POST.get("ResEmail")
+        id = request.POST.get("ResId")
         if id is not None:
             Portal = Researcher.objects.filter(ResId=id).first()
             if Portal.IsClaim == 0:
