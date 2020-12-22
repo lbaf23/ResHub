@@ -780,7 +780,8 @@ def show_paper_info(request):
                 'collectionSum': project.CollectionNum,
                 'viewSum': project.ReadNum,
                 'link': [project.ProjectUrl],
-                'collectTime': ct
+                'collectTime': ct,
+                'subject': project.Subject
             })
         else:
             pass
@@ -820,8 +821,14 @@ def show_paper_info(request):
 
 def search_authors(request):
     search_name = str(request.GET.get('name'))
-    page = int(request.GET.get('page'))  # 页数
-    per_page = int(request.GET.get('PerPage'))  # 每页的数量
+    try:
+        page = int(request.GET.get('page'))  # 页数
+    except Exception:
+        page = 1
+    try:
+        per_page = int(request.GET.get('PerPage'))  # 每页的数量
+    except Exception:
+        per_page = 10
     order_by = request.GET.get('orderBy')
 
     radio = True if request.GET.get('Radio') == 'true' else False
@@ -842,7 +849,8 @@ def search_authors(request):
             'name': rh.ResName,
             'ResEmail': rh.ResEmail,
             'CitedNum': rh.CitedNum,
-            'LiteratureNum': rh.LiteratureNum
+            'LiteratureNum': rh.LiteratureNum,
+            'Institution': rh.InstitutionName
         })
 
     return JsonResponse({'num': num, 'result': l})
