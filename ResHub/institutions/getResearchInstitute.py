@@ -176,9 +176,9 @@ def getResearchInstitute(request):
                         projectauthor = ProjectAuthor.objects.filter(
                             ResearcherId_id=i).all()
                         magCount = magCount + projectauthor.__len__()
-                    ind = ind + 1
-                    if (ind == 5):
-                        break
+                    # ind = ind + 1
+                    # if (ind == 5):
+                    #     break
                 res['hotdata'] = hotData
                 all_have = magCount+confCount
                 if(all_have != 0):
