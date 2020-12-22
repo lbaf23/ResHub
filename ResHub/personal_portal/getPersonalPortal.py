@@ -228,8 +228,11 @@ def getPersonalPortal(request):
                                 break
                             res_temp = {}
                             reseacher_relation_temp = i.ResearchId2_id
-                            reseacher_relation = Researcher.objects.get(
-                                ResId=reseacher_relation_temp)
+                            try:
+                                reseacher_relation = Researcher.objects.get(
+                                    ResId=reseacher_relation_temp)
+                            except Exception as e:
+                                continue
                             email = reseacher_relation.UserEmail_id
                             try:
                                 if(email is not None):
@@ -258,8 +261,11 @@ def getPersonalPortal(request):
                                 res_temp = {}
                                 reseacher_relation_temp = i.ResearchId1_id
                                 try:
-                                    reseacher_relation = Researcher.objects.get(
-                                        ResId=reseacher_relation_temp)
+                                    try:
+                                        reseacher_relation = Researcher.objects.get(
+                                            ResId=reseacher_relation_temp)
+                                    except Exception as e:
+                                        continue
                                     email = reseacher_relation.UserEmail_id
                                     if(email is not None):
                                         user_temp = HubUser.objects.get(
