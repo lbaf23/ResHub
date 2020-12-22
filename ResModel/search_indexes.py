@@ -45,7 +45,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
         # 返回建立索引的模型 数据库表
         return Project
 
-    def index_queryset(self, using=None):
+    def index_queryset(self, using='project_index'):
         return self.get_model().objects.filter()
 
 
@@ -65,7 +65,7 @@ class PatentIndex(indexes.SearchIndex, indexes.Indexable):
         # 返回建立索引的模型 数据库表
         return Patent
 
-    def index_queryset(self, using=None):
+    def index_queryset(self, using='patent_index'):
         return self.get_model().objects.filter()
 
 
@@ -79,5 +79,5 @@ class ResearcherIndex(indexes.SearchIndex, indexes.Indexable):
         # 返回建立索引的模型 数据库表
         return Researcher
 
-    def index_queryset(self, using=None):
+    def index_queryset(self, using='researcher_index'):
         return self.get_model().objects.filter()
