@@ -25,7 +25,9 @@ def return_hot_words(request):
     hot=hotwords.objects.filter(value__gt=100).order_by("value")
     word={}
     value={}
-    for i in range(0,40):
+    for i in range(0,len(hot)):
         word[i]=hot[i].word
         value[i]=hot[i].value
+        if i>39:
+            break
     return JsonResponse({'word':word,"value":value})
