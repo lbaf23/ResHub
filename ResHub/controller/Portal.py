@@ -57,6 +57,7 @@ def new_portal(request):
             Researcher.objects.create(ResId=resId, UserEmail=user, IsClaim=1)
             return JsonResponse({
                 "status": 2,
+                "ResId" : resId,
                 "message": "创建门户成功"
             })
         else:
