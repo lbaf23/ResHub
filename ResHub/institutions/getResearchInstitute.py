@@ -41,8 +41,11 @@ def getResearchInstitute(request):
                 # domain
                 for i in institute:
                     if(i is not None):
-                        res['domain'] = institute[0].ResField
-                        break
+                        if(i.ResField is not None):
+                            res['domain'] = i.ResField
+                            break
+                        else:
+                            res['domain'] = '暂无'
                     else:
                         return JsonResponse({"error": 'error'})
 
@@ -80,7 +83,7 @@ def getResearchInstitute(request):
                     if(ResField is not None):
                         res_temp['domain'] = this_reseacher.ResField
                     else:
-                        res_temp['domain'] = ''
+                        res_temp['domain'] = '暂无'
 
                     VisitNum = this_reseacher.VisitNum
                     if(VisitNum is not None):
