@@ -780,12 +780,12 @@ def show_paper_info(request):
 
 
 def search_authors(request):
-    search_name = request.GET.get('name')
+    search_name = str(request.GET.get('name'))
     page = int(request.GET.get('page')) # 页数
     per_page = int(request.GET.get('PerPage')) #每页的数量
     order_by = request.GET.get('orderBy')
 
-    res = SearchQuerySet().using('researcher').filter(text=search_name).order_by('LiteratureNum')
+    res = SearchQuerySet().using('researcher').filter(text=search_name)
     num = res.count()
     res = res.values('object')[(page-1)*per_page: page*per_page]
     l = []
