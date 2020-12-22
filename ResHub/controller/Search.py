@@ -650,11 +650,11 @@ def search_words(request):
                 'title': p.ProjectTitle,
                 'zhAbstract': p.ZhAbstract,
                 'enAbstract': p.EnAbstract,
-                'finalAnstract': p.FinalAbstract,
+                'finalAbstract': p.FinalAbstract,
                 'author': p.ProjectLeader,
                 'authorTitle': p.ProjectLeaderTitle,
-                'cnKeywords': p.SubjectHeadingCN,
-                'enkeywords': p.SubjectHeadingEN
+                'zhKeywords': p.SubjectHeadingCN,
+                'enKeywords': p.SubjectHeadingEN
             }
             l.append(j)
     elif type == 'patent':
@@ -664,7 +664,7 @@ def search_words(request):
                 'link': [p.PatentUrl],
                 'paperId': p.PatentId,
                 'title': p.PatentTitle,
-                'msg': '' if p.PatentAbstract is None else p.PatentAbstract,
+                'abstract': '' if p.PatentAbstract is None else p.PatentAbstract,
                 'author': p.PatentAuthor,
                 'authorOrg': p.PatentCompany,
             }
@@ -764,7 +764,10 @@ def show_paper_info(request):
                 'paperId': pid,
                 'title': project.ProjectTitle,
                 'zhAbstract': project.ZhAbstract,
-                'enKeywords': project.EnAbstract,
+                'enAbstract': project.EnAbstract,
+                'finalAbstract': project.FinalAbstract,
+                'enKeywords': project.SubjectHeadingEN,
+                'zhKeywords': project.SubjectHeadingCN,
                 'period': project.StudyPeriod,
                 'category': project.ProjectCategory,
                 'year': project.GrantYear,
