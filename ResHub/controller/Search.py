@@ -745,7 +745,7 @@ def show_paper_info(request):
                 'collectTime': ct
             })
     elif type == 'project':
-        pl = Project.objects.filer(ProjectId=pid)
+        pl = Project.objects.filter(ProjectId=pid)
         if len(pl) > 0:
             project = pl[0]
 
