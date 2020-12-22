@@ -38,14 +38,7 @@ def getList(request):
         ReviewList0_out = []
         ReviewList1_out = []
         for i in AppealList0:
-            # AppealList0_out.append({
-            # 'id': i.id,
-            # 'AppealState':i.AppealState,
-            # 'AppealTime': i.AppealTime ,
-            # 'ResearchId': i.ResearchId ,
-            # 'UserEmail' : i.UserEmail ,
-            # 'content'   : i.content
-            # })
+
             r = {}
 
             user = HubUser.objects.filter(UserEmail=i.UserEmail_id).first()
