@@ -881,6 +881,6 @@ def fast_search(request):
     body = '{"query": {"match": {"text": "'+name+'"}}}'
     data=requests.get('http://127.0.0.1:9200/paper_index/_search', data=json.dumps(body))
     print(data)
-
+    return JsonResponse({'data':data})
 
 
