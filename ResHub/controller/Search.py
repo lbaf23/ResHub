@@ -878,9 +878,24 @@ def filter_search_words(request):
 
 def fast_search(request):
     name = request.GET.get('name')
-    body = '{"query": {"match": {"text": "'+name+'"}}}'
-    data=requests.get('http://127.0.0.1:9200/paper_index/_search', data=json.dumps(body))
-    print(data)
-    return JsonResponse({'data':data})
+    body = {"query": {"match": {"text": "'+name+'"}}}
+    data = json.loads(requests.get('http://127.0.0.1:9200/project_index/_search', data=json.dumps(body)).content)
+    hits = data['hits']
+    num = hits['total']
+    l = hits['hits']
+    res = []
+    for i in l:
+        id = i['_source']['django_id']
+        p = Paper.objects.get(PaperId=id)
+        res.append({
+            'link': re.sub(r'[\[|\]|\'| ]', '', p.PaperUrl).split(','),
+            'paperId': p.PaperId,
+            'title': p.PaperTitle,
+            'msg': '' if p.PaperAbstract is None else p.PaperAbstract,
+            'author': format_list(p.PaperAuthors),
+            'authorOrg': format_list(p.PaperOrg),
+            'keywords': re.sub(r' ', ',', re.sub(r'[\[|\'|\]|,]', '', str(p.PaperKeywords)) )
 
+        })
+    return JsonResponse({'num': num, 'result': res})
 
