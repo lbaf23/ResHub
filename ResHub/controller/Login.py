@@ -43,7 +43,7 @@ def register(request):
     result = True
     u=HubUser.objects.filter(UserEmail=address)
     if(len(u)==0 and address!=None):
-        user = HubUser(UserEmail=address,UserIntroduction=description,UserPassword=pwd,UserName=name)
+        user = HubUser(UserEmail=address,UserIntroduction=description,UserPassword=pwd,UserName=name,UserImage="head01.png")
         user.save()
     else:
         result=False
