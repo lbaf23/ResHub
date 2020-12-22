@@ -46,16 +46,15 @@ def new_portal(request):
     if request.method == "POST":
         resId= tid_maker()
         userEmail = request.POST.get("UserEmail")
-        resEmail = request.POST.get("ResEmail")
-        if userEmail is not None and resEmail is not None:
-            resemail_exists = Researcher.objects.filter(ResEmail=resEmail)
+        if userEmail is not None :
+            resemail_exists = Researcher.objects.filter(UserEmail=userEmail)
             if resemail_exists.exists():
                 return JsonResponse({
                     "status": 1,
-                    "message": "该教育邮箱已被使用",
+                    "message": "该用户邮箱已被使用",
                 }, safe=False)
             user = HubUser.objects.filter(UserEmail=userEmail).first()
-            Researcher.objects.create(ResId=resId, UserEmail=user, IsClaim=1, ResEmail=resEmail)
+            Researcher.objects.create(ResId=resId, UserEmail=user, IsClaim=1)
             return JsonResponse({
                 "status": 2,
                 "message": "创建门户成功"
