@@ -40,7 +40,7 @@ def getResearchInstitute(request):
 
                 # domain
                 for i in institute:
-                    if(i is None):
+                    if(i is not None):
                         res['domain'] = institute[0].ResField
                         break
                     else:
