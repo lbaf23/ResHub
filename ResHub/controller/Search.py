@@ -603,6 +603,11 @@ def search_words(request):
     except Exception:
         per_page = 10
 
+    # 0 默认 1 时间 2 被引次数
+    sort = request.GET.get('sort')
+    # 奇数 降序  偶数 升序
+    howToSort = request.GET.get('howToSort')
+
     start_year = int(request.GET.get('dateStart'))
     end_year = int(request.GET.get('dateEnd'))
     type = request.GET.get('type')
@@ -621,6 +626,17 @@ def search_words(request):
     res = search_el_indexes(qs, sk, radio, type)
 
     num = res.count()
+    if sort == 1:
+        if howToSort%2 == 0:
+            res = res.order_by('-PaperTime')
+        else:
+            res = res.order_by('PaperTime')
+    elif sort == 2:
+        if howToSort%2 == 0:
+            res = res.order_by('-PaperCitation')
+        else:
+            res = res.order_by('PaperCitation')
+
     res = res.values('object')[(page - 1) * per_page: page * per_page]
 
     l = []
@@ -858,3 +874,28 @@ def search_authors(request):
 
 def filter_search_words(request):
     pass
+
+
+def fast_search(request):
+    name = request.GET.get('name')
+    body = {"query": {"match": {"text": "'+name+'"}}}
+    data = json.loads(requests.get('http://127.0.0.1:9200/project_index/_search', data=json.dumps(body)).content)
+    hits = data['hits']
+    num = hits['total']
+    l = hits['hits']
+    res = []
+    for i in l:
+        id = i['_source']['django_id']
+        p = Paper.objects.get(PaperId=id)
+        res.append({
+            'link': re.sub(r'[\[|\]|\'| ]', '', p.PaperUrl).split(','),
+            'paperId': p.PaperId,
+            'title': p.PaperTitle,
+            'msg': '' if p.PaperAbstract is None else p.PaperAbstract,
+            'author': format_list(p.PaperAuthors),
+            'authorOrg': format_list(p.PaperOrg),
+            'keywords': re.sub(r' ', ',', re.sub(r'[\[|\'|\]|,]', '', str(p.PaperKeywords)) )
+
+        })
+    return JsonResponse({'num': num, 'result': res})
+

@@ -78,6 +78,7 @@ urlpatterns = [
     path('searchWords', Search.search_words),
     path('openPaper', Search.show_paper_info),
     path('searchAuthors', Search.search_authors),
+    path('fastSearch', Search.fast_search)
 ]
 
 router = routers.DefaultRouter()
