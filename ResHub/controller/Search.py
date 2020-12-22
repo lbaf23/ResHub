@@ -878,7 +878,7 @@ def filter_search_words(request):
 
 def fast_search(request):
     name = request.GET.get('name')
-    body = {"query": {"match": {"text": "'+name+'"}}}
+    body = {"query": {"match": {"text": name}}}
     data = json.loads(requests.get('http://127.0.0.1:9200/paper_index/_search', data=json.dumps(body)).content)
     hits = data['hits']
     num = hits['total']
