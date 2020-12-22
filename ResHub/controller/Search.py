@@ -874,3 +874,13 @@ def search_authors(request):
 
 def filter_search_words(request):
     pass
+
+
+def fast_search(request):
+    name = request.GET.get('name')
+    body = '{"query": {"match": {"text": "'+name+'"}}}'
+    data=requests.get('http://127.0.0.1:9200/paper_index/_search', data=json.dumps(body))
+    print(data)
+
+
+
