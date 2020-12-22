@@ -189,3 +189,7 @@ class Relationship(models.Model):
     ResearchId1 = models.ForeignKey('Researcher', related_name='first', to_field='ResId', on_delete=models.CASCADE)
     ResearchId2 = models.ForeignKey('Researcher', related_name='second', to_field='ResId', on_delete=models.CASCADE)
     LiteratureNum = models.IntegerField()
+
+class hotwords(models.Model):
+    word = models.CharField(max_length='255')
+    value = models.IntegerField()

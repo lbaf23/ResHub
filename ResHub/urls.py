@@ -73,7 +73,7 @@ urlpatterns = [
     path('pass2', Administrator.pass_appeal),
     path('reject2', Administrator.reject_appeal),
     path('addSearchRecord', searchHistory.add_search_history),
-
+    path('hotWords',searchHistory.return_hot_words),
 
     path('searchWords', Search.search_words),
     path('openPaper', Search.show_paper_info),
