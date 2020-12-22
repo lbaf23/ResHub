@@ -650,11 +650,11 @@ def search_words(request):
                 'title': p.ProjectTitle,
                 'zhAbstract': p.ZhAbstract,
                 'enAbstract': p.EnAbstract,
-                'finalAnstract': p.FinalAbstract,
+                'finalAbstract': p.FinalAbstract,
                 'author': p.ProjectLeader,
                 'authorTitle': p.ProjectLeaderTitle,
-                'cnKeywords': p.SubjectHeadingCN,
-                'enkeywords': p.SubjectHeadingEN
+                'zhKeywords': p.SubjectHeadingCN,
+                'enKeywords': p.SubjectHeadingEN
             }
             l.append(j)
     elif type == 'patent':
@@ -664,7 +664,7 @@ def search_words(request):
                 'link': [p.PatentUrl],
                 'paperId': p.PatentId,
                 'title': p.PatentTitle,
-                'msg': '' if p.PatentAbstract is None else p.PatentAbstract,
+                'abstract': '' if p.PatentAbstract is None else p.PatentAbstract,
                 'author': p.PatentAuthor,
                 'authorOrg': p.PatentCompany,
             }
@@ -745,7 +745,7 @@ def show_paper_info(request):
                 'collectTime': ct
             })
     elif type == 'project':
-        pl = Project.objects.filer(ProjectId=pid)
+        pl = Project.objects.filter(ProjectId=pid)
         if len(pl) > 0:
             project = pl[0]
 
@@ -764,11 +764,15 @@ def show_paper_info(request):
                 'paperId': pid,
                 'title': project.ProjectTitle,
                 'zhAbstract': project.ZhAbstract,
-                'enKeywords': project.EnAbstract,
+                'enAbstract': project.EnAbstract,
+                'finalAbstract': project.FinalAbstract,
+                'enKeywords': project.SubjectHeadingEN,
+                'zhKeywords': project.SubjectHeadingCN,
                 'period': project.StudyPeriod,
                 'category': project.ProjectCategory,
                 'year': project.GrantYear,
                 'author': project.ProjectLeader,
+                'authorId': '',
                 'authorTitle': project.ProjectLeaderTitle,
                 'fund': project.Funding,
                 'support': project.SupportUnits,
@@ -781,7 +785,7 @@ def show_paper_info(request):
         else:
             pass
     elif type == 'patent':
-        pl = Patent.objects.filer(PatentId=pid)
+        pl = Patent.objects.filter(PatentId=pid)
         if len(pl) > 0:
             patent = pl[0]
             ct = ''
@@ -802,6 +806,7 @@ def show_paper_info(request):
                 'abstract': patent.PatentAbstract,
                 'date': patent.PatentDate,
                 'author': patent.PatentAuthor,
+                'authorId': '',
                 'collectStatus': cs,
                 'collectionSum': patent.CollectionNum,
                 'viewSum': patent.ReadNum,

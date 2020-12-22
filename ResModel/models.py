@@ -96,8 +96,8 @@ class Project(models.Model):
     Funding = models.CharField(max_length=20, null=True)  # 项目基金
     ProjectCategory = models.CharField(max_length=50, null=True)  # 项目类别
     StudyPeriod = models.CharField(max_length=100, null=True)  # 研究期
-    SubjectHeadingCN = models.CharField(max_length=1000, null=True)  # 项目中文题目
-    SubjectHeadingEN = models.CharField(max_length=1000, null=True)  # 项目英文题目
+    SubjectHeadingCN = models.CharField(max_length=1000, null=True)  # 项目中文关键字
+    SubjectHeadingEN = models.CharField(max_length=1000, null=True)  # 项目英文关键字
     ZhAbstract = models.TextField(max_length=8000, null=True)  # 中文摘要
     EnAbstract = models.TextField(max_length=8000, null=True)  # 英文摘要
     FinalAbstract = models.TextField(max_length=8000, null=True)  # 结题摘要
