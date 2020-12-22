@@ -13,6 +13,7 @@ def catch_portal(request):
         ResEmail = request.POST.get("ResEmail")
         id = request.POST.get("ResId")
         print(id)
+
         if id is not None:
             Portal = Researcher.objects.filter(ResId=id).first()
             if Portal.IsClaim == 0:
