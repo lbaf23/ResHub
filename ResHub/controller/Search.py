@@ -603,6 +603,11 @@ def search_words(request):
     except Exception:
         per_page = 10
 
+    # 0 默认 1 时间 2 被引次数
+    sort = request.GET.get('sort')
+    # 奇数 降序  偶数 升序
+    howToSort = request.GET.get('howToSort')
+
     start_year = int(request.GET.get('dateStart'))
     end_year = int(request.GET.get('dateEnd'))
     type = request.GET.get('type')
@@ -621,6 +626,17 @@ def search_words(request):
     res = search_el_indexes(qs, sk, radio, type)
 
     num = res.count()
+    if sort == 1:
+        if howToSort%2 == 0:
+            res = res.order_by('-PaperTime')
+        else:
+            res = res.order_by('PaperTime')
+    elif sort == 2:
+        if howToSort%2 == 0:
+            res = res.order_by('-PaperCitation')
+        else:
+            res = res.order_by('PaperCitation')
+
     res = res.values('object')[(page - 1) * per_page: page * per_page]
 
     l = []
