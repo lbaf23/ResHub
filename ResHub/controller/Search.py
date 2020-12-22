@@ -695,11 +695,11 @@ def show_paper_info(request):
                 olist = []
 
             authorId = [''] * len(alist)
-            aulist = PaperAuthor.objects.filter(PaperId=p.PaperId)
+            aulist = PaperAuthor.objects.filter(PaperId_id=p.PaperId)
             for a in aulist:
                 authorId[int(a.ResearcherRank)] = a.ResearcherId
 
-            refs = PaperReference.objects.filter(PaperId=pid)
+            refs = PaperReference.objects.filter(PaperId_id=pid)
             reft = []
             refi = []
             for r in refs:
