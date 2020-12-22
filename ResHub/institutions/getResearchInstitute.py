@@ -49,9 +49,6 @@ def getResearchInstitute(request):
                     else:
                         return JsonResponse({"error": 'error'})
 
-                # reseachers
-                res['researchers'] = str(institute.__len__())
-
                 resdata = []
                 hotData = []
                 datas = [0, 0, 0, 0, 0, 0, 0, 0]
@@ -206,7 +203,7 @@ def getResearchInstitute(request):
                     quoCount.append(str(i))
                 res['rescount'] = resCount
                 res['quocount'] = quoCount
-
+                res['researchers'] = resdata.__len__()
                 return JsonResponse(res)
             else:
                 return JsonResponse({
