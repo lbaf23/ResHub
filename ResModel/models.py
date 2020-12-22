@@ -191,5 +191,5 @@ class Relationship(models.Model):
     LiteratureNum = models.IntegerField()
 
 class hotwords(models.Model):
-    word = models.CharField(max_length=255)
+    word = models.CharField(max_length=255,primary_key=True)
     value = models.IntegerField()
