@@ -645,7 +645,7 @@ def search_words(request):
         for r in res:
             p = r['object']
             j = {
-                'link': p.ProjectUrl,
+                'link': [p.ProjectUrl],
                 'paperId': p.ProjectId,
                 'title': p.ProjectTitle,
                 'zhAbstract': p.ZhAbstract,
@@ -661,7 +661,7 @@ def search_words(request):
         for r in res:
             p = r['object']
             j = {
-                'link': p.PatentUrl,
+                'link': [p.PatentUrl],
                 'paperId': p.PatentId,
                 'title': p.PatentTitle,
                 'msg': '' if p.PatentAbstract is None else p.PatentAbstract,
@@ -775,7 +775,7 @@ def show_paper_info(request):
                 'collectStatus': cs,
                 'collectionSum': project.CollectionNum,
                 'viewSum': project.ReadNum,
-                'link': project.ProjectUrl,
+                'link': [project.ProjectUrl],
                 'collectTime': ct
             })
         else:
@@ -805,7 +805,7 @@ def show_paper_info(request):
                 'collectStatus': cs,
                 'collectionSum': patent.CollectionNum,
                 'viewSum': patent.ReadNum,
-                'link': patent.PatentUrl,
+                'link': [patent.PatentUrl],
                 'collectTime': ct,
                 'institution': patent.PatentCompany
             })
