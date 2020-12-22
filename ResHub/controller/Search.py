@@ -1,9 +1,11 @@
-from haystack.query import SearchQuerySet, SQ
-from django.http import JsonResponse
 import json
-from ResModel.models import PaperAuthor, Project, Paper, PaperReference, Patent, Collection
 import re
+
 import requests
+from django.http import JsonResponse
+from haystack.query import SearchQuerySet
+
+from ResModel.models import PaperAuthor, Project, Paper, PaperReference, Patent, Collection
 
 
 # 检索式解码
@@ -242,7 +244,7 @@ def search_project_index(res, key, radio):
                         res = res.using('project').filter_or(ProjectTitle=ow)
 
             elif w['type'] == '5':
-                res = res.using('project').filter(ZhAbstract=w['words']).\
+                res = res.using('project').filter(ZhAbstract=w['words']). \
                     filter_or(EnAbstract=w['words']).filter_or(FinalAbstract=w['words'])
                 if radio:
                     ow = translate_by_api(w['words'])
@@ -267,7 +269,8 @@ def search_project_index(res, key, radio):
         else:
             if w['boolType'] == '1':
                 if w['type'] == '4':
-                    res = res.using('project').filter_and(SubjectHeadingCN=w['words']).filter_or(SubjectHeadingEN=w['words'])
+                    res = res.using('project').filter_and(SubjectHeadingCN=w['words']).filter_or(
+                        SubjectHeadingEN=w['words'])
                     if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
@@ -289,7 +292,7 @@ def search_project_index(res, key, radio):
 
                 elif w['type'] == '5':
                     res = res.using('project').filter_and(ZhAbstract=w['words']). \
-                            filter_or(EnAbstract=w['words']).filter_or(FinalAbstract=w['words'])
+                        filter_or(EnAbstract=w['words']).filter_or(FinalAbstract=w['words'])
                     if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
@@ -312,7 +315,8 @@ def search_project_index(res, key, radio):
 
             elif w['boolType'] == '2':
                 if w['type'] == '4':
-                    res = res.using('project').filter_or(SubjectHeadingCN=w['words']).filter_or(SubjectHeadingEN=w['words'])
+                    res = res.using('project').filter_or(SubjectHeadingCN=w['words']).filter_or(
+                        SubjectHeadingEN=w['words'])
                     if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
@@ -378,12 +382,12 @@ def search_project_index(res, key, radio):
                             res = res.using('project').exclude(ProjectTitle=ow)
 
                 elif w['type'] == '5':
-                    res = res.using('project').exclude(ZhAbstract=w['words'])\
+                    res = res.using('project').exclude(ZhAbstract=w['words']) \
                         .exclude(EnAbstract=w['words']).exclude(FinalAbstract=w['words'])
                     if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
-                            res = res.using('project').exclude(ZhAbstract=ow).\
+                            res = res.using('project').exclude(ZhAbstract=ow). \
                                 exclude(EnAbstract=ow).exclude(FinalAbstract=ow)
 
                 elif w['type'] == '3':
@@ -590,12 +594,12 @@ def search_paper_index(res, key, radio):
 def search_words(request):
     search_key = request.GET.get('keyWords')
     try:
-        page = int(request.GET.get('page')) # 页数
+        page = int(request.GET.get('page'))  # 页数
     except Exception:
         page = 1
 
     try:
-        per_page = int(request.GET.get('PerPage')) #每页的数量
+        per_page = int(request.GET.get('PerPage'))  # 每页的数量
     except Exception:
         per_page = 10
 
@@ -603,38 +607,68 @@ def search_words(request):
     end_year = int(request.GET.get('dateEnd'))
     type = request.GET.get('type')
 
-    radio = True if request.GET.get('Radio') == 'true' else False # 中英扩展 false true
+    radio = True if request.GET.get('Radio') == 'true' else False  # 中英扩展 false true
 
     sk = json.loads(search_key)
 
-    #if exists_in_redis(sk):
+    # if exists_in_redis(sk):
     #    pass
-        # search from redis
-        # ...
+    # search from redis
+    # ...
 
     # search by elasticsearch index
     qs = SearchQuerySet()
     res = search_el_indexes(qs, sk, radio, type)
 
     num = res.count()
-    res = res.values('object')[(page-1)*per_page: page*per_page]
+    res = res.values('object')[(page - 1) * per_page: page * per_page]
 
     l = []
 
-    for r in res:
-        p = r['object']
-        kw = re.sub(r'[\[|\'|\]|,]','' , str(p.PaperKeywords))
-        kw = re.sub(r' ', ',', kw)
-        j = {
-            'link': re.sub(r'[\[|\]|\'| ]','',p.PaperUrl).split(','),
-            'paperId': p.PaperId,
-            'title': p.PaperTitle,
-            'msg': '' if p.PaperAbstract is None else p.PaperAbstract,
-            'author': format_list(p.PaperAuthors),
-            'authorOrg': format_list(p.PaperOrg),
-            'keywords': kw
-        }
-        l.append(j)
+    if type == 'paper':
+        for r in res:
+            p = r['object']
+            kw = re.sub(r'[\[|\'|\]|,]', '', str(p.PaperKeywords))
+            kw = re.sub(r' ', ',', kw)
+            j = {
+                'link': re.sub(r'[\[|\]|\'| ]', '', p.PaperUrl).split(','),
+                'paperId': p.PaperId,
+                'title': p.PaperTitle,
+                'msg': '' if p.PaperAbstract is None else p.PaperAbstract,
+                'author': format_list(p.PaperAuthors),
+                'authorOrg': format_list(p.PaperOrg),
+                'keywords': kw
+            }
+            l.append(j)
+
+    elif type == 'project':
+        for r in res:
+            p = r['object']
+            j = {
+                'link': p.ProjectUrl,
+                'paperId': p.ProjectId,
+                'title': p.ProjectTitle,
+                'zhAbstract': p.ZhAbstract,
+                'enAbstract': p.EnAbstract,
+                'finalAnstract': p.FinalAbstract,
+                'author': p.ProjectLeader,
+                'authorTitle': p.ProjectLeaderTitle,
+                'cnKeywords': p.SubjectHeadingCN,
+                'enkeywords': p.SubjectHeadingEN
+            }
+            l.append(j)
+    elif type == 'patent':
+        for r in res:
+            p = r['object']
+            j = {
+                'link': p.PatentUrl,
+                'paperId': p.PatentId,
+                'title': p.PatentTitle,
+                'msg': '' if p.PatentAbstract is None else p.PatentAbstract,
+                'author': p.PatentAuthor,
+                'authorOrg': p.PatentCompany,
+            }
+            l.append(j)
 
     return JsonResponse({'num': num, 'result': l})
 
@@ -660,7 +694,7 @@ def show_paper_info(request):
             else:
                 olist = []
 
-            authorId = ['']*len(alist)
+            authorId = [''] * len(alist)
             aulist = PaperAuthor.objects.filter(PaperId=p.PaperId)
             for a in aulist:
                 authorId[int(a.ResearcherRank)] = a.ResearcherId
@@ -691,7 +725,7 @@ def show_paper_info(request):
                 'authorId': authorId,
                 'authorOrg': olist,
                 'paperDoi': '' if p.PaperDoi is None else p.PaperDoi,
-                'link': re.sub(r'[\[|\]|\'| ]','',p.PaperUrl).split(','),
+                'link': re.sub(r'[\[|\]|\'| ]', '', p.PaperUrl).split(','),
                 'collectionSum': p.CollectionNum,
                 'viewSum': p.ReadNum,
                 'paperTime': 0 if p.PaperTime is None else p.PaperTime,
@@ -718,7 +752,7 @@ def show_paper_info(request):
             ct = ''
             if uid == '':
                 cs = False
-            else :
+            else:
                 c = Collection.objects.filter(UserEmail=pid).filter(ProjectId=pid)
                 if len(c) > 0:
                     ct = c.CollectionTime
@@ -732,7 +766,7 @@ def show_paper_info(request):
                 'zhAbstract': project.ZhAbstract,
                 'enKeywords': project.EnAbstract,
                 'period': project.StudyPeriod,
-                'category':project.ProjectCategory,
+                'category': project.ProjectCategory,
                 'year': project.GrantYear,
                 'author': project.ProjectLeader,
                 'authorTitle': project.ProjectLeaderTitle,
@@ -781,8 +815,8 @@ def show_paper_info(request):
 
 def search_authors(request):
     search_name = str(request.GET.get('name'))
-    page = int(request.GET.get('page')) # 页数
-    per_page = int(request.GET.get('PerPage')) #每页的数量
+    page = int(request.GET.get('page'))  # 页数
+    per_page = int(request.GET.get('PerPage'))  # 每页的数量
     order_by = request.GET.get('orderBy')
 
     radio = True if request.GET.get('Radio') == 'true' else False
@@ -794,7 +828,7 @@ def search_authors(request):
         if t != '':
             res = res.using('researcher').filter_or(text=t)
     num = res.count()
-    res = res.values('object')[(page-1)*per_page: page*per_page]
+    res = res.values('object')[(page - 1) * per_page: page * per_page]
     l = []
     for r in res:
         rh = r['object']
@@ -811,4 +845,3 @@ def search_authors(request):
 
 def filter_search_words(request):
     pass
-
