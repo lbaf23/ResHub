@@ -20,7 +20,7 @@ def identity_check(request):
             protalId = user[0].ResId
         else:
             isPortal = False
-            protalId = None
+            protalId = ""
         if(u[0].UserEmail == "root@root"):
             isAdministrator = True
         else:
