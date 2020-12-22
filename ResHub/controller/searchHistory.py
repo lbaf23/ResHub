@@ -28,6 +28,6 @@ def return_hot_words(request):
     for i in range(0,len(hot)):
         word[i]=hot[i].word
         value[i]=hot[i].value
-        if i>39:
+        if i>40:
             break
     return JsonResponse({'word':word,"value":value})
