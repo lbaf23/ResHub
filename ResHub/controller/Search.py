@@ -784,7 +784,7 @@ def show_paper_info(request):
         else:
             pass
     elif type == 'patent':
-        pl = Patent.objects.filer(PatentId=pid)
+        pl = Patent.objects.filter(PatentId=pid)
         if len(pl) > 0:
             patent = pl[0]
             ct = ''
