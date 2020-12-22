@@ -136,7 +136,7 @@ def getPersonalPortal(request):
                         quotes = [0, 0, 0, 0, 0, 0, 0, 0]
                         tabledata = []
                         quoteNum = 0
-                        # ind  =  0
+                        ind = 0
                         for i in papersid:
                             res_temp = {}
                             try:
@@ -169,11 +169,11 @@ def getPersonalPortal(request):
                             tabledata.append(res_temp)
                             year = paper.PaperTime
                             index = (8 - (2020-year)) % 5
-                            # if(index < 0):
-                            #     continue
-                            # ind = ind + 1
-                            # if(ind == 7):
-                            #     break
+                            if(index < 0):
+                                continue
+                            ind = ind + 1
+                            if(ind == 7):
+                                break
                             datas[index] = datas[index] + 1
                             quotes[index] = quotes[index] + paper.PaperCitation
                             quoteNum = quoteNum + paper.PaperCitation
