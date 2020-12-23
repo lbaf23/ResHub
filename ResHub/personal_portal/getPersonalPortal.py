@@ -120,7 +120,7 @@ def getPersonalPortal(request):
                     elif(researcher.UserEmail_id is not None):
                         res['mail'] = researcher.UserEmail_id
                     else:
-                        res['mail'] = ""
+                        res['mail'] = "没有邮箱"
 
                     # resField
                     if(researcher.ResField is not None):
