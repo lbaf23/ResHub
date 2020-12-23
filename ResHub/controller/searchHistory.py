@@ -27,7 +27,7 @@ def return_hot_words(request):
     for i in range(0,len(hot)):
         word=hot[i].word
         value=hot[i].value
-        j={'word':word,'value':value}
+        j={'name':word,'value':value}
         hotWords.append(j)
         if i>39:
             break
