@@ -11,7 +11,7 @@ def getResearchInstitute(request):
             if (instituteId is not None):
                 res = {}
                 institute = Researcher.objects.filter(
-                    InstitutionName=instituteId)
+                    InstitutionName=instituteId).order_by("ResId")
                 if(institute is None):
                     return JsonResponse({
                         "status": 0,
