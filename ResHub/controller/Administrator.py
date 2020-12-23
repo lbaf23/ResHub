@@ -17,7 +17,9 @@ def pass_review(request):
     return JsonResponse({'succeed':succeed})
 def reject_appeal(request):
     appeal_id=request.GET.get('id')
+    user=request.GET.get('email')
     Appeal.objects.filter(id=appeal_id).update(AppealState=1)
+    Researcher.objects.filter(ResId=appeal_id).update(UserEmail=user,IsClaim=1)
     succeed=True
     return JsonResponse({'succeed':succeed})
 def pass_appeal(request):
