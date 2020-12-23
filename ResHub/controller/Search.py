@@ -641,7 +641,7 @@ def search_words(request):
     t2 = time.time()
     print("--------")
     print(t2-t1)
-    res = res[(page - 1) * per_page: page * per_page].values('object')
+    res = res[(page - 1) * per_page: page * per_page]
     t3 = time.time()
     print("--------")
     print(t3-t2)
