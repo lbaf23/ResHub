@@ -415,6 +415,17 @@ def fast_search(request):
         b = search_paper_index(Body(), search_key, radio)
         if start_year and end_year:
             b.add_range('PaperTime', start_year, end_year)
+        if sort == 1:
+            if howToSort%2 == 0:
+                b.add_sort('PaperTime', False)
+            else:
+                b.add_sort('PaperTime', True)
+        elif sort == 2:
+            if howToSort%2 == 0:
+                b.add_sort('PaperCitation', False)
+            else:
+                b.add_sort('PaperCitation', True)
+
         b.set_from_page(page-1)
         b.set_page_size(per_page)
 
@@ -484,6 +495,12 @@ def fast_search(request):
             b.add_range('GrantYear', start_year, end_year)
         b.set_from_page(page-1)
         b.set_page_size(per_page)
+        if sort == 1:
+            if howToSort%2 == 0:
+                b.add_sort('GrantYear', False)
+            else:
+                b.add_sort('GrantYear', True)
+
 
         url = 'http://127.0.0.1:9200/project_index/_search'
         body = b.get_body()
@@ -570,6 +587,11 @@ def fast_search(request):
             b.add_range('PatentDate', start_year, end_year)
         b.set_from_page(page-1)
         b.set_page_size(per_page)
+        if sort == 1:
+            if howToSort%2 == 0:
+                b.add_sort('PatentDate', False)
+            else:
+                b.add_sort('PatentDate', True)
 
         url = 'http://127.0.0.1:9200/patent_index/_search'
         body = b.get_body()
