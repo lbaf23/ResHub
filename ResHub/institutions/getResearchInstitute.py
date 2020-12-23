@@ -40,14 +40,14 @@ def getResearchInstitute(request):
 
                 # domain
                 for i in institute:
-                    if(i is None):
-                        res['domain'] = institute[0].ResField
-                        break
+                    if(i is not None):
+                        if(i.ResField is not None):
+                            res['domain'] = i.ResField
+                            break
+                        else:
+                            res['domain'] = '暂无'
                     else:
                         return JsonResponse({"error": 'error'})
-
-                # reseachers
-                res['researchers'] = str(institute.__len__())
 
                 resdata = []
                 hotData = []
@@ -80,7 +80,7 @@ def getResearchInstitute(request):
                     if(ResField is not None):
                         res_temp['domain'] = this_reseacher.ResField
                     else:
-                        res_temp['domain'] = ''
+                        res_temp['domain'] = '暂无'
 
                     VisitNum = this_reseacher.VisitNum
                     if(VisitNum is not None):
@@ -176,9 +176,9 @@ def getResearchInstitute(request):
                         projectauthor = ProjectAuthor.objects.filter(
                             ResearcherId_id=i).all()
                         magCount = magCount + projectauthor.__len__()
-                    ind = ind + 1
-                    if (ind == 5):
-                        break
+                    # ind = ind + 1
+                    # if (ind == 5):
+                    #     break
                 res['hotdata'] = hotData
                 all_have = magCount+confCount
                 if(all_have != 0):
@@ -203,7 +203,7 @@ def getResearchInstitute(request):
                     quoCount.append(str(i))
                 res['rescount'] = resCount
                 res['quocount'] = quoCount
-
+                res['researchers'] = resdata.__len__()
                 return JsonResponse(res)
             else:
                 return JsonResponse({
