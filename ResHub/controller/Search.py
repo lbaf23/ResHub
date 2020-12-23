@@ -650,9 +650,9 @@ def fast_search(request):
             except Exception:
                 author = ''
             try:
-                org = format_list(i['_source']['PatentCompany'])
+                org = i['_source']['PatentCompany']
             except Exception:
-                org = []
+                org = ''
 
             res.append({
                 'paperId': id,
