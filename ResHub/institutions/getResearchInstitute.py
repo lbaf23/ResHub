@@ -1,25 +1,7 @@
 from django.http import JsonResponse
 from ResModel.models import Researcher, HubUser
-from ResModel.models import Concern, Collection, PaperAuthor, Paper, ProjectAuthor
+from ResModel.models import PaperAuthor, Paper, ProjectAuthor
 import re
-
-
-def author_array(authors):
-    temp = []
-    len = authors.__len__()
-    index1 = 0
-    index2 = authors.find(',', index1+1)
-    if(index2 == -1):
-        temp.append(authors[index1:len])
-    index1 = index2
-    index2 = authors.find(',', index1+1)
-    while((index2 < len-1) and (index1 != -1)) and (index2 != -1):
-        temp.append(authors[index1:index2])
-        index1 = index2
-        index2 = authors.find(',', index1+1)
-        if(index2 == -1):
-            break
-    return temp
 
 
 def getResearchInstitute(request):
@@ -56,6 +38,7 @@ def getResearchInstitute(request):
                 magcount = 0
                 confcount = 0
                 index = 0
+                # 存放学者id
                 hotData_temp = []
                 for i in institute:
                     res_temp = {}
@@ -64,17 +47,20 @@ def getResearchInstitute(request):
                     res_temp['resId'] = this_reseacher.ResId
                     hotData_temp.append(this_reseacher.ResId)
                     res_temp['name'] = this_reseacher.ResName
-                    try:
-                        UserEmail_id = this_reseacher.UserEmail_id
-                        this_user = HubUser.objects.get(UserEmail=UserEmail_id)
-                        res_temp['avatar'] = this_user.UserImage
-                        if(UserEmail_id is None):
-                            res['mail'] = ''
-                        else:
-                            res_temp['mail'] = this_reseacher.UserEmail_id
-                    except Exception as e:
-                        res_temp['avatar'] = 'head00.jpg'
-                        res_temp['mail'] = '暂无'
+                    # try:
+                    #     UserEmail_id = this_reseacher.UserEmail_id
+                    #     this_user = HubUser.objects.get(UserEmail=UserEmail_id)
+                    #     res_temp['avatar'] = this_user.UserImage
+                    #     if(UserEmail_id is None):
+                    #         res['mail'] = ''
+                    #     else:
+                    #         res_temp['mail'] = this_reseacher.UserEmail_id
+                    # except Exception as e:
+                    res_temp['avatar'] = 'head00.jpg'
+                    if(this_reseacher.UserEmail_id is None):
+                        res['mail'] = '暂无'
+                    else:
+                        res_temp['mail'] = this_reseacher.UserEmail_id
 
                     ResField = this_reseacher.ResField
                     if(ResField is not None):
@@ -87,14 +73,11 @@ def getResearchInstitute(request):
                         res_temp['viewSum'] = this_reseacher.VisitNum
                     else:
                         res_temp['viewSum'] = 0
-
                     try:
-                        collection = Collection.objects.filter(
-                            UserEmail_id=this_reseacher.UserEmail_id).all()
-                        if(collection.__len__() == 0):
-                            res_temp['collectionSum'] = collection.__len__()
-                        else:
+                        if(this_reseacher.ConcernNum is None):
                             res_temp['collectionSum'] = 0
+                        else:
+                            res_temp['collectionSum'] = this_reseacher.ConcernNum
                     except Exception as e:
                         print(e)
                         res_temp['collectionSum'] = 0
@@ -173,9 +156,10 @@ def getResearchInstitute(request):
                         projectauthor = ProjectAuthor.objects.filter(
                             ResearcherId_id=i).all()
                         magCount = magCount + projectauthor.__len__()
-                    # ind = ind + 1
-                    # if (ind == 5):
-                    #     break
+                    ind = ind + 1
+                    if (hotData.__len__() == 5):
+                        break
+
                 res['hotdata'] = hotData
                 all_have = magCount+confCount
                 if(all_have != 0):
@@ -200,7 +184,7 @@ def getResearchInstitute(request):
                     quoCount.append(str(i))
                 res['rescount'] = resCount
                 res['quocount'] = quoCount
-                res['researchers'] = resdata.__len__()
+                res['researchers'] = hotData_temp.__len__()
                 return JsonResponse(res)
             else:
                 return JsonResponse({
