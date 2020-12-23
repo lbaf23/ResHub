@@ -28,6 +28,7 @@ def getResearchInstitute(request):
                             break
                         else:
                             res['domain'] = '暂无'
+                        break
                     else:
                         return JsonResponse({"error": 'error'})
 
