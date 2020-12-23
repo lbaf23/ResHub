@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from haystack.query import SearchQuerySet
 
 from ResModel.models import PaperAuthor, Project, Paper, PaperReference, Patent, Collection
-
+import time
 
 # 检索式解码
 def exists_in_redis(s1):
@@ -875,7 +875,7 @@ def search_authors(request):
 def filter_search_words(request):
     pass
 
-import time
+
 def fast_search(request):
     name = request.GET.get('name')
     body = {"query": {"match": {"text": name}}}
@@ -889,19 +889,19 @@ def fast_search(request):
     res = []
     for i in l:
         id = i['_source']['django_id']
-        try:
-            p = Paper.objects.get(PaperId=id)
-        except Exception:
-            print(id)
-            continue
+        #try:
+            #p = Paper.objects.get(PaperId=id)
+        #except Exception:
+            #print(id)
+            #continue
         res.append({
-            'link': re.sub(r'[\[|\]|\'| ]', '', p.PaperUrl).split(','),
-            'paperId': p.PaperId,
-            'title': p.PaperTitle,
-            'msg': '' if p.PaperAbstract is None else p.PaperAbstract,
-            'author': format_list(p.PaperAuthors),
-            'authorOrg': format_list(p.PaperOrg),
-            'keywords': re.sub(r' ', ',', re.sub(r'[\[|\'|\]|,]', '', str(p.PaperKeywords)) )
+            #'link': re.sub(r'[\[|\]|\'| ]', '', p.PaperUrl).split(','),
+            'paperId': i['_source']['django_id'],
+            'title': i['_source']['PaperTitle'],
+            'msg': '' if i['_source']['PaperAbstract'] is None else i['_source']['PaperAbstract'],
+            'author': format_list(i['_source']['PaperAuthors']),
+            'authorOrg': format_list(i['_source']['PaperOrg']),
+            'keywords': re.sub(r' ', ',', re.sub(r'[\[|\'|\]|,]', '', str(i['_source']['PaperKeywords'])) )
 
         })
     t3 = time.time()
