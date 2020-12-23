@@ -74,7 +74,7 @@ def getResearchInstitute(request):
                             res_temp['mail'] = this_reseacher.UserEmail_id
                     except Exception as e:
                         res_temp['avatar'] = 'head00.jpg'
-                        res_temp['mail'] = ''
+                        res_temp['mail'] = '暂无'
 
                     ResField = this_reseacher.ResField
                     if(ResField is not None):
@@ -92,14 +92,11 @@ def getResearchInstitute(request):
                         collection = Collection.objects.filter(
                             UserEmail_id=this_reseacher.UserEmail_id).all()
                         if(collection.__len__() == 0):
-                            res_temp['collectStatus'] = True
                             res_temp['collectionSum'] = collection.__len__()
                         else:
-                            res_temp['collectStatus'] = False
                             res_temp['collectionSum'] = 0
                     except Exception as e:
                         print(e)
-                        res_temp['collectStatus'] = False
                         res_temp['collectionSum'] = 0
                     resdata.append(res_temp)
                     index = index + 1

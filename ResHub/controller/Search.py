@@ -641,7 +641,9 @@ def search_words(request):
     t2 = time.time()
     print("--------")
     print(t2-t1)
-    res = res[(page - 1) * per_page: page * per_page].values('object')
+    print(res[0])
+    res = res.values('object')[(page - 1) * per_page: page * per_page]
+
     t3 = time.time()
     print("--------")
     print(t3-t2)
@@ -650,6 +652,7 @@ def search_words(request):
 
     if type == 'paper':
         for r in res:
+            print(r)
             p = r['object']
             kw = re.sub(r'[\[|\'|\]|,]', '', str(p.PaperKeywords))
             kw = re.sub(r' ', ',', kw)

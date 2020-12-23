@@ -120,7 +120,7 @@ def getPersonalPortal(request):
                     elif(researcher.UserEmail_id is not None):
                         res['mail'] = researcher.UserEmail_id
                     else:
-                        res['mail'] = ""
+                        res['mail'] = "没有邮箱"
 
                     # resField
                     if(researcher.ResField is not None):
@@ -136,7 +136,7 @@ def getPersonalPortal(request):
                         quotes = [0, 0, 0, 0, 0, 0, 0, 0]
                         tabledata = []
                         quoteNum = 0
-                        ind = 0
+                        # ind = 0
                         for i in papersid:
                             res_temp = {}
                             try:
@@ -171,9 +171,9 @@ def getPersonalPortal(request):
                             index = (8 - (2020-year)) % 5
                             if(index < 0):
                                 continue
-                            ind = ind + 1
-                            if(ind == 7):
-                                break
+                            # ind = ind + 1
+                            # if(ind == 7):
+                            #     break
                             datas[index] = datas[index] + 1
                             quotes[index] = quotes[index] + paper.PaperCitation
                             quoteNum = quoteNum + paper.PaperCitation
