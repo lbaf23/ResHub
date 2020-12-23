@@ -11,18 +11,19 @@ def get_collection(request):
     c = Collection.objects.filter(UserEmail=user).order_by("-CollectionTime")
     res = list()
     for i in range(0,c.__len__()):
+        print(c[i])
         t = c[i].CollectionType
         if t==1 :
             paper =c[i].PaperId
             j = {
             'paperId': paper.PaperId,
             'title': paper.PaperTitle,
-            'msg': paper.PaperAbstract.split(','),
-            'author': paper.PaperAuthors,
-            'type': t,
+            'msg': ''if paper.PaperAbstract is None else paper.PaperAbstract,
+            'author': ''if len(paper.PaperAuthors.split(','))==0 else paper.PaperAuthors.split(','),
+            'type': str(t),
             'collectionSum':paper.CollectionNum,
             'viewSum':paper.ReadNum,
-            'link':re.sub(r'[\[|\]|\'| ]','',paper.PaperUrl).split(',')[0],
+            'link':re.sub(r'[\[|\]|\'| ]','',paper.PaperUrl).split(','),
             'collectTime':c[i].CollectionTime
             }
         elif t==2:
@@ -30,12 +31,12 @@ def get_collection(request):
             j = {
             'paperId': patent.PatentId,
             'title': patent.PatentTitle,
-            'msg': patent.PatentAbstract,
-            'author': patent.PatentAuthor,
-            'type': t,
+            'msg': ''if patent.PatentAbstract is None else patent.PatentAbstract,
+            'author': ''if len(Patent.PatentAuthor.split(','))==0 else Patent.PatentAuthor.split(','),
+            'type':  str(t),
             'collectionSum':patent.CollectionNum,
             'viewSum':patent.ReadNum,
-            'link':re.sub(r'[\[|\]|\'| ]','',paper.PaperUrl).split(','),
+            'link':re.sub(r'[\[|\]|\'| ]','',patent.PatentUrl).split(','),
             'collectTime':c[i].CollectionTime
             }
         elif t==3:
@@ -43,21 +44,21 @@ def get_collection(request):
             j = {
             'paperId': project.ProjectId,
             'title': project.ProjectTitle,
-            'msg': project.ProjectAbstract,
-            'author': project.ProjectAuthor,
-            'type': t,
+            'msg': ''if project.ProjectAbstract is None else project.ProjectAbstract,
+            'author': ''if len(Project.ProjectLeader.split(','))==0 else Project.ProjectLeader.split(','),
+            'type':  str(t),
             'collectionSum':project.CollectionNum,
             'viewSum':project.ReadNum,
-            'link':re.sub(r'[\[|\]|\'| ]','',paper.PaperUrl).split(','),
+            'link':re.sub(r'[\[|\]|\'| ]','',project.ProjectUrl).split(','),
             'collectTime':c[i].CollectionTime
             }
         res.append(j)
     return JsonResponse({'list' : res})
 
 def add_collection(request):
-    user_id = request.GET.get('userId')
-    col_id = request.GET.get('paperId')
-    col_type = int(request.GET.get('type'))
+    user_id = request.POST.get('userId')
+    col_id = request.POST.get('paperId')
+    col_type = int(request.POST.get('type'))
     succeed = True
     user = HubUser.objects.get(UserEmail=user_id)
     if col_type == 1:

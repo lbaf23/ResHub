@@ -7,6 +7,8 @@ from haystack.query import SearchQuerySet
 
 from ResModel.models import PaperAuthor, Project, Paper, PaperReference, Patent, Collection
 import time
+from ResHub.controller.EsMid import Body
+
 
 # 检索式解码
 def exists_in_redis(s1):
@@ -410,17 +412,19 @@ def search_project_index(res, key, radio):
     return res
 
 
-def search_paper_index(res, key, radio):
+def search_paper_index(body, key, radio):
     for w in list(key):
-        if not w.__contains__('boolType'):
+        if not w.__contains__('boolType') or w['boolType'] == '1':
             if w['type'] == '4':
-                res = res.filter(PaperKeywords=w['words'])
+                body.add_must('PaperKeywords', w['words'])
+                #res = res.filter(PaperKeywords=w['words'])
                 if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.filter_or(PaperKeywords=ow)
             elif w['type'] == '1':
-                res = res.filter(text=w['words'])
+                body.add_must('text', w['words'])
+                #res = res.filter(text=w['words'])
                 if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
@@ -428,115 +432,82 @@ def search_paper_index(res, key, radio):
                         res = res.filter_or(text=ow)
 
             elif w['type'] == '2':
-                res = res.filter(PaperTitle=w['words'])
+                body.add_must('PaperTitle', w['words'])
+                #res = res.filter(PaperTitle=w['words'])
                 if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.filter_or(PaperTitle=ow)
 
             elif w['type'] == '5':
-                res = res.filter(PaperAbstract=w['words'])
+                body.add_must('PaperAbstract', w['words'])
+                #res = res.filter(PaperAbstract=w['words'])
                 if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.filter_or(PaperAbstract=ow)
 
             elif w['type'] == '3':
-                res = res.filter(PaperAuthors=w['words'])
+                body.add_must('PaperAuthors', w['words'])
+                #res = res.filter(PaperAuthors=w['words'])
                 if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.filter_or(PaperAuthors=ow)
 
             elif w['type'] == 'PaperOrg':
-                res = res.filter(PaperOrg=w['words'])
+                body.add_must('PaperOrg', w['words'])
+                #res = res.filter(PaperOrg=w['words'])
                 if radio:
                     ow = translate_by_api(w['words'])
                     if ow != '':
                         res = res.filter_or(PaperOrg=ow)
 
         else:
-            if w['boolType'] == '1':
+            if w['boolType'] == '2':
                 if w['type'] == '4':
-                    res = res.filter_and(PaperKeywords=w['words'])
+                    body.add_should('PaperKeywords', w['words'])
+                    # res = res.filter_or(PaperKeywords=w['words'])
                     if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.filter_or(PaperKeywords=ow)
 
                 elif w['type'] == '1':
-                    res = res.filter_and(text=w['words'])
+                    body.add_should('text', w['words'])
+                    #res = res.filter_or(text=w['words'])
                     if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.filter_or(text=ow)
 
                 elif w['type'] == '2':
-                    res = res.filter_and(PaperTitle=w['words'])
+                    body.add_should('PaperTitle', w['words'])
+                    #res = res.filter_or(PaperTitle=w['words'])
                     if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.filter_or(PaperTitle=ow)
 
                 elif w['type'] == '5':
-                    res = res.filter_and(PaperAbstract=w['words'])
+                    body.add_should('PaperAbstract', w['words'])
+                    #res = res.filter_or(PaperAbstract=w['words'])
                     if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.filter_or(PaperAbstract=ow)
 
                 elif w['type'] == '3':
-                    res = res.filter_and(PaperAuthors=w['words'])
+                    body.add_should('PaperAuthors', w['words'])
+                    #res = res.filter_or(PaperAuthors=w['words'])
                     if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.filter_or(PaperAuthors=ow)
 
                 elif w['type'] == 'PaperOrg':
-                    res = res.filter_and(PaperOrg=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.filter_or(PaperOrg=ow)
-
-            elif w['boolType'] == '2':
-                if w['type'] == '4':
-                    res = res.filter_or(PaperKeywords=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.filter_or(PaperKeywords=ow)
-
-                elif w['type'] == '1':
-                    res = res.filter_or(text=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.filter_or(text=ow)
-
-                elif w['type'] == '2':
-                    res = res.filter_or(PaperTitle=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.filter_or(PaperTitle=ow)
-
-                elif w['type'] == '5':
-                    res = res.filter_or(PaperAbstract=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.filter_or(PaperAbstract=ow)
-
-                elif w['type'] == '3':
-                    res = res.filter_or(PaperAuthors=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.filter_or(PaperAuthors=ow)
-
-                elif w['type'] == 'PaperOrg':
-                    res = res.filter_or(PaperOrg=w['words'])
+                    body.add_should('PaperOrg', w['words'])
+                    #res = res.filter_or(PaperOrg=w['words'])
                     if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
@@ -544,42 +515,48 @@ def search_paper_index(res, key, radio):
 
             elif w['boolType'] == '3':
                 if w['type'] == '4':
-                    res = res.exclude(PaperKeywords=w['words'])
+                    body.add_should('PaperKeywords', w['words'])
+                    #res = res.exclude(PaperKeywords=w['words'])
                     if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.exclude(PaperKeywords=ow)
 
                 elif w['type'] == '1':
-                    res = res.exclude(text=w['words'])
+                    body.add_should('text', w['words'])
+                    #res = res.exclude(text=w['words'])
                     if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.exclude(text=ow)
 
                 elif w['type'] == '2':
-                    res = res.exclude(PaperTitle=w['words'])
+                    body.add_should('PaperTitle', w['words'])
+                    #res = res.exclude(PaperTitle=w['words'])
                     if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.exclude(PaperTitle=ow)
 
                 elif w['type'] == '5':
-                    res = res.exclude(PaperAbstract=w['words'])
+                    body.add_should('PaperAbstract', w['words'])
+                    #res = res.exclude(PaperAbstract=w['words'])
                     if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.exclude(PaperAbstract=ow)
 
                 elif w['type'] == '3':
-                    res = res.exclude(PaperAuthors=w['words'])
+                    body.add_should('PaperAuthors', w['words'])
+                    #res = res.exclude(PaperAuthors=w['words'])
                     if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
                             res = res.exclude(PaperAuthors=ow)
 
                 elif w['type'] == 'PaperOrg':
-                    res = res.exclude(PaperOrg=w['words'])
+                    body.add_should('PaperOrg', w['words'])
+                    #res = res.exclude(PaperOrg=w['words'])
                     if radio:
                         ow = translate_by_api(w['words'])
                         if ow != '':
@@ -588,7 +565,7 @@ def search_paper_index(res, key, radio):
             else:
                 pass
 
-    return res
+    return body
 
 
 def search_words(request):
@@ -641,9 +618,7 @@ def search_words(request):
     t2 = time.time()
     print("--------")
     print(t2-t1)
-    print(res[0])
-    res = res.values('object')[(page - 1) * per_page: page * per_page]
-
+    res = res[(page - 1) * per_page: page * per_page]
     t3 = time.time()
     print("--------")
     print(t3-t2)
@@ -652,8 +627,12 @@ def search_words(request):
 
     if type == 'paper':
         for r in res:
-            print(r)
-            p = r['object']
+            t4 = time.time()
+            print(r.pk)
+            p = r.object
+            t5 = time.time()
+            print(t5-t4)
+
             kw = re.sub(r'[\[|\'|\]|,]', '', str(p.PaperKeywords))
             kw = re.sub(r' ', ',', kw)
             j = {
@@ -887,12 +866,50 @@ def filter_search_words(request):
 
 
 def fast_search(request):
-    name = request.GET.get('name')
-    body = {"query": {"match": {"text": name}}}
+    search_key = json.loads(request.GET.get('keyWords'))
+    try:
+        page = int(request.GET.get('page'))  # 页数
+    except Exception:
+        page = 1
+    try:
+        per_page = int(request.GET.get('PerPage'))  # 每页的数量
+    except Exception:
+        per_page = 10
+    # 0 默认 1 时间 2 被引次数
+    sort = request.GET.get('sort')
+    # 奇数 降序  偶数 升序
+    howToSort = request.GET.get('howToSort')
+    try:
+        start_year = int(request.GET.get('dateStart'))
+    except Exception:
+        start_year = 0
+    try:
+        end_year = int(request.GET.get('dateEnd'))
+    except Exception:
+        end_year = 3000
+    type = request.GET.get('type')
+    radio = True if request.GET.get('Radio') == 'true' else False  # 中英扩展 false true
+
+    if type == 'paper':
+        index_name = 'paper_index'
+        b = search_paper_index(Body(), search_key, radio)
+        url = 'http://127.0.0.1:9200/paper_index/_search'
+    else:
+        index_name = ''
+        b = search_paper_index(Body(), search_key, radio)
+        url = 'http://127.0.0.1:9200/paper_index/_search'
+
+
+
+    body = b.get_body()
     t1 = time.time()
-    data = json.loads(requests.get('http://127.0.0.1:9200/paper_index/_search', data=json.dumps(body)).content)
+    data = json.loads(requests.get(url, data=json.dumps(body)).content)
     t2 = time.time()
+
     print(t2-t1)
+    print(data)
+
+
     hits = data['hits']
     num = hits['total']
     l = hits['hits']
@@ -916,11 +933,7 @@ def fast_search(request):
             key = re.sub(r' ', ',', re.sub(r'[\[|\'|\]|,]', '', str(i['_source']['PaperKeywords'])))
         except Exception:
             key = ''
-        #try:
-            #p = Paper.objects.get(PaperId=id)
-        #except Exception:
-            #print(id)
-            #continue
+
 
         res.append({
             #'link': re.sub(r'[\[|\]|\'| ]', '', p.PaperUrl).split(','),
