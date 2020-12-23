@@ -216,7 +216,7 @@ def getPersonalPortal(request):
                             ResearcherId=resId).all()
                         confCount = projectauthor.__len__()
                         magCount = tabledata.__len__()
-                        all_have = projectauthor.__len__() + researcher.LiteratureNum
+                        all_have = magCount + confCount
                         magpar = str(
                             int(float(magCount)/float(all_have)*100))+'%'
                         confpar = str(
