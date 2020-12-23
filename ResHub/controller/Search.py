@@ -203,116 +203,6 @@ def search_paper_index(body, key, radio):
     return body
 
 
-def search_words(request):
-    search_key = request.GET.get('keyWords')
-    try:
-        page = int(request.GET.get('page'))  # 页数
-    except Exception:
-        page = 1
-
-    try:
-        per_page = int(request.GET.get('PerPage'))  # 每页的数量
-    except Exception:
-        per_page = 10
-
-    # 0 默认 1 时间 2 被引次数
-    sort = request.GET.get('sort')
-    # 奇数 降序  偶数 升序
-    howToSort = request.GET.get('howToSort')
-
-    start_year = int(request.GET.get('dateStart'))
-    end_year = int(request.GET.get('dateEnd'))
-    type = request.GET.get('type')
-
-    radio = True if request.GET.get('Radio') == 'true' else False  # 中英扩展 false true
-
-    sk = json.loads(search_key)
-
-    # if exists_in_redis(sk):
-    #    pass
-    # search from redis
-    # ...
-
-    # search by elasticsearch index
-    t1 = time.time()
-    qs = SearchQuerySet()
-    res = search_el_indexes(qs, sk, radio, type)
-
-    num = res.count()
-    if sort == 1:
-        if howToSort%2 == 0:
-            res = res.order_by('-PaperTime')
-        else:
-            res = res.order_by('PaperTime')
-    elif sort == 2:
-        if howToSort%2 == 0:
-            res = res.order_by('-PaperCitation')
-        else:
-            res = res.order_by('PaperCitation')
-
-    t2 = time.time()
-    print("--------")
-    print(t2-t1)
-    res = res[(page - 1) * per_page: page * per_page]
-    t3 = time.time()
-    print("--------")
-    print(t3-t2)
-
-    l = []
-
-    if type == 'paper':
-        for r in res:
-            t4 = time.time()
-            print(r.pk)
-            p = r.object
-            t5 = time.time()
-            print(t5-t4)
-
-            kw = re.sub(r'[\[|\'|\]|,]', '', str(p.PaperKeywords))
-            kw = re.sub(r' ', ',', kw)
-            j = {
-                'link': re.sub(r'[\[|\]|\'| ]', '', p.PaperUrl).split(','),
-                'paperId': p.PaperId,
-                'title': p.PaperTitle,
-                'msg': '' if p.PaperAbstract is None else p.PaperAbstract,
-                'author': format_list(p.PaperAuthors),
-                'authorOrg': format_list(p.PaperOrg),
-                'keywords': kw
-            }
-            l.append(j)
-
-    elif type == 'project':
-        for r in res:
-            p = r['object']
-            j = {
-                'link': [p.ProjectUrl],
-                'paperId': p.ProjectId,
-                'title': p.ProjectTitle,
-                'zhAbstract': p.ZhAbstract,
-                'enAbstract': p.EnAbstract,
-                'finalAbstract': p.FinalAbstract,
-                'author': p.ProjectLeader,
-                'authorTitle': p.ProjectLeaderTitle,
-                'zhKeywords': p.SubjectHeadingCN,
-                'enKeywords': p.SubjectHeadingEN
-            }
-            l.append(j)
-    elif type == 'patent':
-        for r in res:
-            p = r['object']
-            j = {
-                'link': [p.PatentUrl],
-                'paperId': p.PatentId,
-                'title': p.PatentTitle,
-                'abstract': '' if p.PatentAbstract is None else p.PatentAbstract,
-                'author': p.PatentAuthor,
-                'authorOrg': p.PatentCompany,
-            }
-            l.append(j)
-
-    return JsonResponse({'num': num, 'result': l})
-
-
 def show_paper_info(request):
     pid = request.POST.get('id')
     uid = request.POST.get('userId')
@@ -480,10 +370,10 @@ def search_authors(request):
         if t != '':
             res = res.using('researcher').filter_or(text=t)
     num = res.count()
-    res = res.values('object')[(page - 1) * per_page: page * per_page]
+    res = res[(page - 1) * per_page: page * per_page]
     l = []
     for r in res:
-        rh = r['object']
+        rh = r.object
         l.append({
             'id': rh.ResId,
             'name': rh.ResName,
@@ -494,7 +384,6 @@ def search_authors(request):
         })
 
     return JsonResponse({'num': num, 'result': l})
-
 
 
 def fast_search(request):
@@ -556,14 +445,35 @@ def fast_search(request):
                 key = re.sub(r' ', ',', re.sub(r'[\[|\'|\]|,]', '', str(i['_source']['PaperKeywords'])))
             except Exception:
                 key = ''
+            try:
+                collectionSum = i['_source']['CollectionNum']
+            except Exception:
+                collectionSum = 0
+            try:
+                viewSum = i['_source']['ReadNum']
+            except Exception:
+                viewSum = 0
+
+            try:
+                citation = i['_source']['PaperCitation']
+            except Exception:
+                citation = 0
+
+            try:
+                year = i['_source']['PaperTime']
+            except Exception:
+                year = 0
             res.append({
-                #'link': re.sub(r'[\[|\]|\'| ]', '', p.PaperUrl).split(','),
                 'paperId': id,
                 'title': title,
                 'msg': msg,
                 'author': author,
                 'authorOrg': org,
-                'keywords':  key
+                'keywords':  key,
+                'collectionSum': collectionSum,
+                'viewSum': viewSum,
+                'citation': citation,
+                'year': year
             })
 
         return JsonResponse({'num': num, 'result': res})
@@ -620,6 +530,22 @@ def fast_search(request):
                 enKeywords = re.sub(r' ', ',', re.sub(r'[\[|\'|\]|,]', '', str(i['_source']['SubjectHeadingEN'])))
             except Exception:
                 enKeywords = ''
+            try:
+                collectionSum = i['_source']['CollectionNum']
+            except Exception:
+                collectionSum = 0
+            try:
+                viewSum = i['_source']['ReadNum']
+            except Exception:
+                viewSum = 0
+            try:
+                citation = i['_source']['PaperCitation']
+            except Exception:
+                citation = 0
+            try:
+                year = i['_source']['GrantYear']
+            except Exception:
+                year = 0
 
             res.append({
                 'paperId': id,
@@ -630,7 +556,11 @@ def fast_search(request):
                 'author': author,
                 'authorTitle': org,
                 'zhKeywords': zhKeywords,
-                'enKeywords':enKeywords
+                'enKeywords':enKeywords,
+                'collectionSum': collectionSum,
+                'viewSum': viewSum,
+                'citation': citation,
+                'year': year
             })
 
         return JsonResponse({'num': num, 'result': res})
@@ -664,17 +594,34 @@ def fast_search(request):
                 org = i['_source']['PatentCompany']
             except Exception:
                 org = ''
+            try:
+                collectionSum = i['_source']['CollectionNum']
+            except Exception:
+                collectionSum = 0
+            try:
+                viewSum = i['_source']['ReadNum']
+            except Exception:
+                viewSum = 0
+            try:
+                citation = i['_source']['PaperCitation']
+            except Exception:
+                citation = 0
+            try:
+                year = i['_source']['PatentDate']
+            except Exception:
+                year = 0
 
             res.append({
                 'paperId': id,
                 'title': title,
                 'abstract': abstract,
                 'author': author,
-                'authorOrg': org
+                'authorOrg': org,
+                'collectionSum': collectionSum,
+                'viewSum': viewSum,
+                'citation': citation,
+                'year': year
             })
         return JsonResponse({'num': num, 'result': res})
     else:
         pass
-
-
-
