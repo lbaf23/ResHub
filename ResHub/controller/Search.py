@@ -514,21 +514,24 @@ def fast_search(request):
     try:
         start_year = int(request.GET.get('dateStart'))
     except Exception:
-        start_year = 0
+        start_year = None
     try:
         end_year = int(request.GET.get('dateEnd'))
     except Exception:
-        end_year = 3000
+        end_year = None
     type = request.GET.get('type')
     radio = True if request.GET.get('Radio') == 'true' else False  # 中英扩展 false true
 
     if type == 'paper':
         b = search_paper_index(Body(), search_key, radio)
+        if start_year and end_year:
+            b.add_range('PaperTime', start_year, end_year)
+        b.set_from_page(page-1)
+        b.set_page_size(per_page)
+
         url = 'http://127.0.0.1:9200/paper_index/_search'
         body = b.get_body()
-        t1 = time.time()
         data = json.loads(requests.get(url, data=json.dumps(body)).content)
-        t2 = time.time()
 
         hits = data['hits']
         num = hits['total']
@@ -563,12 +566,15 @@ def fast_search(request):
                 'keywords':  key
             })
 
-        t3 = time.time()
-        print(t3-t2)
         return JsonResponse({'num': num, 'result': res})
 
     elif type == 'project':
         b = search_project_index(Body(), search_key, radio)
+        if start_year and end_year:
+            b.add_range('GrantYear', start_year, end_year)
+        b.set_from_page(page-1)
+        b.set_page_size(per_page)
+
         url = 'http://127.0.0.1:9200/project_index/_search'
         body = b.get_body()
         data = json.loads(requests.get(url, data=json.dumps(body)).content)
@@ -630,6 +636,11 @@ def fast_search(request):
         return JsonResponse({'num': num, 'result': res})
     elif type == 'patent':
         b = search_patent_index(Body(), search_key, radio)
+        if start_year and end_year:
+            b.add_range('PatentDate', start_year, end_year)
+        b.set_from_page(page-1)
+        b.set_page_size(per_page)
+
         url = 'http://127.0.0.1:9200/patent_index/_search'
         body = b.get_body()
         data = json.loads(requests.get(url, data=json.dumps(body)).content)

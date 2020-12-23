@@ -41,6 +41,16 @@ class Body:
         self.must_list = []
         self.should_list = []
         self.not_list = []
+        self.sort_list = []
+        self.range_list = []
+        self.from_page = 0
+        self.page_size = 10
+
+    def set_from_page(self, from_page):
+        self.from_page = from_page
+
+    def set_page_size(self, page_size):
+        self.page_size = page_size
 
     def add_must(self, key, value, expand=False):
         self.must_list.append({
@@ -87,6 +97,30 @@ class Body:
                     }
                 })
 
+    def add_range(self, key, value_from, value_to, from_eq = False, to_eq = False):
+        l = "gt"
+        h = "lt"
+        if from_eq:
+            l = "gte"
+        if to_eq:
+            h = "lte"
+        self.range_list.append({
+            key:{
+                l: value_from,
+                h: value_to
+            }
+        })
+
+    def add_sort(self, key, sort_type_desc = True):
+        o = "desc"
+        if not sort_type_desc:
+            o = "asc"
+        self.sort_list.append({
+            key: {
+                "order": o
+            }
+        })
+
     def get_body(self):
         if self.should_list:
             self.must_list.append({
@@ -94,11 +128,18 @@ class Body:
                     "should": self.should_list
                 }
             })
+        if self.range_list:
+            self.must_list.append({
+                "range": self.range_list
+            })
         return {
             "query": {
                 "bool": {
                     "must": self.must_list,
                     "must_not": self.not_list
                 }
-            }
+            },
+            "sort": self.sort_list,
+            "size": self.page_size,
+            "from": self.from_page
         }
