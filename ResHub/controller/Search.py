@@ -572,7 +572,6 @@ def fast_search(request):
         url = 'http://127.0.0.1:9200/project_index/_search'
         body = b.get_body()
         data = json.loads(requests.get(url, data=json.dumps(body)).content)
-        print(data)
         hits = data['hits']
         num = hits['total']
         l = hits['hits']
@@ -598,14 +597,14 @@ def fast_search(request):
                 finalAbstract = ''
 
             try:
-                author = format_list(i['_source']['ProjectLeader'])
+                author = i['_source']['ProjectLeader']
             except Exception:
-                author = []
+                author = ''
 
             try:
-                org = format_list(i['_source']['SupportUnits'])
+                org = i['_source']['SupportUnits']
             except Exception:
-                org = []
+                org = ''
 
             try:
                 zhKeywords = re.sub(r' ', ',', re.sub(r'[\[|\'|\]|,]', '', str(i['_source']['SubjectHeadingCN'])))
