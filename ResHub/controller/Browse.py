@@ -50,9 +50,9 @@ def browse_history(request):
         })
 
 def add_browse_history(request):
-    user_id = request.GET.get('userId')
-    bro_id = request.GET.get('paperId')
-    bro_type = int(request.GET.get('type'))
+    user_id = request.POST.get('userId')
+    bro_id = request.POST.get('paperId')
+    bro_type = int(request.POST.get('type'))
     succeed = True
     user = HubUser.objects.get(UserEmail=user_id)
     if bro_type == 1:
