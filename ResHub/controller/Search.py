@@ -361,7 +361,7 @@ def search_authors(request):
     try:
         order_by = int(request.GET.get('orderBy'))
     except Exception:
-        order_by = 0
+        order_by = -1
 
     radio = True if request.GET.get('Radio') == 'true' else False
 
@@ -370,7 +370,7 @@ def search_authors(request):
     b.set_from_page(page - 1)
     if order_by == 0:
         b.add_sort('LiteratureNum')
-    else:
+    elif order_by == 1:
         b.add_sort('CitedNum')
 
     url = 'http://127.0.0.1:9200/researcher_index/_search'
