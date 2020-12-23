@@ -138,6 +138,8 @@ def getPersonalPortal(request):
                         quoteNum = 0
                         # ind = 0
                         for i in papersid:
+                            if(papersid.__len__() == 0):
+                                break
                             res_temp = {}
                             try:
                                 paper = Paper.objects.get(PaperId=i.PaperId_id)
@@ -175,8 +177,12 @@ def getPersonalPortal(request):
                             # if(ind == 7):
                             #     break
                             datas[index] = datas[index] + 1
-                            quotes[index] = quotes[index] + paper.PaperCitation
-                            quoteNum = quoteNum + paper.PaperCitation
+                            if(paper.PaperCitation is None):
+                                donothing = 1
+                            else:
+                                quotes[index] = quotes[index] + \
+                                    paper.PaperCitation
+                                quoteNum = quoteNum + paper.PaperCitation
                         resCount = []
                         quoCount = []
                         for i in datas:
@@ -203,7 +209,7 @@ def getPersonalPortal(request):
                         projectauthor = ProjectAuthor.objects.filter(
                             ResearcherId=resId).all()
                         confCount = projectauthor.__len__()
-                        magCount = researcher.LiteratureNum
+                        magCount = tabledata.__len__()
                         all_have = projectauthor.__len__() + researcher.LiteratureNum
                         magpar = str(
                             int(float(magCount)/float(all_have)*100))+'%'
@@ -238,16 +244,8 @@ def getPersonalPortal(request):
                             except Exception as e:
                                 continue
                             email = reseacher_relation.UserEmail_id
-                            try:
-                                if(email is not None):
-                                    user_temp = HubUser.objects.get(
-                                        UserEmail=email)
-                                    res_temp['avatar'] = user_temp.UserImage
-                                else:
-                                    res_temp['avatar'] = user_temp.UserImage
-                            except Exception as e:
-                                print(str(e))
-                                res_temp['avatar'] = 'head00.jpg'
+
+                            res_temp['avatar'] = 'head00.jpg'
 
                             res_temp['name'] = reseacher_relation.ResName
                             res_temp['institute'] = reseacher_relation.InstitutionName
