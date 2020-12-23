@@ -23,11 +23,12 @@ def add_search_history(request):
 
 def return_hot_words(request):
     hot=hotwords.objects.filter(value__gt=100).order_by("value")
-    word={}
-    value={}
+    hotWords=list()
     for i in range(0,len(hot)):
-        word[i]=hot[i].word
-        value[i]=hot[i].value
-        if i>40:
+        word=hot[i].word
+        value=hot[i].value
+        j={'word':word,"value":value}
+        hotWords.__add__(j)
+        if i>39:
             break
-    return JsonResponse({'word':word,"value":value})
+    return JsonResponse({'hotWords':hotWords})
