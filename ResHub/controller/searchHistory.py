@@ -22,11 +22,11 @@ def add_search_history(request):
     u.save()
     key =hotwords.objects.filter(word=wo)
     if(len(key)==0):
-        hot = hotwords(word=keyword,value=1)
+        hot = hotwords(word=wo,value=1)
         hot.save()
     else:
         value = key[0].value
-        hotwords.objects.filter(word=keyword).update(value=value+1)
+        hotwords.objects.filter(word=wo).update(value=value+1)
     return JsonResponse({'result':succeed})
 
 def return_hot_words(request):
