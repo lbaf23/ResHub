@@ -115,7 +115,15 @@ def getResearchInstitute(request):
                                 res_temp['title'] = paper.PaperTitle[:20]+'...'
                             else:
                                 res_temp['title'] = paper.PaperTitle
-                            res_temp['msg'] = paper.PaperAbstract
+
+                            try:
+                                if(paper.PaperAbstract.__len__() > 60):
+                                    res_temp['msg'] = paper.PaperAbstract[:60]+'...'
+                                else:
+                                    res_temp['msg'] = paper.PaperAbstract
+                            except Exception as e:
+                                res_temp['msg'] = ''
+
                             if(paper.PaperCitation is None):
                                 quoted = quoted
                             else:
