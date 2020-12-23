@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from haystack.query import SearchQuerySet
 
 from ResModel.models import PaperAuthor, Project, Paper, PaperReference, Patent, Collection
-
+import time
 
 # 检索式解码
 def exists_in_redis(s1):
@@ -622,6 +622,7 @@ def search_words(request):
     # ...
 
     # search by elasticsearch index
+    t1 = time.time()
     qs = SearchQuerySet()
     res = search_el_indexes(qs, sk, radio, type)
 
@@ -637,13 +638,19 @@ def search_words(request):
         else:
             res = res.order_by('PaperCitation')
 
-    res = res.values('object')[(page - 1) * per_page: page * per_page]
+    t2 = time.time()
+    print("--------")
+    print(t2-t1)
+    res = res[(page - 1) * per_page: page * per_page]
+    t3 = time.time()
+    print("--------")
+    print(t3-t2)
 
     l = []
 
     if type == 'paper':
         for r in res:
-            p = r['object']
+            p = r.values('object')['object']
             kw = re.sub(r'[\[|\'|\]|,]', '', str(p.PaperKeywords))
             kw = re.sub(r' ', ',', kw)
             j = {
@@ -879,27 +886,49 @@ def filter_search_words(request):
 def fast_search(request):
     name = request.GET.get('name')
     body = {"query": {"match": {"text": name}}}
+    t1 = time.time()
     data = json.loads(requests.get('http://127.0.0.1:9200/paper_index/_search', data=json.dumps(body)).content)
+    t2 = time.time()
+    print(t2-t1)
     hits = data['hits']
     num = hits['total']
     l = hits['hits']
     res = []
     for i in l:
         id = i['_source']['django_id']
+        title = i['_source']['PaperTitle']
         try:
-            p = Paper.objects.get(PaperId=id)
+            msg = i['_source']['PaperAbstract']
         except Exception:
-            print(id)
-            continue
-        res.append({
-            'link': re.sub(r'[\[|\]|\'| ]', '', p.PaperUrl).split(','),
-            'paperId': p.PaperId,
-            'title': p.PaperTitle,
-            'msg': '' if p.PaperAbstract is None else p.PaperAbstract,
-            'author': format_list(p.PaperAuthors),
-            'authorOrg': format_list(p.PaperOrg),
-            'keywords': re.sub(r' ', ',', re.sub(r'[\[|\'|\]|,]', '', str(p.PaperKeywords)) )
+            msg = ''
+        try:
+            author = format_list(i['_source']['PaperAuthors'])
+        except Exception:
+            author = []
+        try:
+            org = format_list(i['_source']['PaperOrg'])
+        except Exception:
+            org = []
+        try:
+            key = re.sub(r' ', ',', re.sub(r'[\[|\'|\]|,]', '', str(i['_source']['PaperKeywords'])))
+        except Exception:
+            key = ''
+        #try:
+            #p = Paper.objects.get(PaperId=id)
+        #except Exception:
+            #print(id)
+            #continue
 
+        res.append({
+            #'link': re.sub(r'[\[|\]|\'| ]', '', p.PaperUrl).split(','),
+            'paperId': id,
+            'title': title,
+            'msg': msg,
+            'author': author,
+            'authorOrg': org,
+            'keywords':  key
         })
+    t3 = time.time()
+    print(t3-t2)
     return JsonResponse({'num': num, 'result': res})
 

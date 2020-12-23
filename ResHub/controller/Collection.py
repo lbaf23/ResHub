@@ -17,12 +17,12 @@ def get_collection(request):
             j = {
             'paperId': paper.PaperId,
             'title': paper.PaperTitle,
-            'msg': paper.PaperAbstract,
+            'msg': paper.PaperAbstract.split(','),
             'author': paper.PaperAuthors,
             'type': t,
             'collectionSum':paper.CollectionNum,
             'viewSum':paper.ReadNum,
-            'link':re.sub(r'[\[|\]|\'| ]','',paper.PaperUrl).split(','),
+            'link':re.sub(r'[\[|\]|\'| ]','',paper.PaperUrl).split(',')[0],
             'collectTime':c[i].CollectionTime
             }
         elif t==2:
@@ -88,6 +88,6 @@ def del_collection(request):
         Collection.objects.filter(PatentId=patent,UserEmail=user).delete()
     elif col_type == 3:
         project = Paper.objects.get(ProjectId=col_id)
-        Collection.objects.filter(PaperId=project,UserEmail=user).delete()
+        Collection.objects.filter(ProjectId=project,UserEmail=user).delete()
     return JsonResponse({'succeed':succeed})
 
