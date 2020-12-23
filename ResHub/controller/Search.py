@@ -22,7 +22,6 @@ def format_list(s):
     return s.split(',')[:-1]
 
 
-
 # boolType {1:AND ; 2:OR ; 3:NOT}
 # type {1：主题；2：标题；3：作者；4：关键词；5：摘要; }
 
@@ -368,7 +367,7 @@ def search_authors(request):
 
     b = Body()
     b.add_must('text', search_name, radio)
-    b.set_from_page(page-1)
+    b.set_from_page(page - 1)
     if order_by == 0:
         b.add_sort('LiteratureNum')
     else:
@@ -381,7 +380,7 @@ def search_authors(request):
     hits = data['hits']
     num = hits['total']
     res = hits['hits']
-    l=[]
+    l = []
     for r in res:
         id = r['_source']['django_id']
         try:
@@ -430,21 +429,22 @@ def fast_search(request):
         if start_year and end_year:
             b.add_range('PaperTime', start_year, end_year)
         if sort == 1:
-            if howToSort%2 == 0:
+            if howToSort % 2 == 0:
                 b.add_sort('PaperTime', False)
             else:
                 b.add_sort('PaperTime', True)
         elif sort == 2:
-            if howToSort%2 == 0:
+            if howToSort % 2 == 0:
                 b.add_sort('PaperCitation', False)
             else:
                 b.add_sort('PaperCitation', True)
 
-        b.set_from_page(page-1)
+        b.set_from_page(page - 1)
         b.set_page_size(per_page)
 
         url = 'http://127.0.0.1:9200/paper_index/_search'
         body = b.get_body()
+        print(body)
         data = json.loads(requests.get(url, data=json.dumps(body)).content)
 
         hits = data['hits']
@@ -494,7 +494,7 @@ def fast_search(request):
                 'msg': msg,
                 'author': author,
                 'authorOrg': org,
-                'keywords':  key,
+                'keywords': key,
                 'collectionSum': collectionSum,
                 'viewSum': viewSum,
                 'citation': citation,
@@ -507,14 +507,13 @@ def fast_search(request):
         b = search_project_index(Body(), search_key, radio)
         if start_year and end_year:
             b.add_range('GrantYear', start_year, end_year)
-        b.set_from_page(page-1)
+        b.set_from_page(page - 1)
         b.set_page_size(per_page)
         if sort == 1:
-            if howToSort%2 == 0:
+            if howToSort % 2 == 0:
                 b.add_sort('GrantYear', False)
             else:
                 b.add_sort('GrantYear', True)
-
 
         url = 'http://127.0.0.1:9200/project_index/_search'
         body = b.get_body()
@@ -587,7 +586,7 @@ def fast_search(request):
                 'author': author,
                 'authorTitle': org,
                 'zhKeywords': zhKeywords,
-                'enKeywords':enKeywords,
+                'enKeywords': enKeywords,
                 'collectionSum': collectionSum,
                 'viewSum': viewSum,
                 'citation': citation,
@@ -599,10 +598,10 @@ def fast_search(request):
         b = search_patent_index(Body(), search_key, radio)
         if start_year and end_year:
             b.add_range('PatentDate', start_year, end_year)
-        b.set_from_page(page-1)
+        b.set_from_page(page - 1)
         b.set_page_size(per_page)
         if sort == 1:
-            if howToSort%2 == 0:
+            if howToSort % 2 == 0:
                 b.add_sort('PatentDate', False)
             else:
                 b.add_sort('PatentDate', True)
