@@ -11,7 +11,7 @@ def getResearchInstitute(request):
             if (instituteId is not None):
                 res = {}
                 institute = Researcher.objects.filter(
-                    InstitutionName=instituteId)
+                    InstitutionName=instituteId).order_by("ResId")
                 if(institute is None):
                     return JsonResponse({
                         "status": 0,
@@ -19,6 +19,8 @@ def getResearchInstitute(request):
                     })
                 # insname
                 res['insname'] = instituteId
+
+                res['researchers'] = institute.__len__()
 
                 # domain
                 for i in institute:
@@ -28,6 +30,7 @@ def getResearchInstitute(request):
                             break
                         else:
                             res['domain'] = '暂无'
+                        break
                     else:
                         return JsonResponse({"error": 'error'})
 
@@ -192,7 +195,7 @@ def getResearchInstitute(request):
                     quoCount.append(str(i))
                 res['rescount'] = resCount
                 res['quocount'] = quoCount
-                res['researchers'] = hotData_temp.__len__()
+
                 return JsonResponse(res)
             else:
                 return JsonResponse({
