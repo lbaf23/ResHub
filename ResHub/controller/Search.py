@@ -5,7 +5,7 @@ import requests
 from django.http import JsonResponse
 from haystack.query import SearchQuerySet
 
-from ResModel.models import PaperAuthor, Project, Paper, PaperReference, Patent, Collection
+from ResModel.models import PaperAuthor, Project, Paper, PaperReference, Patent, Collection, Researcher
 import time
 from ResHub.controller.EsMid import Body, translate_by_api
 
@@ -359,21 +359,34 @@ def search_authors(request):
         per_page = int(request.GET.get('PerPage'))  # 每页的数量
     except Exception:
         per_page = 10
-    order_by = request.GET.get('orderBy')
+    try:
+        order_by = int(request.GET.get('orderBy'))
+    except Exception:
+        order_by = 0
 
     radio = True if request.GET.get('Radio') == 'true' else False
 
-    res = SearchQuerySet().using('researcher').filter(text=search_name)
-    print(len(res))
-    if radio:
-        t = translate_by_api(search_name)
-        if t != '':
-            res = res.using('researcher').filter_or(text=t)
-    num = res.count()
-    res = res[(page - 1) * per_page: page * per_page]
+    b = Body()
+    b.add_must('text', search_name, radio)
+    b.set_from_page(page-1)
+    if order_by == 0:
+        b.add_sort('LiteratureNum')
+    else:
+        b.add_sort('CitedNum')
+
+    url = 'http://127.0.0.1:9200/researcher_index/_search'
+    body = b.get_body()
+    data = json.loads(requests.get(url, data=json.dumps(body)).content)
+
+    hits = data['hits']
+    num = hits['total']
+    l = hits['hits']
+    res = []
+
     l = []
     for r in res:
-        rh = r.object
+        id = r['_source']['django_id']
+        rh = Researcher.objects.filter(ResId =id)
         l.append({
             'id': rh.ResId,
             'name': rh.ResName,
