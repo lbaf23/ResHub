@@ -380,10 +380,8 @@ def search_authors(request):
 
     hits = data['hits']
     num = hits['total']
-    l = hits['hits']
-    res = []
-
-    l = []
+    res = hits['hits']
+    l=[]
     for r in res:
         id = r['_source']['django_id']
         rh = Researcher.objects.filter(ResId =id)
