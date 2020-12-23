@@ -20,6 +20,8 @@ def getResearchInstitute(request):
                 # insname
                 res['insname'] = instituteId
 
+                res['researchers'] = institute.__len__()
+
                 # domain
                 for i in institute:
                     if(i is not None):
@@ -193,7 +195,7 @@ def getResearchInstitute(request):
                     quoCount.append(str(i))
                 res['rescount'] = resCount
                 res['quocount'] = quoCount
-                res['researchers'] = hotData_temp.__len__()
+
                 return JsonResponse(res)
             else:
                 return JsonResponse({
