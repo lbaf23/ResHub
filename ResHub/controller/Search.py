@@ -639,9 +639,11 @@ def search_words(request):
             res = res.order_by('PaperCitation')
 
     t2 = time.time()
+    print("--------")
     print(t2-t1)
-    res = res.values('object')[(page - 1) * per_page: page * per_page]
+    res = res[(page - 1) * per_page: page * per_page].values('object')
     t3 = time.time()
+    print("--------")
     print(t3-t2)
 
     l = []
