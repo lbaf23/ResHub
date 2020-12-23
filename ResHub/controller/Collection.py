@@ -17,12 +17,12 @@ def get_collection(request):
             j = {
             'paperId': paper.PaperId,
             'title': paper.PaperTitle,
-            'msg': paper.PaperAbstract,
-            'author': paper.PaperAuthors.split(','),
+            'msg': ''if paper.PaperAbstract is None else paper.PaperAbstract,
+            'author': ''if len(paper.PaperAuthors.split(','))==0 else paper.PaperAuthors.split(','),
             'type': t,
             'collectionSum':paper.CollectionNum,
             'viewSum':paper.ReadNum,
-            'link':re.sub(r'[\[|\]|\'| ]','',paper.PaperUrl).split(',')[0],
+            'link':''if len(re.sub(r'[\[|\]|\'| ]','',paper.PaperUrl).split(','))==0 else re.sub(r'[\[|\]|\'| ]','',paper.PaperUrl).split(',')[0],
             'collectTime':c[i].CollectionTime
             }
         elif t==2:
@@ -30,12 +30,12 @@ def get_collection(request):
             j = {
             'paperId': patent.PatentId,
             'title': patent.PatentTitle,
-            'msg': patent.PatentAbstract,
-            'author': patent.PatentAuthor.split(','),
+            'msg': ''if patent.PatentAbstract is None else patent.PatentAbstract,
+            'author': ''if len(Patent.PatentAuthor.split(','))==0 else Patent.PatentAuthor.split(','),
             'type': t,
             'collectionSum':patent.CollectionNum,
             'viewSum':patent.ReadNum,
-            'link':re.sub(r'[\[|\]|\'| ]','',paper.PaperUrl).split(','),
+            'link':''if len(re.sub(r'[\[|\]|\'| ]','',patent.PatentUrl).split(','))==0 else re.sub(r'[\[|\]|\'| ]','',patent.PatentUrl).split(',')[0],
             'collectTime':c[i].CollectionTime
             }
         elif t==3:
@@ -43,12 +43,12 @@ def get_collection(request):
             j = {
             'paperId': project.ProjectId,
             'title': project.ProjectTitle,
-            'msg': project.ProjectAbstract,
-            'author': project.ProjectAuthor.split(','),
+            'msg': ''if project.ProjectAbstract is None else project.ProjectId,
+            'author': ''if len(Project.ProjectLeader.split(','))==0 else Project.ProjectLeader.split(','),
             'type': t,
             'collectionSum':project.CollectionNum,
             'viewSum':project.ReadNum,
-            'link':re.sub(r'[\[|\]|\'| ]','',paper.PaperUrl).split(','),
+            'link':''if len(re.sub(r'[\[|\]|\'| ]','',project.ProjectId).split(','))==0 else re.sub(r'[\[|\]|\'| ]','',project.ProjectId).split(',')[0],
             'collectTime':c[i].CollectionTime
             }
         res.append(j)
