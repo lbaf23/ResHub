@@ -622,6 +622,7 @@ def search_words(request):
     # ...
 
     # search by elasticsearch index
+    t1 = time.time()
     qs = SearchQuerySet()
     res = search_el_indexes(qs, sk, radio, type)
 
@@ -637,7 +638,11 @@ def search_words(request):
         else:
             res = res.order_by('PaperCitation')
 
+    t2 = time.time()
+    print(t2-t1)
     res = res.values('object')[(page - 1) * per_page: page * per_page]
+    t3 = time.time()
+    print(t3-t2)
 
     l = []
 
