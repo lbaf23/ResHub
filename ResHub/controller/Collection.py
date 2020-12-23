@@ -22,7 +22,7 @@ def get_collection(request):
             'type': t,
             'collectionSum':paper.CollectionNum,
             'viewSum':paper.ReadNum,
-            'link':''if len(re.sub(r'[\[|\]|\'| ]','',paper.PaperUrl).split(','))==0 else re.sub(r'[\[|\]|\'| ]','',paper.PaperUrl).split(',')[0],
+            'link':re.sub(r'[\[|\]|\'| ]','',paper.PaperUrl).split(','),
             'collectTime':c[i].CollectionTime
             }
         elif t==2:
@@ -35,7 +35,7 @@ def get_collection(request):
             'type': t,
             'collectionSum':patent.CollectionNum,
             'viewSum':patent.ReadNum,
-            'link':''if len(re.sub(r'[\[|\]|\'| ]','',patent.PatentUrl).split(','))==0 else re.sub(r'[\[|\]|\'| ]','',patent.PatentUrl).split(',')[0],
+            'link':re.sub(r'[\[|\]|\'| ]','',patent.PatentUrl).split(','),
             'collectTime':c[i].CollectionTime
             }
         elif t==3:
@@ -48,7 +48,7 @@ def get_collection(request):
             'type': t,
             'collectionSum':project.CollectionNum,
             'viewSum':project.ReadNum,
-            'link':''if len(re.sub(r'[\[|\]|\'| ]','',project.ProjectUrl).split(','))==0 else re.sub(r'[\[|\]|\'| ]','',project.ProjectUrl).split(',')[0],
+            'link':re.sub(r'[\[|\]|\'| ]','',project.ProjectUrl).split(','),
             'collectTime':c[i].CollectionTime
             }
         res.append(j)
