@@ -57,7 +57,7 @@ def get_collection(request):
 def add_collection(request):
     user_id = request.GET.get('userId')
     col_id = request.GET.get('paperId')
-    col_type = int(request.GET.get('type'))
+    col_type = request.GET.get('type')
     succeed = True
     user = HubUser.objects.get(UserEmail=user_id)
     if col_type == 1:
@@ -77,7 +77,7 @@ def add_collection(request):
 def del_collection(request):
     user_id = request.GET.get('userId')
     col_id = request.GET.get('paperId')
-    col_type = int(request.GET.get('type'))
+    col_type = request.GET.get('type')
     succeed = True
     user = HubUser.objects.get(UserEmail=user_id)
     if col_type == 1:
