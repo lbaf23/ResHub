@@ -17,8 +17,8 @@ def get_collection(request):
             j = {
             'paperId': paper.PaperId,
             'title': paper.PaperTitle,
-            'msg': paper.PaperAbstract.split(','),
-            'author': paper.PaperAuthors,
+            'msg': paper.PaperAbstract,
+            'author': paper.PaperAuthors.split(','),
             'type': t,
             'collectionSum':paper.CollectionNum,
             'viewSum':paper.ReadNum,
@@ -31,7 +31,7 @@ def get_collection(request):
             'paperId': patent.PatentId,
             'title': patent.PatentTitle,
             'msg': patent.PatentAbstract,
-            'author': patent.PatentAuthor,
+            'author': patent.PatentAuthor.split(','),
             'type': t,
             'collectionSum':patent.CollectionNum,
             'viewSum':patent.ReadNum,
@@ -44,7 +44,7 @@ def get_collection(request):
             'paperId': project.ProjectId,
             'title': project.ProjectTitle,
             'msg': project.ProjectAbstract,
-            'author': project.ProjectAuthor,
+            'author': project.ProjectAuthor.split(','),
             'type': t,
             'collectionSum':project.CollectionNum,
             'viewSum':project.ReadNum,
@@ -77,7 +77,7 @@ def add_collection(request):
 def del_collection(request):
     user_id = request.GET.get('userId')
     col_id = request.GET.get('paperId')
-    col_type = request.GET.get('type')
+    col_type = int(request.POST.get('type'))
     succeed = True
     user = HubUser.objects.get(UserEmail=user_id)
     if col_type == 1:
