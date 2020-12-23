@@ -410,9 +410,9 @@ def fast_search(request):
     except Exception:
         per_page = 10
     # 0 默认 1 时间 2 被引次数
-    sort = request.GET.get('sort')
+    sort = int(request.GET.get('sort'))
     # 奇数 降序  偶数 升序
-    howToSort = request.GET.get('howToSort')
+    howToSort = int(request.GET.get('howToSort'))
     try:
         start_year = int(request.GET.get('dateStart'))
     except Exception:
