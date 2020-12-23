@@ -74,6 +74,7 @@ urlpatterns = [
     path('reject2', Administrator.reject_appeal),
     path('addSearchRecord', searchHistory.add_search_history),
     path('hotWords',searchHistory.return_hot_words),
+    path('getHotSpot',searchHistory.get_hot),
 
     #path('searchWords', Search.search_words),
     path('openPaper', Search.show_paper_info),
