@@ -147,14 +147,20 @@ def getPersonalPortal(request):
                                 print(str(e))
                                 continue
                             res_temp['paperId'] = i.PaperId_id
-                            if(paper.PaperTitle.__len__() > 30):
-                                res_temp['title'] = paper.PaperTitle[:30]+'...'
-                            else:
-                                res_temp['title'] = paper.PaperTitle
-                            if(paper.PaperAbstract.__len__() > 60):
-                                res_temp['msg'] = paper.PaperAbstract[:60]+'...'
-                            else:
-                                res_temp['msg'] = paper.PaperAbstract
+                            try:
+                                if(paper.PaperTitle.__len__() > 30):
+                                    res_temp['title'] = paper.PaperTitle[:30]+'...'
+                                else:
+                                    res_temp['title'] = paper.PaperTitle
+                            except Exception as e:
+                                res_temp['title'] = ''
+                            try:
+                                if(paper.PaperAbstract.__len__() > 60):
+                                    res_temp['msg'] = paper.PaperAbstract[:60]+'...'
+                                else:
+                                    res_temp['msg'] = paper.PaperAbstract
+                            except Exception as e:
+                                res_temp['msg'] = ''
                             res_temp['collectionSum'] = paper.CollectionNum
                             res_temp['link'] = re.sub(
                                 r'[\[|\]|\'| ]', '', paper.PaperUrl).split(',')[0]

@@ -5,7 +5,7 @@ import requests
 from django.http import JsonResponse
 from haystack.query import SearchQuerySet
 
-from ResModel.models import PaperAuthor, Project, Paper, PaperReference, Patent, Collection
+from ResModel.models import PaperAuthor, Project, Paper, PaperReference, Patent, Collection, Researcher
 import time
 from ResHub.controller.EsMid import Body, translate_by_api
 
@@ -20,7 +20,6 @@ def format_list(s):
     if s is None:
         return []
     return s.split(',')[:-1]
-
 
 
 # boolType {1:AND ; 2:OR ; 3:NOT}
@@ -359,29 +358,43 @@ def search_authors(request):
         per_page = int(request.GET.get('PerPage'))  # 每页的数量
     except Exception:
         per_page = 10
-    order_by = request.GET.get('orderBy')
+    try:
+        order_by = int(request.GET.get('orderBy'))
+    except Exception:
+        order_by = 0
 
     radio = True if request.GET.get('Radio') == 'true' else False
 
-    res = SearchQuerySet().using('researcher').filter(text=search_name)
-    print(len(res))
-    if radio:
-        t = translate_by_api(search_name)
-        if t != '':
-            res = res.using('researcher').filter_or(text=t)
-    num = res.count()
-    res = res[(page - 1) * per_page: page * per_page]
+    b = Body()
+    b.add_must('text', search_name, radio)
+    b.set_from_page(page - 1)
+    if order_by == 0:
+        b.add_sort('LiteratureNum')
+    else:
+        b.add_sort('CitedNum')
+
+    url = 'http://127.0.0.1:9200/researcher_index/_search'
+    body = b.get_body()
+    data = json.loads(requests.get(url, data=json.dumps(body)).content)
+
+    hits = data['hits']
+    num = hits['total']
+    res = hits['hits']
     l = []
     for r in res:
-        rh = r.object
-        l.append({
-            'id': rh.ResId,
-            'name': rh.ResName,
-            'ResEmail': rh.ResEmail,
-            'CitedNum': rh.CitedNum,
-            'LiteratureNum': rh.LiteratureNum,
-            'Institution': rh.InstitutionName
-        })
+        id = r['_source']['django_id']
+        try:
+            rh = Researcher.objects.filter(ResId=id)[0]
+            l.append({
+                'id': rh.ResId,
+                'name': rh.ResName,
+                'ResEmail': rh.ResEmail,
+                'CitedNum': rh.CitedNum,
+                'LiteratureNum': rh.LiteratureNum,
+                'Institution': rh.InstitutionName
+            })
+        except Exception:
+            pass
 
     return JsonResponse({'num': num, 'result': l})
 
@@ -397,9 +410,9 @@ def fast_search(request):
     except Exception:
         per_page = 10
     # 0 默认 1 时间 2 被引次数
-    sort = request.GET.get('sort')
+    sort = int(request.GET.get('sort'))
     # 奇数 降序  偶数 升序
-    howToSort = request.GET.get('howToSort')
+    howToSort = int(request.GET.get('howToSort'))
     try:
         start_year = int(request.GET.get('dateStart'))
     except Exception:
@@ -415,11 +428,23 @@ def fast_search(request):
         b = search_paper_index(Body(), search_key, radio)
         if start_year and end_year:
             b.add_range('PaperTime', start_year, end_year)
-        b.set_from_page(page-1)
+        if sort == 1:
+            if howToSort % 2 == 0:
+                b.add_sort('PaperTime', False)
+            else:
+                b.add_sort('PaperTime', True)
+        elif sort == 2:
+            if howToSort % 2 == 0:
+                b.add_sort('PaperCitation', False)
+            else:
+                b.add_sort('PaperCitation', True)
+
+        b.set_from_page(page - 1)
         b.set_page_size(per_page)
 
         url = 'http://127.0.0.1:9200/paper_index/_search'
         body = b.get_body()
+        print(body)
         data = json.loads(requests.get(url, data=json.dumps(body)).content)
 
         hits = data['hits']
@@ -469,7 +494,7 @@ def fast_search(request):
                 'msg': msg,
                 'author': author,
                 'authorOrg': org,
-                'keywords':  key,
+                'keywords': key,
                 'collectionSum': collectionSum,
                 'viewSum': viewSum,
                 'citation': citation,
@@ -482,8 +507,13 @@ def fast_search(request):
         b = search_project_index(Body(), search_key, radio)
         if start_year and end_year:
             b.add_range('GrantYear', start_year, end_year)
-        b.set_from_page(page-1)
+        b.set_from_page(page - 1)
         b.set_page_size(per_page)
+        if sort == 1:
+            if howToSort % 2 == 0:
+                b.add_sort('GrantYear', False)
+            else:
+                b.add_sort('GrantYear', True)
 
         url = 'http://127.0.0.1:9200/project_index/_search'
         body = b.get_body()
@@ -556,7 +586,7 @@ def fast_search(request):
                 'author': author,
                 'authorTitle': org,
                 'zhKeywords': zhKeywords,
-                'enKeywords':enKeywords,
+                'enKeywords': enKeywords,
                 'collectionSum': collectionSum,
                 'viewSum': viewSum,
                 'citation': citation,
@@ -568,8 +598,13 @@ def fast_search(request):
         b = search_patent_index(Body(), search_key, radio)
         if start_year and end_year:
             b.add_range('PatentDate', start_year, end_year)
-        b.set_from_page(page-1)
+        b.set_from_page(page - 1)
         b.set_page_size(per_page)
+        if sort == 1:
+            if howToSort % 2 == 0:
+                b.add_sort('PatentDate', False)
+            else:
+                b.add_sort('PatentDate', True)
 
         url = 'http://127.0.0.1:9200/patent_index/_search'
         body = b.get_body()
