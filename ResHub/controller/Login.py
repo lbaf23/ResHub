@@ -14,7 +14,7 @@ def identity_check(request):
     if(u.__len__() > 0):
         id=u[0].UserEmail
         head=u[0].UserImage
-        user = Researcher.objects.filter(ResEmail=id)
+        user = Researcher.objects.filter(UserEmail=id)
         if(user.__len__()>0):
             isPortal = True
             protalId = user[0].ResId
