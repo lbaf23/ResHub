@@ -75,10 +75,10 @@ urlpatterns = [
     path('addSearchRecord', searchHistory.add_search_history),
     path('hotWords',searchHistory.return_hot_words),
 
-    path('searchWords', Search.search_words),
+    #path('searchWords', Search.search_words),
     path('openPaper', Search.show_paper_info),
     path('searchAuthors', Search.search_authors),
-    path('fastSearch', Search.fast_search)
+    path('searchWords', Search.fast_search)
 ]
 
 router = routers.DefaultRouter()
