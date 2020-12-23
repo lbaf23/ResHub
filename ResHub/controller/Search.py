@@ -889,20 +889,37 @@ def fast_search(request):
     res = []
     for i in l:
         id = i['_source']['django_id']
+        title = i['_source']['PaperTitle']
+        try:
+            msg = i['_source']['PaperAbstract']
+        except Exception:
+            msg = ''
+        try:
+            author = format_list(i['_source']['PaperAuthors'])
+        except Exception:
+            author = []
+        try:
+            org = format_list(i['_source']['PaperOrg'])
+        except Exception:
+            org = []
+        try:
+            key = re.sub(r' ', ',', re.sub(r'[\[|\'|\]|,]', '', str(i['_source']['PaperKeywords'])))
+        except Exception:
+            key = ''
         #try:
             #p = Paper.objects.get(PaperId=id)
         #except Exception:
             #print(id)
             #continue
+
         res.append({
             #'link': re.sub(r'[\[|\]|\'| ]', '', p.PaperUrl).split(','),
-            'paperId': i['_source']['django_id'],
-            'title': i['_source']['PaperTitle'],
-            'msg': '' if i['_source']['PaperAbstract'] is None else i['_source']['PaperAbstract'],
-            'author': format_list(i['_source']['PaperAuthors']),
-            'authorOrg': format_list(i['_source']['PaperOrg']),
-            'keywords': re.sub(r' ', ',', re.sub(r'[\[|\'|\]|,]', '', str(i['_source']['PaperKeywords'])) )
-
+            'paperId': id,
+            'title': title,
+            'msg': msg,
+            'author': author,
+            'authorOrg': org,
+            'keywords':  key
         })
     t3 = time.time()
     print(t3-t2)
