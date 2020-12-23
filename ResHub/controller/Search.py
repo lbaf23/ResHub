@@ -641,9 +641,7 @@ def search_words(request):
     t2 = time.time()
     print("--------")
     print(t2-t1)
-    print(res[0])
-    res = res.values('object')[(page - 1) * per_page: page * per_page]
-
+    res = res[(page - 1) * per_page: page * per_page]
     t3 = time.time()
     print("--------")
     print(t3-t2)
@@ -652,8 +650,8 @@ def search_words(request):
 
     if type == 'paper':
         for r in res:
-            print(r)
-            p = r['object']
+            print(r.object)
+            p = r.object
             kw = re.sub(r'[\[|\'|\]|,]', '', str(p.PaperKeywords))
             kw = re.sub(r' ', ',', kw)
             j = {
@@ -888,7 +886,13 @@ def filter_search_words(request):
 
 def fast_search(request):
     name = request.GET.get('name')
-    body = {"query": {"match": {"text": name}}}
+    body = {
+        "query": {
+            "match": {
+                "text": name
+            }
+        }
+    }
     t1 = time.time()
     data = json.loads(requests.get('http://127.0.0.1:9200/paper_index/_search', data=json.dumps(body)).content)
     t2 = time.time()
