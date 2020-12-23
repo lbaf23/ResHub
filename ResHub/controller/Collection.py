@@ -11,6 +11,7 @@ def get_collection(request):
     c = Collection.objects.filter(UserEmail=user).order_by("-CollectionTime")
     res = list()
     for i in range(0,c.__len__()):
+        print(c[i])
         t = c[i].CollectionType
         if t==1 :
             paper =c[i].PaperId
