@@ -875,11 +875,14 @@ def search_authors(request):
 def filter_search_words(request):
     pass
 
-
+import time
 def fast_search(request):
     name = request.GET.get('name')
     body = {"query": {"match": {"text": name}}}
+    t1 = time.time()
     data = json.loads(requests.get('http://127.0.0.1:9200/paper_index/_search', data=json.dumps(body)).content)
+    t2 = time.time()
+    print(t2-t1)
     hits = data['hits']
     num = hits['total']
     l = hits['hits']
@@ -901,5 +904,7 @@ def fast_search(request):
             'keywords': re.sub(r' ', ',', re.sub(r'[\[|\'|\]|,]', '', str(p.PaperKeywords)) )
 
         })
+    t3 = time.time()
+    print(t3-t2)
     return JsonResponse({'num': num, 'result': res})
 
