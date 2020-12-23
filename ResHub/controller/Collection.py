@@ -55,9 +55,9 @@ def get_collection(request):
     return JsonResponse({'list' : res})
 
 def add_collection(request):
-    user_id = request.GET.get('userId')
-    col_id = request.GET.get('paperId')
-    col_type = request.GET.get('type')
+    user_id = request.POST.get('userId')
+    col_id = request.POST.get('paperId')
+    col_type = request.POST.get('type')
     succeed = True
     user = HubUser.objects.get(UserEmail=user_id)
     if col_type == 1:
