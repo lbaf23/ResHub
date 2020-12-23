@@ -650,8 +650,11 @@ def search_words(request):
 
     if type == 'paper':
         for r in res:
-            print(r.object)
+            t4 = time.time()
             p = r.object
+            t5 = time.time()
+            print(t5-t4)
+
             kw = re.sub(r'[\[|\'|\]|,]', '', str(p.PaperKeywords))
             kw = re.sub(r' ', ',', kw)
             j = {
