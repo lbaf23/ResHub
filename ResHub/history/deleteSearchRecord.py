@@ -10,7 +10,7 @@ def deleteSearchRecord(request):
             if userId is not None:
                 deletlist = deletId.split(',')
                 res = {}
-                list = []
+                helplist = []
                 browse = Search.objects.filter(UserEmail_id=userId).all()
                 len = browse.__len__()
                 if(len == 0):
@@ -20,15 +20,23 @@ def deleteSearchRecord(request):
                         "succeed": False
                     })
                 index = 0
+                temp_this = browse[0]
+
                 for i in deletlist:
-                    j = Search.objects.get(UserEmail_id=userId, id=i)
-                    if(j is None):
+                    k = int(i)
+                    flag = 0
+                    for j in browse:
+                        if(k == j.id):
+                            helplist.append(j)
+                            flag = 1
+                            break
+                    if(flag == 0):
                         res['succeed'] = False
                         return JsonResponse(res)
-                    temp = str(j.id)
-                    j.delete()
-                    list.append(temp)
-                    index = index + 1
+
+                for i in helplist:
+                    i.delete()
+
                 res['succeed'] = True
                 return JsonResponse(res)
             else:
