@@ -36,7 +36,7 @@ def return_hot_words(request):
 def get_hot(request):
     hot=hotwords.objects.filter(value__gt=100).order_by("-value")
     paper = Paper.objects.filter(ReadNum__gt=1000).order_by("-ReadNum")
-    res = Researcher.objects.filter(CitedNum__gt=100).order_by("-VisitNum")
+    res = Researcher.objects.filter(VisitNum__gt=100).order_by("-VisitNum")
     hotWords=list()
     p=list()
     su=list()
