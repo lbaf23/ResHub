@@ -384,15 +384,18 @@ def search_authors(request):
     l=[]
     for r in res:
         id = r['_source']['django_id']
-        rh = Researcher.objects.filter(ResId =id)
-        l.append({
-            'id': rh.ResId,
-            'name': rh.ResName,
-            'ResEmail': rh.ResEmail,
-            'CitedNum': rh.CitedNum,
-            'LiteratureNum': rh.LiteratureNum,
-            'Institution': rh.InstitutionName
-        })
+        try:
+            rh = Researcher.objects.filter(ResId=id)[0]
+            l.append({
+                'id': rh.ResId,
+                'name': rh.ResName,
+                'ResEmail': rh.ResEmail,
+                'CitedNum': rh.CitedNum,
+                'LiteratureNum': rh.LiteratureNum,
+                'Institution': rh.InstitutionName
+            })
+        except Exception:
+            pass
 
     return JsonResponse({'num': num, 'result': l})
 
