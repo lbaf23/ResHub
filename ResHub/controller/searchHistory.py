@@ -58,9 +58,9 @@ def get_hot(request):
         if i>11:
             break
     for i in range(0,len(res)):
-        su[i]=res[i].CitedNum
-        sc[i]=res[i].LiteratureNum
-        sn[i]=res[i].ResName
+        su.append(res[i].CitedNum)
+        sc.append(res[i].LiteratureNum)
+        sn.append(res[i].ResName)
         if i>11:
             break
     return JsonResponse({'hotSearach':hotWords,'scholarUsed':su,'scholarCited':sc,'paperTable':p,'scholarName':sn})
