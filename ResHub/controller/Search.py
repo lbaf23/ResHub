@@ -5,9 +5,9 @@ import requests
 from django.http import JsonResponse
 from haystack.query import SearchQuerySet
 
-from ResModel.models import PaperAuthor, Project, Paper, PaperReference, Patent, Collection
+from ResModel.models import PaperAuthor, Project, Paper, PaperReference, Patent, Collection, Researcher
 import time
-from ResHub.controller.EsMid import Body
+from ResHub.controller.EsMid import Body, translate_by_api
 
 
 # 检索式解码
@@ -22,660 +22,185 @@ def format_list(s):
     return s.split(',')[:-1]
 
 
-def translate_by_api(str):
-    """
-   input : str 需要翻译的字符串
-   output：translation 翻译后的字符串
-   有每小时1000次访问的限制
-   """
-    # API
-    url = 'http://fanyi.youdao.com/translate?smartresult=dict&smartresult=rule&smartresult=ugc&sessionFrom=null'
-    # 传输的参数， i为要翻译的内容
-    key = {
-        'type': "AUTO",
-        'i': str,
-        "doctype": "json",
-        "version": "2.1",
-        "keyfrom": "fanyi.web",
-        "ue": "UTF-8",
-        "action": "FY_BY_CLICKBUTTON",
-        "typoResult": "true"
-    }
-    # key 这个字典为发送给有道词典服务器的内容
-    response = requests.post(url, data=key)
-    # 判断服务器是否相应成功
-    if response.status_code == 200:
-        # 通过 json.loads 把返回的结果加载成 json 格式
-        result = json.loads(response.text)
-        #         print ("输入的词为：%s" % result['translateResult'][0][0]['src'])
-        #         print ("翻译结果为：%s" % result['translateResult'][0][0]['tgt'])
-        translation = result['translateResult'][0][0]['tgt']
-        return translation
-    else:
-        # 相应失败就返回空
-        return ''
-
 
 # boolType {1:AND ; 2:OR ; 3:NOT}
 # type {1：主题；2：标题；3：作者；4：关键词；5：摘要; }
-def search_el_indexes(res, key, radio, type):
-    if type == 'paper':
-        return search_paper_index(res, key, radio)
-    elif type == 'project':
-        return search_project_index(res, key, radio)
-    elif type == 'patent':
-        return search_patent_index(res, key, radio)
-    else:
-        return SearchQuerySet()
 
 
-def search_patent_index(res, key, radio):
-    for w in list(key):
-        if not w.__contains__('boolType'):
-            if w['type'] == '1' or w['type'] == '4':
-                res = res.using('patent').filter(text=w['words'])
-                if radio:
-                    ow = translate_by_api(w['words'])
-                    if ow != '':
-                        res = res.using('patent').filter_or(text=ow)
-
-            elif w['type'] == '2':
-                res = res.using('patent').filter(PatentTitle=w['words'])
-                if radio:
-                    ow = translate_by_api(w['words'])
-                    if ow != '':
-                        res = res.using('patent').filter_or(PatentTitle=ow)
-
-            elif w['type'] == '5':
-                res = res.using('patent').filter(PatentAbstract=w['words'])
-                if radio:
-                    ow = translate_by_api(w['words'])
-                    if ow != '':
-                        res = res.using('patent').filter_or(PatentAbstract=ow)
-
-            elif w['type'] == '3':
-                res = res.using('patent').filter(PatentAuthor=w['words'])
-                if radio:
-                    ow = translate_by_api(w['words'])
-                    if ow != '':
-                        res = res.using('patent').filter_or(PatentAuthor=ow)
-
-            elif w['type'] == 'PaperOrg':
-                res = res.using('patent').filter(PatentCompany=w['words'])
-                if radio:
-                    ow = translate_by_api(w['words'])
-                    if ow != '':
-                        res = res.using('patent').filter_or(PatentCompany=ow)
-
-        else:
-            if w['boolType'] == '1':
-                if w['type'] == '1' or w['type'] == '4':
-                    res = res.using('patent').filter_and(text=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('patent').filter_or(text=ow)
-
-                elif w['type'] == '2':
-                    res = res.using('patent').filter_and(PatentTitle=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('patent').filter_or(PatentTitle=ow)
-
-                elif w['type'] == '5':
-                    res = res.using('patent').filter_and(PatentAbstract=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('patent').filter_or(PatentAbstract=ow)
-
-                elif w['type'] == '3':
-                    res = res.using('patent').filter_and(PatentAuthor=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('patent').filter_or(PatentAuthor=ow)
-
-                elif w['type'] == 'PaperOrg':
-                    res = res.using('patent').filter_and(PatentCompany=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('patent').filter_or(PatentCompany=ow)
-
-            elif w['boolType'] == '2':
-                if w['type'] == '1' or w['type'] == '4':
-                    res = res.using('patent').filter_or(text=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('patent').filter_or(text=ow)
-
-                elif w['type'] == '2':
-                    res = res.using('patent').filter_or(PatentTitle=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('patent').filter_or(PatentTitle=ow)
-
-                elif w['type'] == '5':
-                    res = res.using('patent').filter_or(PatentAbstract=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('patent').filter_or(PatentAbstract=ow)
-
-                elif w['type'] == '3':
-                    res = res.using('patent').filter_or(PatentAuthor=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('patent').filter_or(PatentAuthor=ow)
-
-                elif w['type'] == 'PaperOrg':
-                    res = res.using('patent').filter_or(PatentCompany=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('patent').filter_or(PatentCompany=ow)
-
-            elif w['boolType'] == '3':
-                if w['type'] == '1' or w['type'] == '4':
-                    res = res.using('patent').exclude(text=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('patent').exclude(text=ow)
-
-                elif w['type'] == '2':
-                    res = res.using('patent').exclude(PatentTitle=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('patent').exclude(PatentTitle=ow)
-
-                elif w['type'] == '5':
-                    res = res.using('patent').exclude(PatentAbstract=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('patent').exclude(PatentAbstract=ow)
-
-                elif w['type'] == '3':
-                    res = res.using('patent').exclude(PatentAuthor=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('patent').exclude(PatentAuthor=ow)
-
-                elif w['type'] == 'PaperOrg':
-                    res = res.using('patent').exclude(PatentCompany=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('patent').exclude(PatentCompany=ow)
-
-            else:
-                pass
-
-    return res
-
-
-def search_project_index(res, key, radio):
-    for w in list(key):
-        if not w.__contains__('boolType'):
-            if w['type'] == '4':
-                res = res.using('project').filter(SubjectHeadingCN=w['words']).filter_or(SubjectHeadingEN=w['words'])
-                if radio:
-                    ow = translate_by_api(w['words'])
-                    if ow != '':
-                        res = res.using('project').filter_or(SubjectHeadingCN=ow).filter_or(SubjectHeadingEN=ow)
-            elif w['type'] == '1':
-                res = res.using('project').filter(text=w['words'])
-                if radio:
-                    ow = translate_by_api(w['words'])
-                    if ow != '':
-                        res = res.using('project').filter_or(text=ow)
-
-            elif w['type'] == '2':
-                res = res.using('project').filter(ProjectTitle=w['words'])
-                if radio:
-                    ow = translate_by_api(w['words'])
-                    if ow != '':
-                        res = res.using('project').filter_or(ProjectTitle=ow)
-
-            elif w['type'] == '5':
-                res = res.using('project').filter(ZhAbstract=w['words']). \
-                    filter_or(EnAbstract=w['words']).filter_or(FinalAbstract=w['words'])
-                if radio:
-                    ow = translate_by_api(w['words'])
-                    if ow != '':
-                        res = res.using('project').filter_or(PaperAbstract=ow). \
-                            filter_or(EnAbstract=ow).filter_or(FinalAbstract=ow)
-
-            elif w['type'] == '3':
-                res = res.using('project').filter(ProjectLeader=w['words'])
-                if radio:
-                    ow = translate_by_api(w['words'])
-                    if ow != '':
-                        res = res.using('project').filter_or(ProjectLeader=ow)
-
-            elif w['type'] == 'PaperOrg':
-                res = res.using('project').filter(SupportUnits=w['words'])
-                if radio:
-                    ow = translate_by_api(w['words'])
-                    if ow != '':
-                        res = res.using('project').filter_or(SupportUnits=ow)
-
-        else:
-            if w['boolType'] == '1':
-                if w['type'] == '4':
-                    res = res.using('project').filter_and(SubjectHeadingCN=w['words']).filter_or(
-                        SubjectHeadingEN=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('project').filter_and(SubjectHeadingEN=ow).filter_or(SubjectHeadingEN=ow)
-
-                elif w['type'] == '1':
-                    res = res.using('project').filter_and(text=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('project').filter_or(text=ow)
-
-                elif w['type'] == '2':
-                    res = res.using('project').filter_and(ProjectTitle=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('project').filter_or(ProjectTitle=ow)
-
-                elif w['type'] == '5':
-                    res = res.using('project').filter_and(ZhAbstract=w['words']). \
-                        filter_or(EnAbstract=w['words']).filter_or(FinalAbstract=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('project').filter_and(EnAbstract=w['words']). \
-                                filter_or(ZhAbstract=w['words']).filter_or(FinalAbstract=w['words'])
-
-                elif w['type'] == '3':
-                    res = res.using('project').filter_and(ProjectLeader=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('project').filter_or(ProjectLeader=ow)
-
-                elif w['type'] == 'PaperOrg':
-                    res = res.using('project').filter_and(SupportUnits=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('project').filter_or(SupportUnits=ow)
-
-            elif w['boolType'] == '2':
-                if w['type'] == '4':
-                    res = res.using('project').filter_or(SubjectHeadingCN=w['words']).filter_or(
-                        SubjectHeadingEN=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('project').filter_or(SubjectHeadingCN=ow).filter_or(SubjectHeadingEN=ow)
-
-                elif w['type'] == '1':
-                    res = res.using('project').filter_or(text=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('project').filter_or(text=ow)
-
-                elif w['type'] == '2':
-                    res = res.using('project').filter_or(ProjectTitle=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('project').filter_or(ProjectTitle=ow)
-
-                elif w['type'] == '5':
-                    res = res.using('project').filter_or(ZhAbstract=w['words']). \
-                        filter_or(EnAbstract=w['words']).filter_or(FinalAbstract=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('project').filter_or(ZhAbstract=ow). \
-                                filter_or(EnAbstract=ow).filter_or(FinalAbstract=ow)
-
-                elif w['type'] == '3':
-                    res = res.using('project').filter_or(ProjectLeader=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('project').filter_or(ProjectLeader=ow)
-
-                elif w['type'] == 'PaperOrg':
-                    res = res.using('project').filter_or(SupportUnits=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('project').filter_or(SupportUnits=ow)
-
-            elif w['boolType'] == '3':
-                if w['type'] == '4':
-                    res = res.using('project').exclude(SubjectHeadingCN=w['words']).exclude(SubjectHeadingEN=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('project').exclude(SubjectHeadingCN=ow).exclude(SubjectHeadingEN=ow)
-
-                elif w['type'] == '1':
-                    res = res.using('project').exclude(text=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('project').exclude(text=ow)
-
-                elif w['type'] == '2':
-                    res = res.using('project').exclude(ProjectTitle=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('project').exclude(ProjectTitle=ow)
-
-                elif w['type'] == '5':
-                    res = res.using('project').exclude(ZhAbstract=w['words']) \
-                        .exclude(EnAbstract=w['words']).exclude(FinalAbstract=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('project').exclude(ZhAbstract=ow). \
-                                exclude(EnAbstract=ow).exclude(FinalAbstract=ow)
-
-                elif w['type'] == '3':
-                    res = res.using('project').exclude(ProjectLeader=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('project').exclude(ProjectLeader=ow)
-
-                elif w['type'] == 'PaperOrg':
-                    res = res.using('project').exclude(SupportUnits=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.using('project').exclude(SupportUnits=ow)
-
-            else:
-                pass
-
-    return res
-
-
-def search_paper_index(body, key, radio):
+def search_patent_index(body, key, radio):
     for w in list(key):
         if not w.__contains__('boolType') or w['boolType'] == '1':
-            if w['type'] == '4':
-                body.add_must('PaperKeywords', w['words'])
-                #res = res.filter(PaperKeywords=w['words'])
-                if radio:
-                    ow = translate_by_api(w['words'])
-                    if ow != '':
-                        res = res.filter_or(PaperKeywords=ow)
-            elif w['type'] == '1':
-                body.add_must('text', w['words'])
-                #res = res.filter(text=w['words'])
-                if radio:
-                    ow = translate_by_api(w['words'])
-                    if ow != '':
-                        print(ow)
-                        res = res.filter_or(text=ow)
-
+            if w['type'] == '1' or w['type'] == '4':
+                body.add_must('text', w['words'], radio)
             elif w['type'] == '2':
-                body.add_must('PaperTitle', w['words'])
-                #res = res.filter(PaperTitle=w['words'])
-                if radio:
-                    ow = translate_by_api(w['words'])
-                    if ow != '':
-                        res = res.filter_or(PaperTitle=ow)
-
+                body.add_must('PatentTitle', w['words'], radio)
             elif w['type'] == '5':
-                body.add_must('PaperAbstract', w['words'])
-                #res = res.filter(PaperAbstract=w['words'])
-                if radio:
-                    ow = translate_by_api(w['words'])
-                    if ow != '':
-                        res = res.filter_or(PaperAbstract=ow)
+                body.add_must('PatentAbstract', w['words'], radio)
 
             elif w['type'] == '3':
-                body.add_must('PaperAuthors', w['words'])
-                #res = res.filter(PaperAuthors=w['words'])
-                if radio:
-                    ow = translate_by_api(w['words'])
-                    if ow != '':
-                        res = res.filter_or(PaperAuthors=ow)
-
+                body.add_must('PatentAuthor', w['words'], radio)
             elif w['type'] == 'PaperOrg':
-                body.add_must('PaperOrg', w['words'])
-                #res = res.filter(PaperOrg=w['words'])
-                if radio:
-                    ow = translate_by_api(w['words'])
-                    if ow != '':
-                        res = res.filter_or(PaperOrg=ow)
+                body.add_must('PatentCompany', w['words'], radio)
 
         else:
             if w['boolType'] == '2':
-                if w['type'] == '4':
-                    body.add_should('PaperKeywords', w['words'])
-                    # res = res.filter_or(PaperKeywords=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.filter_or(PaperKeywords=ow)
-
-                elif w['type'] == '1':
-                    body.add_should('text', w['words'])
-                    #res = res.filter_or(text=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.filter_or(text=ow)
-
+                if w['type'] == '1' or w['type'] == '4':
+                    body.add_should('text', w['words'], radio)
                 elif w['type'] == '2':
-                    body.add_should('PaperTitle', w['words'])
-                    #res = res.filter_or(PaperTitle=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.filter_or(PaperTitle=ow)
-
+                    body.add_should('PatentTitle', w['words'], radio)
                 elif w['type'] == '5':
-                    body.add_should('PaperAbstract', w['words'])
-                    #res = res.filter_or(PaperAbstract=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.filter_or(PaperAbstract=ow)
-
+                    body.add_should('PatentAbstract', w['words'], radio)
                 elif w['type'] == '3':
-                    body.add_should('PaperAuthors', w['words'])
-                    #res = res.filter_or(PaperAuthors=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.filter_or(PaperAuthors=ow)
-
+                    body.add_should('PatentAuthor', w['words'], radio)
                 elif w['type'] == 'PaperOrg':
-                    body.add_should('PaperOrg', w['words'])
-                    #res = res.filter_or(PaperOrg=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.filter_or(PaperOrg=ow)
+                    body.add_should('PatentCompany', w['words'], radio)
 
             elif w['boolType'] == '3':
-                if w['type'] == '4':
-                    body.add_should('PaperKeywords', w['words'])
-                    #res = res.exclude(PaperKeywords=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.exclude(PaperKeywords=ow)
-
-                elif w['type'] == '1':
-                    body.add_should('text', w['words'])
-                    #res = res.exclude(text=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.exclude(text=ow)
-
+                if w['type'] == '1' or w['type'] == '4':
+                    body.add_not('text', w['words'], radio)
                 elif w['type'] == '2':
-                    body.add_should('PaperTitle', w['words'])
-                    #res = res.exclude(PaperTitle=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.exclude(PaperTitle=ow)
-
+                    body.add_not('PatentTitle', w['words'], radio)
                 elif w['type'] == '5':
-                    body.add_should('PaperAbstract', w['words'])
-                    #res = res.exclude(PaperAbstract=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.exclude(PaperAbstract=ow)
-
+                    body.add_not('PatentAbstract', w['words'], radio)
                 elif w['type'] == '3':
-                    body.add_should('PaperAuthors', w['words'])
-                    #res = res.exclude(PaperAuthors=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.exclude(PaperAuthors=ow)
-
+                    body.add_not('PatentAuthor', w['words'], radio)
                 elif w['type'] == 'PaperOrg':
-                    body.add_should('PaperOrg', w['words'])
-                    #res = res.exclude(PaperOrg=w['words'])
-                    if radio:
-                        ow = translate_by_api(w['words'])
-                        if ow != '':
-                            res = res.exclude(PaperOrg=ow)
-
+                    body.add_not('PatentCompany', w['words'], radio)
             else:
                 pass
 
     return body
 
 
-def search_words(request):
-    search_key = request.GET.get('keyWords')
-    try:
-        page = int(request.GET.get('page'))  # 页数
-    except Exception:
-        page = 1
+def search_project_index(body, key, radio):
+    for w in list(key):
+        if not w.__contains__('boolType') or w['boolType'] == '1':
+            if w['type'] == '4':
+                body.add_must('SubjectHeadingCN', w['words'], radio)
+                body.add_should('SubjectHeadingEN', w['words'], radio)
+            elif w['type'] == '1':
+                body.add_must('text', w['words'], radio)
+            elif w['type'] == '2':
+                body.add_must('ProjectTitle', w['words'], radio)
+            elif w['type'] == '5':
+                body.add_must('ZhAbstract', w['words'], radio)
+                body.add_should('EnAbstract', w['words'], radio)
+                body.add_should('FinalAbstract', w['words'], radio)
 
-    try:
-        per_page = int(request.GET.get('PerPage'))  # 每页的数量
-    except Exception:
-        per_page = 10
+            elif w['type'] == '3':
+                body.add_must('ProjectLeader', w['words'], radio)
 
-    # 0 默认 1 时间 2 被引次数
-    sort = request.GET.get('sort')
-    # 奇数 降序  偶数 升序
-    howToSort = request.GET.get('howToSort')
+            elif w['type'] == 'PaperOrg':
+                body.add_must('SupportUnits', w['words'], radio)
 
-    start_year = int(request.GET.get('dateStart'))
-    end_year = int(request.GET.get('dateEnd'))
-    type = request.GET.get('type')
-
-    radio = True if request.GET.get('Radio') == 'true' else False  # 中英扩展 false true
-
-    sk = json.loads(search_key)
-
-    # if exists_in_redis(sk):
-    #    pass
-    # search from redis
-    # ...
-
-    # search by elasticsearch index
-    t1 = time.time()
-    qs = SearchQuerySet()
-    res = search_el_indexes(qs, sk, radio, type)
-
-    num = res.count()
-    if sort == 1:
-        if howToSort%2 == 0:
-            res = res.order_by('-PaperTime')
         else:
-            res = res.order_by('PaperTime')
-    elif sort == 2:
-        if howToSort%2 == 0:
-            res = res.order_by('-PaperCitation')
+            if w['boolType'] == '2':
+                if w['type'] == '4':
+                    body.add_should('SubjectHeadingCN', w['words'], radio)
+                    body.add_should('SubjectHeadingEN', w['words'], radio)
+
+                elif w['type'] == '1':
+                    body.add_should('text', w['words'], radio)
+
+                elif w['type'] == '2':
+                    body.add_should('ProjectTitle', w['words'], radio)
+                elif w['type'] == '5':
+                    body.add_should('ZhAbstract', w['words'], radio)
+                    body.add_should('FinalAbstract', w['words'], radio)
+                    body.add_should('EnAbstract', w['words'], radio)
+                elif w['type'] == '3':
+                    body.add_should('ProjectLeader', w['words'], radio)
+
+                elif w['type'] == 'PaperOrg':
+                    body.add_should('SupportUnits', w['words'], radio)
+
+            elif w['boolType'] == '3':
+                if w['type'] == '4':
+                    body.add_not('SubjectHeadingCN', w['words'], radio)
+                    body.add_not('SubjectHeadingEN', w['words'], radio)
+
+                elif w['type'] == '1':
+                    body.add_not('text', w['words'], radio)
+                elif w['type'] == '2':
+                    body.add_not('ProjectTitle', w['words'], radio)
+                elif w['type'] == '5':
+                    body.add_not('ZhAbstract', w['words'], radio)
+                    body.add_not('EnAbstract', w['words'], radio)
+                    body.add_not('FinalAbstract', w['words'], radio)
+
+                elif w['type'] == '3':
+                    body.add_not('ProjectLeader', w['words'], radio)
+                elif w['type'] == 'PaperOrg':
+                    body.add_not('SupportUnits', w['words'], radio)
+            else:
+                pass
+
+    return body
+
+
+def search_paper_index(body, key, radio):
+    for w in list(key):
+        if not w.__contains__('boolType') or w['boolType'] == '1':
+            if w['type'] == '4':
+                body.add_must('PaperKeywords', w['words'], radio)
+            elif w['type'] == '1':
+                body.add_must('text', w['words'], radio)
+
+            elif w['type'] == '2':
+                body.add_must('PaperTitle', w['words'], radio)
+
+            elif w['type'] == '5':
+                body.add_must('PaperAbstract', w['words'], radio)
+
+            elif w['type'] == '3':
+                body.add_must('PaperAuthors', w['words'], radio)
+
+            elif w['type'] == 'PaperOrg':
+                body.add_must('PaperOrg', w['words'], radio)
+
         else:
-            res = res.order_by('PaperCitation')
+            if w['boolType'] == '2':
+                if w['type'] == '4':
+                    body.add_should('PaperKeywords', w['words'], radio)
 
-    t2 = time.time()
-    print("--------")
-    print(t2-t1)
-    res = res[(page - 1) * per_page: page * per_page]
-    t3 = time.time()
-    print("--------")
-    print(t3-t2)
+                elif w['type'] == '1':
+                    body.add_should('text', w['words'], radio)
 
-    l = []
+                elif w['type'] == '2':
+                    body.add_should('PaperTitle', w['words'], radio)
 
-    if type == 'paper':
-        for r in res:
-            t4 = time.time()
-            print(r.pk)
-            p = r.object
-            t5 = time.time()
-            print(t5-t4)
+                elif w['type'] == '5':
+                    body.add_should('PaperAbstract', w['words'], radio)
 
-            kw = re.sub(r'[\[|\'|\]|,]', '', str(p.PaperKeywords))
-            kw = re.sub(r' ', ',', kw)
-            j = {
-                'link': re.sub(r'[\[|\]|\'| ]', '', p.PaperUrl).split(','),
-                'paperId': p.PaperId,
-                'title': p.PaperTitle,
-                'msg': '' if p.PaperAbstract is None else p.PaperAbstract,
-                'author': format_list(p.PaperAuthors),
-                'authorOrg': format_list(p.PaperOrg),
-                'keywords': kw
-            }
-            l.append(j)
+                elif w['type'] == '3':
+                    body.add_should('PaperAuthors', w['words'], radio)
 
-    elif type == 'project':
-        for r in res:
-            p = r['object']
-            j = {
-                'link': [p.ProjectUrl],
-                'paperId': p.ProjectId,
-                'title': p.ProjectTitle,
-                'zhAbstract': p.ZhAbstract,
-                'enAbstract': p.EnAbstract,
-                'finalAbstract': p.FinalAbstract,
-                'author': p.ProjectLeader,
-                'authorTitle': p.ProjectLeaderTitle,
-                'zhKeywords': p.SubjectHeadingCN,
-                'enKeywords': p.SubjectHeadingEN
-            }
-            l.append(j)
-    elif type == 'patent':
-        for r in res:
-            p = r['object']
-            j = {
-                'link': [p.PatentUrl],
-                'paperId': p.PatentId,
-                'title': p.PatentTitle,
-                'abstract': '' if p.PatentAbstract is None else p.PatentAbstract,
-                'author': p.PatentAuthor,
-                'authorOrg': p.PatentCompany,
-            }
-            l.append(j)
+                elif w['type'] == 'PaperOrg':
+                    body.add_should('PaperOrg', w['words'], radio)
 
-    return JsonResponse({'num': num, 'result': l})
+            elif w['boolType'] == '3':
+                if w['type'] == '4':
+                    body.add_should('PaperKeywords', w['words'], radio)
+
+                elif w['type'] == '1':
+                    body.add_should('text', w['words'], radio)
+
+                elif w['type'] == '2':
+                    body.add_should('PaperTitle', w['words'], radio)
+
+                elif w['type'] == '5':
+                    body.add_should('PaperAbstract', w['words'], radio)
+
+                elif w['type'] == '3':
+                    body.add_should('PaperAuthors', w['words'], radio)
+
+                elif w['type'] == 'PaperOrg':
+                    body.add_should('PaperOrg', w['words'], radio)
+
+            else:
+                pass
+
+    return body
 
 
 def show_paper_info(request):
@@ -834,35 +359,45 @@ def search_authors(request):
         per_page = int(request.GET.get('PerPage'))  # 每页的数量
     except Exception:
         per_page = 10
-    order_by = request.GET.get('orderBy')
+    try:
+        order_by = int(request.GET.get('orderBy'))
+    except Exception:
+        order_by = 0
 
     radio = True if request.GET.get('Radio') == 'true' else False
 
-    res = SearchQuerySet().using('researcher').filter(text=search_name)
-    print(len(res))
-    if radio:
-        t = translate_by_api(search_name)
-        if t != '':
-            res = res.using('researcher').filter_or(text=t)
-    num = res.count()
-    res = res.values('object')[(page - 1) * per_page: page * per_page]
-    l = []
+    b = Body()
+    b.add_must('text', search_name, radio)
+    b.set_from_page(page-1)
+    if order_by == 0:
+        b.add_sort('LiteratureNum')
+    else:
+        b.add_sort('CitedNum')
+
+    url = 'http://127.0.0.1:9200/researcher_index/_search'
+    body = b.get_body()
+    data = json.loads(requests.get(url, data=json.dumps(body)).content)
+
+    hits = data['hits']
+    num = hits['total']
+    res = hits['hits']
+    l=[]
     for r in res:
-        rh = r['object']
-        l.append({
-            'id': rh.ResId,
-            'name': rh.ResName,
-            'ResEmail': rh.ResEmail,
-            'CitedNum': rh.CitedNum,
-            'LiteratureNum': rh.LiteratureNum,
-            'Institution': rh.InstitutionName
-        })
+        id = r['_source']['django_id']
+        try:
+            rh = Researcher.objects.filter(ResId=id)[0]
+            l.append({
+                'id': rh.ResId,
+                'name': rh.ResName,
+                'ResEmail': rh.ResEmail,
+                'CitedNum': rh.CitedNum,
+                'LiteratureNum': rh.LiteratureNum,
+                'Institution': rh.InstitutionName
+            })
+        except Exception:
+            pass
 
     return JsonResponse({'num': num, 'result': l})
-
-
-def filter_search_words(request):
-    pass
 
 
 def fast_search(request):
@@ -882,69 +417,247 @@ def fast_search(request):
     try:
         start_year = int(request.GET.get('dateStart'))
     except Exception:
-        start_year = 0
+        start_year = None
     try:
         end_year = int(request.GET.get('dateEnd'))
     except Exception:
-        end_year = 3000
+        end_year = None
     type = request.GET.get('type')
     radio = True if request.GET.get('Radio') == 'true' else False  # 中英扩展 false true
 
     if type == 'paper':
-        index_name = 'paper_index'
         b = search_paper_index(Body(), search_key, radio)
+        if start_year and end_year:
+            b.add_range('PaperTime', start_year, end_year)
+        if sort == 1:
+            if howToSort%2 == 0:
+                b.add_sort('PaperTime', False)
+            else:
+                b.add_sort('PaperTime', True)
+        elif sort == 2:
+            if howToSort%2 == 0:
+                b.add_sort('PaperCitation', False)
+            else:
+                b.add_sort('PaperCitation', True)
+
+        b.set_from_page(page-1)
+        b.set_page_size(per_page)
+
         url = 'http://127.0.0.1:9200/paper_index/_search'
+        body = b.get_body()
+        data = json.loads(requests.get(url, data=json.dumps(body)).content)
+
+        hits = data['hits']
+        num = hits['total']
+        l = hits['hits']
+        res = []
+        for i in l:
+            id = i['_source']['django_id']
+            title = i['_source']['PaperTitle']
+            try:
+                msg = i['_source']['PaperAbstract']
+            except Exception:
+                msg = ''
+            try:
+                author = format_list(i['_source']['PaperAuthors'])
+            except Exception:
+                author = []
+            try:
+                org = format_list(i['_source']['PaperOrg'])
+            except Exception:
+                org = []
+            try:
+                key = re.sub(r' ', ',', re.sub(r'[\[|\'|\]|,]', '', str(i['_source']['PaperKeywords'])))
+            except Exception:
+                key = ''
+            try:
+                collectionSum = i['_source']['CollectionNum']
+            except Exception:
+                collectionSum = 0
+            try:
+                viewSum = i['_source']['ReadNum']
+            except Exception:
+                viewSum = 0
+
+            try:
+                citation = i['_source']['PaperCitation']
+            except Exception:
+                citation = 0
+
+            try:
+                year = i['_source']['PaperTime']
+            except Exception:
+                year = 0
+            res.append({
+                'paperId': id,
+                'title': title,
+                'msg': msg,
+                'author': author,
+                'authorOrg': org,
+                'keywords':  key,
+                'collectionSum': collectionSum,
+                'viewSum': viewSum,
+                'citation': citation,
+                'year': year
+            })
+
+        return JsonResponse({'num': num, 'result': res})
+
+    elif type == 'project':
+        b = search_project_index(Body(), search_key, radio)
+        if start_year and end_year:
+            b.add_range('GrantYear', start_year, end_year)
+        b.set_from_page(page-1)
+        b.set_page_size(per_page)
+        if sort == 1:
+            if howToSort%2 == 0:
+                b.add_sort('GrantYear', False)
+            else:
+                b.add_sort('GrantYear', True)
+
+
+        url = 'http://127.0.0.1:9200/project_index/_search'
+        body = b.get_body()
+        data = json.loads(requests.get(url, data=json.dumps(body)).content)
+        hits = data['hits']
+        num = hits['total']
+        l = hits['hits']
+        res = []
+        for i in l:
+            id = i['_source']['django_id']
+            title = i['_source']['ProjectTitle']
+            try:
+                msg = i['_source']['PaperAbstract']
+            except Exception:
+                msg = ''
+            try:
+                zhAbstract = i['_source']['ZhAbstract']
+            except Exception:
+                zhAbstract = ''
+            try:
+                enAbstract = i['_source']['EnAbstract']
+            except Exception:
+                enAbstract = ''
+            try:
+                finalAbstract = i['_source']['FinalAbstract']
+            except Exception:
+                finalAbstract = ''
+
+            try:
+                author = i['_source']['ProjectLeader']
+            except Exception:
+                author = ''
+
+            try:
+                org = i['_source']['SupportUnits']
+            except Exception:
+                org = ''
+
+            try:
+                zhKeywords = re.sub(r' ', ',', re.sub(r'[\[|\'|\]|,]', '', str(i['_source']['SubjectHeadingCN'])))
+            except Exception:
+                zhKeywords = ''
+            try:
+                enKeywords = re.sub(r' ', ',', re.sub(r'[\[|\'|\]|,]', '', str(i['_source']['SubjectHeadingEN'])))
+            except Exception:
+                enKeywords = ''
+            try:
+                collectionSum = i['_source']['CollectionNum']
+            except Exception:
+                collectionSum = 0
+            try:
+                viewSum = i['_source']['ReadNum']
+            except Exception:
+                viewSum = 0
+            try:
+                citation = i['_source']['PaperCitation']
+            except Exception:
+                citation = 0
+            try:
+                year = i['_source']['GrantYear']
+            except Exception:
+                year = 0
+
+            res.append({
+                'paperId': id,
+                'title': title,
+                'zhAbstract': zhAbstract,
+                'enAbstract': enAbstract,
+                'finalAbstract': finalAbstract,
+                'author': author,
+                'authorTitle': org,
+                'zhKeywords': zhKeywords,
+                'enKeywords':enKeywords,
+                'collectionSum': collectionSum,
+                'viewSum': viewSum,
+                'citation': citation,
+                'year': year
+            })
+
+        return JsonResponse({'num': num, 'result': res})
+    elif type == 'patent':
+        b = search_patent_index(Body(), search_key, radio)
+        if start_year and end_year:
+            b.add_range('PatentDate', start_year, end_year)
+        b.set_from_page(page-1)
+        b.set_page_size(per_page)
+        if sort == 1:
+            if howToSort%2 == 0:
+                b.add_sort('PatentDate', False)
+            else:
+                b.add_sort('PatentDate', True)
+
+        url = 'http://127.0.0.1:9200/patent_index/_search'
+        body = b.get_body()
+        data = json.loads(requests.get(url, data=json.dumps(body)).content)
+
+        hits = data['hits']
+        num = hits['total']
+        l = hits['hits']
+        res = []
+        for i in l:
+            id = i['_source']['django_id']
+            title = i['_source']['PatentTitle']
+            try:
+                abstract = i['_source']['PatentAbstract']
+            except Exception:
+                abstract = ''
+            try:
+                author = i['_source']['PatentAuthor']
+            except Exception:
+                author = ''
+            try:
+                org = i['_source']['PatentCompany']
+            except Exception:
+                org = ''
+            try:
+                collectionSum = i['_source']['CollectionNum']
+            except Exception:
+                collectionSum = 0
+            try:
+                viewSum = i['_source']['ReadNum']
+            except Exception:
+                viewSum = 0
+            try:
+                citation = i['_source']['PaperCitation']
+            except Exception:
+                citation = 0
+            try:
+                year = i['_source']['PatentDate']
+            except Exception:
+                year = 0
+
+            res.append({
+                'paperId': id,
+                'title': title,
+                'abstract': abstract,
+                'author': author,
+                'authorOrg': org,
+                'collectionSum': collectionSum,
+                'viewSum': viewSum,
+                'citation': citation,
+                'year': year
+            })
+        return JsonResponse({'num': num, 'result': res})
     else:
-        index_name = ''
-        b = search_paper_index(Body(), search_key, radio)
-        url = 'http://127.0.0.1:9200/paper_index/_search'
-
-
-
-    body = b.get_body()
-    t1 = time.time()
-    data = json.loads(requests.get(url, data=json.dumps(body)).content)
-    t2 = time.time()
-
-    print(t2-t1)
-    print(data)
-
-
-    hits = data['hits']
-    num = hits['total']
-    l = hits['hits']
-    res = []
-    for i in l:
-        id = i['_source']['django_id']
-        title = i['_source']['PaperTitle']
-        try:
-            msg = i['_source']['PaperAbstract']
-        except Exception:
-            msg = ''
-        try:
-            author = format_list(i['_source']['PaperAuthors'])
-        except Exception:
-            author = []
-        try:
-            org = format_list(i['_source']['PaperOrg'])
-        except Exception:
-            org = []
-        try:
-            key = re.sub(r' ', ',', re.sub(r'[\[|\'|\]|,]', '', str(i['_source']['PaperKeywords'])))
-        except Exception:
-            key = ''
-
-
-        res.append({
-            #'link': re.sub(r'[\[|\]|\'| ]', '', p.PaperUrl).split(','),
-            'paperId': id,
-            'title': title,
-            'msg': msg,
-            'author': author,
-            'authorOrg': org,
-            'keywords':  key
-        })
-    t3 = time.time()
-    print(t3-t2)
-    return JsonResponse({'num': num, 'result': res})
-
+        pass
