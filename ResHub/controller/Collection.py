@@ -43,12 +43,12 @@ def get_collection(request):
             j = {
             'paperId': project.ProjectId,
             'title': project.ProjectTitle,
-            'msg': ''if project.ProjectAbstract is None else project.ProjectId,
+            'msg': ''if project.ProjectAbstract is None else project.ProjectAbstract,
             'author': ''if len(Project.ProjectLeader.split(','))==0 else Project.ProjectLeader.split(','),
             'type': t,
             'collectionSum':project.CollectionNum,
             'viewSum':project.ReadNum,
-            'link':''if len(re.sub(r'[\[|\]|\'| ]','',project.ProjectId).split(','))==0 else re.sub(r'[\[|\]|\'| ]','',project.ProjectId).split(',')[0],
+            'link':''if len(re.sub(r'[\[|\]|\'| ]','',project.ProjectUrl).split(','))==0 else re.sub(r'[\[|\]|\'| ]','',project.ProjectUrl).split(',')[0],
             'collectTime':c[i].CollectionTime
             }
         res.append(j)
