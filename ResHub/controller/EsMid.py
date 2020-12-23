@@ -32,7 +32,9 @@ class Body:
     def get_body(self):
         if self.should_list:
             self.must_list.append({
-                "bool": self.should_list
+                "bool": {
+                    "should": self.should_list
+                }
             })
         return {
             "query": {
@@ -42,11 +44,3 @@ class Body:
                 }
             }
         }
-
-
-a = Body()
-a.add_must( "text", "计算机")
-a.add_must("text", "软件")
-a.add_should("title", '人')
-
-print((a.get_body()))

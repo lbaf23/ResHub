@@ -907,6 +907,9 @@ def fast_search(request):
     t2 = time.time()
 
     print(t2-t1)
+    print(data)
+
+
     hits = data['hits']
     num = hits['total']
     l = hits['hits']
@@ -930,11 +933,7 @@ def fast_search(request):
             key = re.sub(r' ', ',', re.sub(r'[\[|\'|\]|,]', '', str(i['_source']['PaperKeywords'])))
         except Exception:
             key = ''
-        #try:
-            #p = Paper.objects.get(PaperId=id)
-        #except Exception:
-            #print(id)
-            #continue
+
 
         res.append({
             #'link': re.sub(r'[\[|\]|\'| ]', '', p.PaperUrl).split(','),
