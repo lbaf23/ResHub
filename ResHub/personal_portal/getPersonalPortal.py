@@ -136,6 +136,7 @@ def getPersonalPortal(request):
                         quotes = [0, 0, 0, 0, 0, 0, 0, 0]
                         tabledata = []
                         quoteNum = 0
+                        ind = 0
                         for i in papersid:
                             res_temp = {}
                             try:
@@ -168,8 +169,11 @@ def getPersonalPortal(request):
                             tabledata.append(res_temp)
                             year = paper.PaperTime
                             index = (8 - (2020-year)) % 5
-                            # if(index < 0):
-                            #     continue
+                            if(index < 0):
+                                continue
+                            ind = ind + 1
+                            if(ind == 7):
+                                break
                             datas[index] = datas[index] + 1
                             quotes[index] = quotes[index] + paper.PaperCitation
                             quoteNum = quoteNum + paper.PaperCitation
@@ -183,6 +187,7 @@ def getPersonalPortal(request):
                         res['quocount'] = quoCount
                         res['quotenum'] = str(quoteNum)
                         res['tabledata'] = tabledata
+                        res['papernum'] = tabledata.__len__()
                     except Exception as e:
                         print(str(e))
                         res['rescount'] = [
@@ -191,6 +196,7 @@ def getPersonalPortal(request):
                             '0', '0', '0', '0', '0', '0', '0', '0']
                         res['quotenum'] = '0'
                         res['tabledata'] = []
+                        res['papernum'] = 0
 
                     # magCount ....
                     try:
@@ -207,14 +213,13 @@ def getPersonalPortal(request):
                         res['magpar'] = magpar
                         res['confcount'] = confCount
                         res['confpar'] = confpar
-                        res['papernum'] = magCount+confCount
+
                     except Exception as e:
                         print(str(e))
                         res['magcount'] = 0
                         res['magpar'] = '0%'
                         res['confcount'] = 0
                         res['confpar'] = '0%'
-                        res['papernum'] = 0
 
                     # coopData
                     try:
@@ -227,8 +232,11 @@ def getPersonalPortal(request):
                                 break
                             res_temp = {}
                             reseacher_relation_temp = i.ResearchId2_id
-                            reseacher_relation = Researcher.objects.get(
-                                ResId=reseacher_relation_temp)
+                            try:
+                                reseacher_relation = Researcher.objects.get(
+                                    ResId=reseacher_relation_temp)
+                            except Exception as e:
+                                continue
                             email = reseacher_relation.UserEmail_id
                             try:
                                 if(email is not None):
@@ -257,8 +265,11 @@ def getPersonalPortal(request):
                                 res_temp = {}
                                 reseacher_relation_temp = i.ResearchId1_id
                                 try:
-                                    reseacher_relation = Researcher.objects.get(
-                                        ResId=reseacher_relation_temp)
+                                    try:
+                                        reseacher_relation = Researcher.objects.get(
+                                            ResId=reseacher_relation_temp)
+                                    except Exception as e:
+                                        continue
                                     email = reseacher_relation.UserEmail_id
                                     if(email is not None):
                                         user_temp = HubUser.objects.get(
