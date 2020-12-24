@@ -46,7 +46,7 @@ def getList(request):
             user = HubUser.objects.filter(UserEmail=i.UserEmail_id).first()
             researcher = Researcher.objects.filter(ResId=i.ResearchId_id).first()
 
-            r['id'] = i.id
+            r['id'] = str(i.id)
             r['AppealState'] = i.AppealState
             r['AppealTime'] = i.AppealTime
             r['ResearchId'] = researcher.ResId
@@ -61,7 +61,7 @@ def getList(request):
             user = HubUser.objects.filter(UserEmail=i.UserEmail_id).first()
             researcher = Researcher.objects.filter(ResId=i.ResearchId_id).first()
 
-            r['id']=i.id
+            r['id']=str(i.id)
             r['AppealState']= i.AppealState
             r['AppealTime'] = i.AppealTime
             r['ResearchId'] = researcher.ResId
@@ -75,7 +75,7 @@ def getList(request):
 
             user = HubUser.objects.filter(UserEmail=i.UserEmail_id).first()
 
-            r['id']=i.id
+            r['id']=str(i.id)
             r['ReviewPath']=i.ReviewPath
             r['UserEmail'] = user.UserEmail
             r['UploadTime'] = i.UploadTime
@@ -89,7 +89,7 @@ def getList(request):
 
             user = HubUser.objects.filter(UserEmail=i.UserEmail_id).first()
 
-            r['id']=i.id
+            r['id']=str(i.id)
             r['ReviewPath']=i.ReviewPath
             r['UserEmail'] = user.UserEmail
             r['UploadTime'] = i.UploadTime
