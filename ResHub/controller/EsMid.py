@@ -128,14 +128,19 @@ class Body:
                     "must": self.must_list
                 }
             })
+        global_list = [{
+            "bool": {
+                "should" :self.should_list
+            }
+        }]
         if self.range_list:
-            self.must_list.append({
+            global_list.append({
                 "range": self.range_list
             })
         return {
             "query": {
                 "bool": {
-                    "must": self.must_list,
+                    "must": global_list,
                     "must_not": self.not_list
                 }
             },
