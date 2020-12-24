@@ -54,6 +54,7 @@ def get_collection(request):
             'link':re.sub(r'[\[|\]|\'| ]','',project.ProjectUrl).split(','),
             'collectTime':c[i].CollectionTime
             }
+            print(j)
         res.append(j)
     return JsonResponse({'list' : res})
 
