@@ -41,11 +41,13 @@ def get_collection(request):
             }
         elif t==3:
             project = c[i].ProjectId
+            li=list()
+            li.append(''if Project.ProjectLeader is None else Project.ProjectLeader)
             j = {
             'paperId': project.ProjectId,
             'title': project.ProjectTitle,
             'msg': ''if project.ZhAbstract is None else project.ZhAbstract,
-            'author': ''if Project.ProjectLeader is None else Project.ProjectLeader,
+            'author': li,
             'type':  str(t),
             'collectionSum':project.CollectionNum,
             'viewSum':project.ReadNum,
