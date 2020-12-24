@@ -122,10 +122,10 @@ class Body:
         })
 
     def get_body(self):
-        if self.should_list:
-            self.must_list.append({
+        if self.must_list:
+            self.should_list.append({
                 "bool": {
-                    "should": self.should_list
+                    "must": self.must_list
                 }
             })
         if self.range_list:
