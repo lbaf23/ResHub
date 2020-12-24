@@ -25,6 +25,7 @@ def pass_appeal(request):
     user=request.GET.get('email')
     print(appeal_id)
     Appeal.objects.filter(id=appeal_id).update(AppealState=2)
+    print(Appeal.objects.filter(id=appeal_id)[0])
     Researcher.objects.filter(ResId=appeal_id).update(UserEmail=user,IsClaim=1)
     succeed=True
     return JsonResponse({'succeed':succeed})
