@@ -368,6 +368,19 @@ def search_authors(request):
 
     radio = True if request.GET.get('Radio') == 'true' else False
 
+    authors = Researcher.objects.filter(ResName=search_name)
+    l =[]
+    for rh in authors:
+        l.append({
+                'id': rh.ResId,
+                'name': rh.ResName,
+                'ResEmail': rh.ResEmail,
+                'CitedNum': rh.CitedNum,
+                'LiteratureNum': rh.LiteratureNum,
+                'Institution': rh.InstitutionName
+            })
+    return JsonResponse({'num': len(authors), 'result': l})
+'''
     b = Body()
     b.add_must('text', search_name, radio)
     b.set_from_page(page - 1)
@@ -400,7 +413,7 @@ def search_authors(request):
             pass
 
     return JsonResponse({'num': num, 'result': l})
-
+'''
 
 def fast_search(request):
     search_key = json.loads(request.GET.get('keyWords'))
