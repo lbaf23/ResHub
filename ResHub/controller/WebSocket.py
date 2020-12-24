@@ -34,8 +34,8 @@ class web_socket_connect(AsyncJsonWebsocketConsumer):
                     "state": 'sendMessage',
                     "id": msg["id"],
                     "messageContent": msg['messageContent'],
-                    "friendId": msg['friendId'] + '@qq.com',
-                    "myId": msg['myId'] + '@qq.com',
+                    "friendId": msg['friendId'],
+                    "myId": msg['myId'],
                     "sendDate": msg['sendDate'],
                 },
             )
@@ -46,8 +46,8 @@ class web_socket_connect(AsyncJsonWebsocketConsumer):
                     "state": 'sendMessage',
                     "id": msg["id"],
                     "messageContent": msg['messageContent'],
-                    "friendId": msg['friendId'] + '@qq.com',
-                    "myId": msg['myId'] + '@qq.com',
+                    "friendId": msg['friendId'],
+                    "myId": msg['myId'],
                     "sendDate": msg['sendDate'],
                 },
             )
