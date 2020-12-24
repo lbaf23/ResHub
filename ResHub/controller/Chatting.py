@@ -6,19 +6,23 @@ from ResModel.models import HubUser, Mail, ChatFriends
 
 def get_recent_friends(request):
     mid = request.GET.get('userId')
-    f = ChatFriends.objects.filter(MyId=mid).order_by('LastMail__SendTime')
+    print(mid)
+    f = ChatFriends.objects.filter(MyId_id=mid)#.order_by('LastMail__SendTime')
+    print(f)
     res = list()
 
-    for i in range(0,f.__len__()):
+    for i in range(0, f.__len__()):
+        fr = f[i].FriendId
         j = {
             'chatId': f[i].id,
             'friendId': f[i].FriendId_id,
-            'friendName': f[i].FriendId.UserName,
+            'friendName': fr.UserName,
             'newMessage': f[i].Unread,
-            'friendHead': f[i].FriendId.UserImage
+            'friendHead': fr.UserImage
         }
         res.append(j)
-    return JsonResponse({'list' : res})
+    return JsonResponse({'list': res})
+
 
 def get_chats(request):
     mid = request.GET.get('myId')
