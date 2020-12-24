@@ -53,49 +53,52 @@ class Body:
         self.page_size = page_size
 
     def add_must(self, key, value, expand=False):
-        self.must_list.append({
-            "match": {
-                key: value
-            }
-        })
-        if expand:
-            ex = translate_by_api(value)
-            if ex != '':
-                self.should_list.append({
-                    "match": {
-                        key: ex
-                    }
-                })
+        if value != '':
+            self.must_list.append({
+                "match": {
+                    key: value
+                }
+            })
+            if expand:
+                ex = translate_by_api(value)
+                if ex != '':
+                    self.should_list.append({
+                        "match": {
+                            key: ex
+                        }
+                    })
 
     def add_should(self, key, value, expand=False):
-        self.should_list.append({
-            "match": {
-                key: value
-            }
-        })
-        if expand:
-            ex = translate_by_api(value)
-            if ex != '':
-                self.should_list.append({
-                    "match": {
-                        key: ex
-                    }
-                })
+        if value != '':
+            self.should_list.append({
+                "match": {
+                    key: value
+                }
+            })
+            if expand:
+                ex = translate_by_api(value)
+                if ex != '':
+                    self.should_list.append({
+                        "match": {
+                            key: ex
+                        }
+                    })
 
     def add_not(self, key, value, expand=False):
-        self.not_list.append({
-            "match": {
-                key: value
-            }
-        })
-        if expand:
-            ex = translate_by_api(value)
-            if ex != '':
-                self.not_list.append({
-                    "match": {
-                        key: ex
-                    }
-                })
+        if value != '':
+            self.not_list.append({
+                "match": {
+                    key: value
+                }
+            })
+            if expand:
+                ex = translate_by_api(value)
+                if ex != '':
+                    self.not_list.append({
+                        "match": {
+                            key: ex
+                        }
+                    })
 
     def add_range(self, key, value_from, value_to, from_eq = False, to_eq = False):
         l = "gt"
