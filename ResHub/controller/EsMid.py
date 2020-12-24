@@ -47,8 +47,9 @@ class Body:
         self.from_page = 0
         self.page_size = 10
 
+    # 从0开始
     def set_from_page(self, from_page):
-        self.from_page = from_page
+        self.from_page = from_page * self.page_size
 
     def set_page_size(self, page_size):
         self.page_size = page_size
