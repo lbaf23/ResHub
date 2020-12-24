@@ -41,19 +41,18 @@ def get_collection(request):
             }
         elif t==3:
             project = c[i].ProjectId
-            author=[]
+            print(Project.ProjectLeader)
             j = {
             'paperId': project.ProjectId,
             'title': project.ProjectTitle,
             'msg': ''if project.ZhAbstract is None else project.ZhAbstract,
-            'author':''if Project.ProjectLeader is None else Project.ProjectLeader,
+            'author':''if Project.ProjectLeader is None else [Project.ProjectLeader],
             'type':  str(t),
             'collectionSum':project.CollectionNum,
             'viewSum':project.ReadNum,
             'link':re.sub(r'[\[|\]|\'| ]','',project.ProjectUrl).split(','),
             'collectTime':c[i].CollectionTime
             }
-            print(j)
         res.append(j)
     return JsonResponse({'list' : res})
 
