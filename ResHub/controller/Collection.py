@@ -11,7 +11,6 @@ def get_collection(request):
     c = Collection.objects.filter(UserEmail=user).order_by("-CollectionTime")
     res = list()
     for i in range(0,c.__len__()):
-        print(c[i])
         t = c[i].CollectionType
         if t==1 :
             paper =c[i].PaperId
@@ -41,6 +40,7 @@ def get_collection(request):
             }
         elif t==3:
             project = c[i].ProjectId
+            print(project)
             p=Project.objects.get(ProjectId=project)
             j = {
             'paperId': project.ProjectId,
