@@ -22,6 +22,7 @@ def getSearchRecord(request):
                     cock = string.split(' ')
                     temp['SearchTime'] = cock[0]
                     temp['id'] = str(i.id)
+                    temp['searchList'] = i.SearchList
                     list.append(temp)
                 res['len'] = search.__len__()
                 res['list'] = list
