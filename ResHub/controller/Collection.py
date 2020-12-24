@@ -40,13 +40,14 @@ def get_collection(request):
             }
         elif t==3:
             project = c[i].ProjectId
-            print(project)
             p=Project.objects.get(ProjectId=project.ProjectId)
+            au=[]
+            au.append(p.ProjectLeader)
             j = {
             'paperId': project.ProjectId,
             'title': project.ProjectTitle,
             'msg': ''if project.ZhAbstract is None else project.ZhAbstract,
-            'author':p.ProjectLeader,
+            'author':au,
             'type':  str(t),
             'collectionSum':project.CollectionNum,
             'viewSum':project.ReadNum,
