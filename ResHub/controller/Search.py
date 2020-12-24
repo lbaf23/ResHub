@@ -242,7 +242,7 @@ def show_paper_info(request):
                 c = Collection.objects.filter(UserEmail=uid).filter(PaperId=pid)
                 if len(c) > 0:
                     cs = True
-                    ct = c.CollectionTime
+                    ct = c[0].CollectionTime
                 else:
                     cs = False
 
@@ -284,7 +284,7 @@ def show_paper_info(request):
             else:
                 c = Collection.objects.filter(UserEmail=uid).filter(ProjectId=pid)
                 if len(c) > 0:
-                    ct = c.CollectionTime
+                    ct = c[0].CollectionTime
                     cs = True
                 else:
                     cs = False
@@ -324,7 +324,7 @@ def show_paper_info(request):
             else:
                 c = Collection.objects.filter(UserEmail=uid).filter(PatentId=pid)
                 if len(c) > 0:
-                    ct = c.CollectionTime
+                    ct = c[0].CollectionTime
                     cs = True
                 else:
                     cs = False
@@ -444,9 +444,8 @@ def fast_search(request):
 
         url = 'http://127.0.0.1:9200/paper_index/_search'
         body = b.get_body()
-        print(body)
         data = json.loads(requests.get(url, data=json.dumps(body)).content)
-
+        print(data)
         hits = data['hits']
         num = hits['total']
         l = hits['hits']
