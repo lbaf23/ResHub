@@ -113,8 +113,13 @@ def getResearchInstitute(request):
                     confCount = confCount+projectauthor.__len__()
 
                     try:
-                        data_temp = PaperAuthor.objects.get(
+                        this_temp = PaperAuthor.objects.filter(
                             ResearcherId_id=i)
+                        if(this_temp.__len__() == 0):
+                            data_temp = None
+                        else:
+                            data_temp = PaperAuthor.objects.filter(
+                                ResearcherId_id=i)[0]
                     except Exception as e:
                         data_temp = None
                     if(data_temp is not None):
