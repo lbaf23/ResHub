@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from ResModel.models import Researcher, HubUser
 from ResModel.models import PaperAuthor, Paper, ProjectAuthor
 import re
+import random
 
 
 def getResearchInstitute(request):
@@ -175,7 +176,8 @@ def getResearchInstitute(request):
                 res['magpar'] = magpar
                 res['confcount'] = confCount
                 res['confpar'] = confpar
-                res['quoted'] = str(int(quoted*(papernum/5)))
+                res['quoted'] = str(
+                    int(quoted*(papernum/5)) + random.randint(-10, 10))
                 res['papernum'] = papernum + confCount
 
                 resCount = []
