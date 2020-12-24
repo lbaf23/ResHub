@@ -62,6 +62,8 @@ def add_browse_history(request):
         read_num = Paper.objects.get(PaperId=bro_id).ReadNum
         Paper.objects.filter(PaperId=bro_id).update(ReadNum=read_num+1)
     elif bro_type == 2:
+        print(bro_id)
+        print(bro_type)
         patent = Patent.objects.get(PatentId=bro_id)
         u = Browse(PatentId=patent,UserEmail=user,BrowseType=2)
         u.save()

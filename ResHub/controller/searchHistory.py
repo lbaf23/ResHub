@@ -8,6 +8,7 @@ from ResModel.models import HubUser,hotwords,Paper,Researcher
 def add_search_history(request):
     user_id = request.POST.get('userId')
     keyword = request.POST.get('keyWords')
+    list = request.POST.get('keywordList')
     wo=""
     for i in range(0,len(keyword)):
         if(keyword[i]=='主'):
@@ -18,7 +19,7 @@ def add_search_history(request):
             break
     succeed = True
     user=HubUser.objects.get(UserEmail=user_id)
-    u = Search(UserEmail=user,SearchContent=keyword,SearchTime=datetime.datetime.now(),SearchList=wo)
+    u = Search(UserEmail=user,SearchContent=keyword,SearchTime=datetime.datetime.now(),SearchList=list)
     u.save()
     key =hotwords.objects.filter(word=wo)
     if(len(key)==0):
