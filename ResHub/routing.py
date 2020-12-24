@@ -9,7 +9,7 @@ application = ProtocolTypeRouter({
     # WebSocket chat handler
     "websocket": AuthMiddlewareStack(
         URLRouter([
-            path('websocketTest/<str:pk>', WebSocket.web_socket_connect),
+            path('websocket/<str:pk>', WebSocket.web_socket_connect),
         ])
     ),
 })
