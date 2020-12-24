@@ -50,7 +50,10 @@ def getResearchInstitute(request):
                     resid = i.ResId
                     res_temp['resId'] = this_reseacher.ResId
                     hotData_temp.append(this_reseacher.ResId)
-                    res_temp['name'] = this_reseacher.ResName
+                    if(this_reseacher.ResName.__len__() > 20):
+                        res_temp['name'] = this_reseacher.ResName[:20]+'...'
+                    else:
+                        res_temp['name'] = this_reseacher.ResName
                     # try:
                     #     UserEmail_id = this_reseacher.UserEmail_id
                     #     this_user = HubUser.objects.get(UserEmail=UserEmail_id)
