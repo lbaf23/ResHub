@@ -84,9 +84,6 @@ def del_collection(request):
 
     succeed = True
     user = HubUser.objects.get(UserEmail=user_id)
-    print(col_id)
-    print(user_id)
-    print(col_type)
     if col_type == 1:
         paper = Paper.objects.get(PaperId=col_id)
         Collection.objects.filter(PaperId=paper,UserEmail=user).delete()
@@ -94,7 +91,7 @@ def del_collection(request):
         patent = Patent.objects.get(PatentId=col_id)
         Collection.objects.filter(PatentId=patent,UserEmail=user).delete()
     elif col_type == 3:
-        project = Paper.objects.get(ProjectId=col_id)
+        project = Project.objects.get(ProjectId=col_id)
         Collection.objects.filter(ProjectId=project,UserEmail=user).delete()
     return JsonResponse({'succeed':succeed})
 
