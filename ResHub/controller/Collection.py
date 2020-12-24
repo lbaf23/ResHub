@@ -41,7 +41,7 @@ def get_collection(request):
         elif t==3:
             project = c[i].ProjectId
             print(project)
-            p=Project.objects.get(ProjectId=project)
+            p=Project.objects.get(ProjectId=project.ProjectId)
             j = {
             'paperId': project.ProjectId,
             'title': project.ProjectTitle,
