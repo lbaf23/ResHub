@@ -46,6 +46,7 @@ def get_collection(request):
             j = {
             'paperId': project.ProjectId,
             'title': project.ProjectTitle,
+            'msg': ''if project.ZhAbstract is None else project.ZhAbstract,
             'type':  str(t),
             'collectionSum':project.CollectionNum,
             'viewSum':project.ReadNum,
