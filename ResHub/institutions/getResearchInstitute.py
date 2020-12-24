@@ -41,6 +41,7 @@ def getResearchInstitute(request):
                 magcount = 0
                 confcount = 0
                 index = 0
+
                 # 存放学者id
                 hotData_temp = []
                 for i in institute:
@@ -97,15 +98,19 @@ def getResearchInstitute(request):
                 quoted = 0
                 papernum = 0
                 for i in hotData_temp:
-                    papernum = papernum + PaperAuthor.objects.filter(
-                        ResearcherId=i).all().__len__()
 
                     projectauthor = ProjectAuthor.objects.filter(
                         ResearcherId=i).all()
                     confCount = confCount+projectauthor.__len__()
 
                     try:
-                        data_temp = PaperAuthor.objects.get(ResearcherId_id=i)
+                        paper_temp = PaperAuthor.objects.filter(
+                            ResearcherId_id=i)
+                        papernum = papernum + paper_temp.__len__()
+                        if(paper_temp.__len__() != 0):
+                            data_temp = paper_temp[0]
+                        else:
+                            data_temp = None
                     except Exception as e:
                         data_temp = None
                     if(data_temp is not None):
@@ -146,24 +151,7 @@ def getResearchInstitute(request):
                         except Exception as e:
                             donothing = 1
 
-                        papersid = PaperAuthor.objects.filter(
-                            ResearcherId=i).all()
-                        for j in papersid:
-                            try:
-                                paper = Paper.objects.get(PaperId=j.PaperId_id)
-                                year = paper.PaperTime
-                                index = (year-1980) % 5
-                                if(index < 0):
-                                    continue
-                                datas[index] = datas[index] + 1
-                                if(paper.PaperCitation is None):
-                                    quotes[index] = quotes[index] + 0
-                                else:
-                                    quotes[index] = quotes[index] + \
-                                        paper.PaperCitation
-                            except Exception as e:
-                                donothing = 1
-                        magCount = magCount + papersid.__len__()
+                        magCount = papernum
                         projectauthor = ProjectAuthor.objects.filter(
                             ResearcherId_id=i).all()
                         magCount = magCount + projectauthor.__len__()
@@ -185,7 +173,7 @@ def getResearchInstitute(request):
                 res['confcount'] = confCount
                 res['confpar'] = confpar
                 res['quoted'] = str(quoted)
-                res['papernum'] = str(magCount+confCount)
+                res['papernum'] = papernum
 
                 resCount = []
                 quoCount = []
