@@ -87,10 +87,10 @@ def del_collection(request):
     if col_type == 1:
         paper = Paper.objects.get(PaperId=col_id)
         Collection.objects.filter(PaperId=paper,UserEmail=user).delete()
-    elif col_type == 3:
+    elif col_type == 2:
         patent = Patent.objects.get(PatentId=col_id)
         Collection.objects.filter(PatentId=patent,UserEmail=user).delete()
-    elif col_type == 2:
+    elif col_type == 3:
         project = Paper.objects.get(ProjectId=col_id)
         Collection.objects.filter(ProjectId=project,UserEmail=user).delete()
     return JsonResponse({'succeed':succeed})
