@@ -28,7 +28,7 @@ def get_my_concern(request):
                     j['label'] = user.UserIntroduction
                 else :
                     j['name'] = researcher.ResName
-                    j['headImage'] = "head17.jpg"
+                    j['headImage'] = "head00.jpg"
                     j['userEmail'] = " "
                     j['id'] = researcher.ResId
                     j['label'] = " "

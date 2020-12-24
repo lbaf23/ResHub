@@ -2,12 +2,12 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 
 from ResHub.controller import Chatting
 
-
 # 自定义websocket处理类
 class web_socket_connect(AsyncJsonWebsocketConsumer):
     async def connect(self):
         # 创建连接时调用
         mid = self.scope['url_route']['kwargs']['pk']
+        mid = mid[:-7]
         print(mid)
         print('连接：', mid, self.channel_name)
         await self.accept()
@@ -17,7 +17,7 @@ class web_socket_connect(AsyncJsonWebsocketConsumer):
 
     async def receive_json(self, message):
         # 收到信息时调用
-        print('收到消息：',self.channel_name)
+        print('收到消息：', self.channel_name)
 
         # 信息单发
         # await self.send_json(content=content)
@@ -26,26 +26,26 @@ class web_socket_connect(AsyncJsonWebsocketConsumer):
             print(message)
             msg = await Chatting.submit_message(message)
             await self.channel_layer.group_send(
-                message.get('friendId'),
+                message.get('friendId')[:-7],
                 {
                     "type": 'chat.message',
                     "state": 'sendMessage',
                     "id": msg["id"],
                     "messageContent": msg['messageContent'],
-                    "friendId": msg['friendId'],
-                    "myId": msg['myId'],
+                    "friendId": msg['friendId'] + '@qq.com',
+                    "myId": msg['myId'] + '@qq.com',
                     "sendDate": msg['sendDate'],
                 },
             )
             await self.channel_layer.group_send(
-                message.get('myId'),
+                message.get('myId')[:-7],
                 {
                     "type": 'chat.message',
                     "state": 'sendMessage',
                     "id": msg["id"],
                     "messageContent": msg['messageContent'],
-                    "friendId": msg['friendId'],
-                    "myId": msg['myId'],
+                    "friendId": msg['friendId'] + '@qq.com',
+                    "myId": msg['myId'] + '@qq.com',
                     "sendDate": msg['sendDate'],
                 },
             )
@@ -62,13 +62,13 @@ class web_socket_connect(AsyncJsonWebsocketConsumer):
 
     async def chat_message(self, event):
         # 发送给自己
-        if event['state']=='sendMessage':
+        if event['state'] == 'sendMessage':
             print("发送消息")
             await self.send_json({
                 "state": 'sendMessage',
                 "id": event["id"],
-                "msg" : event["messageContent"],
-                "sendId": event["myId"],
-                "receiveId": event["friendId"],
+                "msg": event["messageContent"],
+                "sendId": event["myId"] + '@qq.com',
+                "receiveId": event["friendId"] + '@qq.com',
                 "sendTime": event['sendDate'],
             })
