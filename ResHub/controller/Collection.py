@@ -81,8 +81,11 @@ def del_collection(request):
     user_id = request.GET.get('userId')
     col_id = request.GET.get('paperId')
     col_type = int(request.GET.get('type'))
+
     succeed = True
     user = HubUser.objects.get(UserEmail=user_id)
+    print(col_id)
+    print(user_id)
     print(col_type)
     if col_type == 1:
         paper = Paper.objects.get(PaperId=col_id)
