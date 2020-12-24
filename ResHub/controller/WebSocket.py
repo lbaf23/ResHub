@@ -22,30 +22,32 @@ class web_socket_connect(AsyncJsonWebsocketConsumer):
         # 信息单发
         # await self.send_json(content=content)
 
-        if message['state']=='sendMessage': # 发送信息
+        if message['state'] == 'sendMessage': # 发送信息
             print(message)
             msg = await Chatting.submit_message(message)
+            fid = message.get('friendId')[:-7]
+            mid = message.get('myId')[:-7]
             await self.channel_layer.group_send(
-                message.get('friendId')[:-7],
+                fid,
                 {
                     "type": 'chat.message',
                     "state": 'sendMessage',
                     "id": msg["id"],
                     "messageContent": msg['messageContent'],
-                    "friendId": msg['friendId'] + '@qq.com',
-                    "myId": msg['myId'] + '@qq.com',
+                    "friendId": msg['friendId'],
+                    "myId": msg['myId'],
                     "sendDate": msg['sendDate'],
                 },
             )
             await self.channel_layer.group_send(
-                message.get('myId')[:-7],
+                mid,
                 {
                     "type": 'chat.message',
                     "state": 'sendMessage',
                     "id": msg["id"],
                     "messageContent": msg['messageContent'],
-                    "friendId": msg['friendId'] + '@qq.com',
-                    "myId": msg['myId'] + '@qq.com',
+                    "friendId": msg['friendId'],
+                    "myId": msg['myId'],
                     "sendDate": msg['sendDate'],
                 },
             )
@@ -56,6 +58,7 @@ class web_socket_connect(AsyncJsonWebsocketConsumer):
         # 将关闭的连接从群组中移除
         print('断开：',self.channel_name)
         mid = self.scope['url_route']['kwargs']['pk']
+        mid = mid[:-7]
         await self.channel_layer.group_discard(mid, self.channel_name)
         await self.close()
 
@@ -68,7 +71,7 @@ class web_socket_connect(AsyncJsonWebsocketConsumer):
                 "state": 'sendMessage',
                 "id": event["id"],
                 "msg": event["messageContent"],
-                "sendId": event["myId"] + '@qq.com',
-                "receiveId": event["friendId"] + '@qq.com',
+                "sendId": event["myId"],
+                "receiveId": event["friendId"],
                 "sendTime": event['sendDate'],
             })
