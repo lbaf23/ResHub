@@ -9,7 +9,9 @@ class web_socket_connect(AsyncJsonWebsocketConsumer):
         # 创建连接时调用
         mid = self.scope['url_route']['kwargs']['pk']
 
-        print('连接：',mid,self.channel_name)
+        mid = mid[:-6]
+        print(mid)
+        print('连接：', mid, self.channel_name)
         await self.accept()
         # 将新的连接加入到群组
 
