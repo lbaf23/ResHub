@@ -45,7 +45,7 @@ def get_collection(request):
             'paperId': project.ProjectId,
             'title': project.ProjectTitle,
             'msg': ''if project.ZhAbstract is None else project.ZhAbstract,
-            'author': ''if len(Project.ProjectLeader.split(','))==0 else Project.ProjectLeader.split(','),
+            'author': ''if len(Project.ProjectLeader)==0 else Project.ProjectLeader,
             'type':  str(t),
             'collectionSum':project.CollectionNum,
             'viewSum':project.ReadNum,
