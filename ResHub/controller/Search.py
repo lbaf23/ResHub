@@ -232,8 +232,11 @@ def show_paper_info(request):
             reft = []
             refi = []
             for r in refs:
-                reft.append(Paper.objects.get(PaperId=r.RePaperId).PaperTitle)
-                refi.append(r.RePaperId_id)
+                try:
+                    reft.append(Paper.objects.get(PaperId=r.RePaperId).PaperTitle)
+                    refi.append(r.RePaperId_id)
+                except Exception:
+                    pass
 
             ct = ''
             if uid == '':
