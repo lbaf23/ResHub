@@ -239,7 +239,7 @@ def show_paper_info(request):
             if uid == '':
                 cs = False
             else:
-                c = Collection.objects.filter(UserEmail=pid).filter(PaperId=pid)
+                c = Collection.objects.filter(UserEmail=uid).filter(PaperId=pid)
                 if len(c) > 0:
                     cs = True
                     ct = c.CollectionTime
@@ -282,7 +282,7 @@ def show_paper_info(request):
             if uid == '':
                 cs = False
             else:
-                c = Collection.objects.filter(UserEmail=pid).filter(ProjectId=pid)
+                c = Collection.objects.filter(UserEmail=uid).filter(ProjectId=pid)
                 if len(c) > 0:
                     ct = c.CollectionTime
                     cs = True
@@ -322,7 +322,7 @@ def show_paper_info(request):
             if uid == '':
                 cs = False
             else:
-                c = Collection.objects.filter(UserEmail=pid).filter(PatentId=pid)
+                c = Collection.objects.filter(UserEmail=uid).filter(PatentId=pid)
                 if len(c) > 0:
                     ct = c.CollectionTime
                     cs = True
