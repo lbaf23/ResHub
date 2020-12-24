@@ -368,7 +368,7 @@ def search_authors(request):
 
     radio = True if request.GET.get('Radio') == 'true' else False
 
-    authors = Researcher.objects.filter(ResName=search_name)
+    authors = Researcher.objects.filter(ResName=search_name)[(page-1)*per_page: page*per_page]
     l =[]
     for rh in authors:
         l.append({
