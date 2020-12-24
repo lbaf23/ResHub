@@ -429,7 +429,7 @@ def fast_search(request):
 
     if type == 'paper':
         b = search_paper_index(Body(), search_key, radio)
-        if start_year and end_year:
+        if start_year is not None and end_year is not None:
             b.add_range('PaperTime', start_year, end_year)
         if sort == 1:
             if howToSort % 2 == 0:
@@ -448,6 +448,7 @@ def fast_search(request):
         url = 'http://127.0.0.1:9200/paper_index/_search'
         body = b.get_body()
         data = json.loads(requests.get(url, data=json.dumps(body)).content)
+        print(data)
         hits = data['hits']
         num = hits['total']
         l = hits['hits']

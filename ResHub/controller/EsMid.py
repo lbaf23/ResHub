@@ -1,6 +1,7 @@
 import json
-#from ResHub.controller.Search import translate_by_api
+# from ResHub.controller.Search import translate_by_api
 import requests
+
 
 def translate_by_api(str):
     """
@@ -100,21 +101,21 @@ class Body:
                         }
                     })
 
-    def add_range(self, key, value_from, value_to, from_eq = False, to_eq = False):
+    def add_range(self, key, value_from, value_to, from_eq=False, to_eq=False):
         l = "gt"
         h = "lt"
         if from_eq:
             l = "gte"
         if to_eq:
             h = "lte"
-        self.range_list.append({
-            key:{
+        self.range_list = ({
+            key: {
                 l: value_from,
                 h: value_to
             }
         })
 
-    def add_sort(self, key, sort_type_desc = True):
+    def add_sort(self, key, sort_type_desc=True):
         o = "desc"
         if not sort_type_desc:
             o = "asc"
@@ -133,7 +134,7 @@ class Body:
             })
         global_list = [{
             "bool": {
-                "should" :self.should_list
+                "should": self.should_list
             }
         }]
         if self.range_list:
