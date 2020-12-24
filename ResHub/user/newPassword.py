@@ -16,8 +16,10 @@ def newPassword(request):
                         "result": False
                     })
                 else:
-                    temp.UserPassword = newPassword
-                    temp.save()
+                    HubUser.objects.filter(UserEmail=mailAddress).update(
+                        UserPassword=newPassword)
+                    # temp.UserPassword = newPassword
+                    # temp.save()
                     return JsonResponse({
                         "status": 1,
                         "result": True

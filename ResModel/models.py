@@ -168,7 +168,7 @@ class Search(models.Model):
     UserEmail = models.ForeignKey('HubUser', to_field='UserEmail', on_delete=models.CASCADE)
     SearchContent = models.CharField(max_length=200)
     SearchTime = models.DateTimeField(auto_now_add=True)
-
+    SearchList = models.CharField(max_length=255)
 
 class Appeal(models.Model):
     ResearchId = models.ForeignKey('Researcher', to_field='ResId', on_delete=models.CASCADE)

@@ -50,9 +50,9 @@ def browse_history(request):
         })
 
 def add_browse_history(request):
-    user_id = request.GET.get('userId')
-    bro_id = request.GET.get('paperId')
-    bro_type = int(request.GET.get('type'))
+    user_id = request.POST.get('userId')
+    bro_id = request.POST.get('paperId')
+    bro_type = int(request.POST.get('type'))
     succeed = True
     user = HubUser.objects.get(UserEmail=user_id)
     if bro_type == 1:
@@ -61,13 +61,15 @@ def add_browse_history(request):
         u.save()
         read_num = Paper.objects.get(PaperId=bro_id).ReadNum
         Paper.objects.filter(PaperId=bro_id).update(ReadNum=read_num+1)
-    elif bro_type == 2:
+    elif bro_type == 3:
+        print(bro_id)
+        print(bro_type)
         patent = Patent.objects.get(PatentId=bro_id)
         u = Browse(PatentId=patent,UserEmail=user,BrowseType=2)
         u.save()
         read_num = Patent.objects.get(PatentId=bro_id).ReadNum
         Patent.objects.filter(PatentId=bro_id).update(ReadNum = read_num+1)
-    elif bro_type == 3:
+    elif bro_type == 2:
         project = Project.objects.get(ProjectId=bro_id)
         u = Browse(ProjectId=project,UserEmail=user,BrowseType=3)
         u.save()
