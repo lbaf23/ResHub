@@ -122,20 +122,25 @@ class Body:
         })
 
     def get_body(self):
-        if self.should_list:
-            self.must_list.append({
+        if self.must_list:
+            self.should_list.append({
                 "bool": {
-                    "should": self.should_list
+                    "must": self.must_list
                 }
             })
+        global_list = [{
+            "bool": {
+                "should" :self.should_list
+            }
+        }]
         if self.range_list:
-            self.must_list.append({
+            global_list.append({
                 "range": self.range_list
             })
         return {
             "query": {
                 "bool": {
-                    "must": self.must_list,
+                    "must": global_list,
                     "must_not": self.not_list
                 }
             },
