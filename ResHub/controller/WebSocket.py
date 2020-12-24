@@ -58,6 +58,7 @@ class web_socket_connect(AsyncJsonWebsocketConsumer):
         # 将关闭的连接从群组中移除
         print('断开：',self.channel_name)
         mid = self.scope['url_route']['kwargs']['pk']
+        mid = mid[:-7]
         await self.channel_layer.group_discard(mid, self.channel_name)
         await self.close()
 
