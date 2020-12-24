@@ -12,12 +12,13 @@ def get_recent_friends(request):
     res = list()
 
     for i in range(0, f.__len__()):
+        fr = f[i].FriendId
         j = {
             'chatId': f[i].id,
             'friendId': f[i].FriendId_id,
-            'friendName': f[i].FriendId.UserName,
+            'friendName': fr.UserName,
             'newMessage': f[i].Unread,
-            'friendHead': f[i].FriendId.UserImage
+            'friendHead': fr.UserImage
         }
         res.append(j)
     return JsonResponse({'list': res})
