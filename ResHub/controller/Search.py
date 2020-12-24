@@ -448,7 +448,6 @@ def fast_search(request):
         url = 'http://127.0.0.1:9200/paper_index/_search'
         body = b.get_body()
         data = json.loads(requests.get(url, data=json.dumps(body)).content)
-        print(data)
         hits = data['hits']
         num = hits['total']
         l = hits['hits']
