@@ -11,7 +11,6 @@ def get_collection(request):
     c = Collection.objects.filter(UserEmail=user).order_by("-CollectionTime")
     res = list()
     for i in range(0,c.__len__()):
-        print(c[i])
         t = c[i].CollectionType
         if t==1 :
             paper =c[i].PaperId
@@ -41,11 +40,14 @@ def get_collection(request):
             }
         elif t==3:
             project = c[i].ProjectId
+            p=Project.objects.get(ProjectId=project.ProjectId)
+            au=[]
+            au.append(p.ProjectLeader)
             j = {
             'paperId': project.ProjectId,
             'title': project.ProjectTitle,
-            'msg': ''if project.ProjectAbstract is None else project.ProjectAbstract,
-            'author': ''if len(Project.ProjectLeader.split(','))==0 else Project.ProjectLeader.split(','),
+            'msg': ''if project.ZhAbstract is None else project.ZhAbstract,
+            'author':au,
             'type':  str(t),
             'collectionSum':project.CollectionNum,
             'viewSum':project.ReadNum,

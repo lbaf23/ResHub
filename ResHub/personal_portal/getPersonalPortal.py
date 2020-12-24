@@ -131,7 +131,7 @@ def getPersonalPortal(request):
                     # 一堆东西
                     try:
                         papersid = PaperAuthor.objects.filter(
-                            ResearcherId_id=resId).all()
+                            ResearcherId_id=resId).order_by("PaperId_id")
                         datas = [0, 0, 0, 0, 0, 0, 0, 0]
                         quotes = [0, 0, 0, 0, 0, 0, 0, 0]
                         tabledata = []
