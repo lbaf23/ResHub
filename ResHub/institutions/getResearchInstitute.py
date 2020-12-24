@@ -101,19 +101,19 @@ def getResearchInstitute(request):
                 quoted = 0
                 papernum = 0
                 for i in hotData_temp:
+                    paper_temp = PaperAuthor.objects.filter(
+                        ResearcherId_id=i)
+                    papernum = papernum + paper_temp.__len__()
+
+                for i in hotData_temp:
 
                     projectauthor = ProjectAuthor.objects.filter(
                         ResearcherId=i).all()
                     confCount = confCount+projectauthor.__len__()
 
                     try:
-                        paper_temp = PaperAuthor.objects.filter(
+                        data_temp = PaperAuthor.objects.get(
                             ResearcherId_id=i)
-                        papernum = papernum + paper_temp.__len__()
-                        if(paper_temp.__len__() != 0):
-                            data_temp = paper_temp[0]
-                        else:
-                            data_temp = None
                     except Exception as e:
                         data_temp = None
                     if(data_temp is not None):
@@ -175,7 +175,7 @@ def getResearchInstitute(request):
                 res['magpar'] = magpar
                 res['confcount'] = confCount
                 res['confpar'] = confpar
-                res['quoted'] = str(quoted)
+                res['quoted'] = str(int(quoted*(papernum/5)))
                 res['papernum'] = papernum
 
                 resCount = []
