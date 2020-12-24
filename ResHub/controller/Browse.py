@@ -61,7 +61,7 @@ def add_browse_history(request):
         u.save()
         read_num = Paper.objects.get(PaperId=bro_id).ReadNum
         Paper.objects.filter(PaperId=bro_id).update(ReadNum=read_num+1)
-    elif bro_type == 2:
+    elif bro_type == 3:
         print(bro_id)
         print(bro_type)
         patent = Patent.objects.get(PatentId=bro_id)
@@ -69,7 +69,7 @@ def add_browse_history(request):
         u.save()
         read_num = Patent.objects.get(PatentId=bro_id).ReadNum
         Patent.objects.filter(PatentId=bro_id).update(ReadNum = read_num+1)
-    elif bro_type == 3:
+    elif bro_type == 2:
         project = Project.objects.get(ProjectId=bro_id)
         u = Browse(ProjectId=project,UserEmail=user,BrowseType=3)
         u.save()
