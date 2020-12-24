@@ -6,6 +6,7 @@ from ResModel.models import HubUser, Mail, ChatFriends
 
 def get_recent_friends(request):
     mid = request.GET.get('userId')
+    print(mid)
     f = ChatFriends.objects.filter(MyId_id=mid)#.order_by('LastMail__SendTime')
     print(f)
     res = list()
