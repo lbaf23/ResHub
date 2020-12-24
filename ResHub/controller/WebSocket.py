@@ -22,11 +22,13 @@ class web_socket_connect(AsyncJsonWebsocketConsumer):
         # 信息单发
         # await self.send_json(content=content)
 
-        if message['state']=='sendMessage': # 发送信息
+        if message['state'] == 'sendMessage': # 发送信息
             print(message)
             msg = await Chatting.submit_message(message)
+            fid = message.get('friendId')[:-7]
+            mid = message.get('myId')[:-7]
             await self.channel_layer.group_send(
-                message.get('friendId')[:-7],
+                fid,
                 {
                     "type": 'chat.message',
                     "state": 'sendMessage',
@@ -38,7 +40,7 @@ class web_socket_connect(AsyncJsonWebsocketConsumer):
                 },
             )
             await self.channel_layer.group_send(
-                message.get('myId')[:-7],
+                mid,
                 {
                     "type": 'chat.message',
                     "state": 'sendMessage',
@@ -68,7 +70,7 @@ class web_socket_connect(AsyncJsonWebsocketConsumer):
                 "state": 'sendMessage',
                 "id": event["id"],
                 "msg": event["messageContent"],
-                "sendId": event["myId"] + '@qq.com',
-                "receiveId": event["friendId"] + '@qq.com',
+                "sendId": event["myId"],
+                "receiveId": event["friendId"],
                 "sendTime": event['sendDate'],
             })
