@@ -91,6 +91,7 @@ def getPersonalPortal(request):
                         res['follownum'] = 0
 
                     # realName
+
                     res['realname'] = researcher.ResName
 
                     # insName
@@ -252,8 +253,10 @@ def getPersonalPortal(request):
                             email = reseacher_relation.UserEmail_id
 
                             res_temp['avatar'] = 'head00.jpg'
-
-                            res_temp['name'] = reseacher_relation.ResName
+                            if(reseacher_relation.ResName.__len_() > 20):
+                                res_temp['name'] = reseacher_relation.ResName[:15]+'...'
+                            else:
+                                res_temp['name'] = reseacher_relation.ResName
                             res_temp['institute'] = reseacher_relation.InstitutionName
 
                             res_temp['link'] = reseacher_relation.ResId

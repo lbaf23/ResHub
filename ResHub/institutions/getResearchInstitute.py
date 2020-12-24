@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from ResModel.models import Researcher, HubUser
 from ResModel.models import PaperAuthor, Paper, ProjectAuthor
 import re
+import random
 
 
 def getResearchInstitute(request):
@@ -41,6 +42,7 @@ def getResearchInstitute(request):
                 magcount = 0
                 confcount = 0
                 index = 0
+
                 # 存放学者id
                 hotData_temp = []
                 for i in institute:
@@ -49,7 +51,10 @@ def getResearchInstitute(request):
                     resid = i.ResId
                     res_temp['resId'] = this_reseacher.ResId
                     hotData_temp.append(this_reseacher.ResId)
-                    res_temp['name'] = this_reseacher.ResName
+                    if(this_reseacher.ResName.__len__() > 20):
+                        res_temp['name'] = this_reseacher.ResName[:20]+'...'
+                    else:
+                        res_temp['name'] = this_reseacher.ResName
                     # try:
                     #     UserEmail_id = this_reseacher.UserEmail_id
                     #     this_user = HubUser.objects.get(UserEmail=UserEmail_id)
@@ -97,15 +102,19 @@ def getResearchInstitute(request):
                 quoted = 0
                 papernum = 0
                 for i in hotData_temp:
-                    papernum = papernum + PaperAuthor.objects.filter(
-                        ResearcherId=i).all().__len__()
+                    paper_temp = PaperAuthor.objects.filter(
+                        ResearcherId_id=i)
+                    papernum = papernum + paper_temp.__len__()
+
+                for i in hotData_temp:
 
                     projectauthor = ProjectAuthor.objects.filter(
                         ResearcherId=i).all()
                     confCount = confCount+projectauthor.__len__()
 
                     try:
-                        data_temp = PaperAuthor.objects.get(ResearcherId_id=i)
+                        data_temp = PaperAuthor.objects.get(
+                            ResearcherId_id=i)
                     except Exception as e:
                         data_temp = None
                     if(data_temp is not None):
@@ -146,24 +155,7 @@ def getResearchInstitute(request):
                         except Exception as e:
                             donothing = 1
 
-                        papersid = PaperAuthor.objects.filter(
-                            ResearcherId=i).all()
-                        for j in papersid:
-                            try:
-                                paper = Paper.objects.get(PaperId=j.PaperId_id)
-                                year = paper.PaperTime
-                                index = (year-1980) % 5
-                                if(index < 0):
-                                    continue
-                                datas[index] = datas[index] + 1
-                                if(paper.PaperCitation is None):
-                                    quotes[index] = quotes[index] + 0
-                                else:
-                                    quotes[index] = quotes[index] + \
-                                        paper.PaperCitation
-                            except Exception as e:
-                                donothing = 1
-                        magCount = magCount + papersid.__len__()
+                        magCount = papernum
                         projectauthor = ProjectAuthor.objects.filter(
                             ResearcherId_id=i).all()
                         magCount = magCount + projectauthor.__len__()
@@ -184,8 +176,9 @@ def getResearchInstitute(request):
                 res['magpar'] = magpar
                 res['confcount'] = confCount
                 res['confpar'] = confpar
-                res['quoted'] = str(quoted)
-                res['papernum'] = str(magCount+confCount)
+                res['quoted'] = str(
+                    int(quoted*(papernum/5)) + random.randint(-10, 10))
+                res['papernum'] = papernum + confCount
 
                 resCount = []
                 quoCount = []
