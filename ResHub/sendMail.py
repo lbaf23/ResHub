@@ -17,7 +17,7 @@ def send_email(receive):
 
     code = get_code()
     subject = 'Reshub'
-    content = '您的验证码是：' + str(code)
+    content = '【ResHub】验证码：' + str(code)+'，您正在注册成为新用户，感谢您的支持！'
     message = MIMEText(content)
     message['Subject'] = subject
     message['From'] = msg_from
