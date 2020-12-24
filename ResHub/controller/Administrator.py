@@ -52,7 +52,7 @@ def getList(request):
             r['id'] = str(i.id)
             r['AppealState'] = i.AppealState
             r['AppealTime'] = i.AppealTime
-            r['ResearchId'] = researcher.ResId
+            r['ResearchId'] = str(researcher.ResId)
             r['UserEmail'] = user.UserEmail
             r['content'] = i.content
 
@@ -67,7 +67,7 @@ def getList(request):
             r['id']=str(i.id)
             r['AppealState']= i.AppealState
             r['AppealTime'] = i.AppealTime
-            r['ResearchId'] = researcher.ResId
+            r['ResearchId'] = str(researcher.ResId)
             r['UserEmail'] = user.UserEmail
             r['content'] = i.content
 
