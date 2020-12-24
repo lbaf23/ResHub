@@ -65,11 +65,11 @@ def add_collection(request):
         paper = Paper.objects.get(PaperId=col_id)
         u = Collection(PaperId=paper,UserEmail=user,CollectionType=1)
         u.save()
-    elif col_type == 2:
+    elif col_type == 3:
         patent = Patent.objects.get(PatentId=col_id)
         u = Collection(PatentId=patent,UserEmail=user,CollectionType=2)
         u.save()
-    elif col_type == 3:
+    elif col_type == 2:
         project = Project.objects.get(ProjectId=col_id)
         u = Collection(ProjectId=project,UserEmail=user,CollectionType=3)
         u.save()
