@@ -25,6 +25,7 @@ def pass_appeal(request):
     user=request.GET.get('email')
     resid =request.GET.get('ResId')
     print(resid)
+    print(user)
     Appeal.objects.filter(id=appeal_id).update(AppealState=2)
     Researcher.objects.filter(ResId=resid).update(UserEmail=user,IsClaim=1)
     succeed=True
